@@ -1,3 +1,5 @@
-export * from './authorization/authorization';
+export * from './edit/edit';
 export * from './main/main';
-export * from './post/post';
+export * from './question/question';
+export * from './result/result';
+

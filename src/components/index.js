@@ -1,4 +1,4 @@
+export * from './button/button';
 export * from './error/error';
-export * from './footer/footer';
-export * from './header/header';
-export * from './modal/modal';
+export * from './nav-bar/nav-bar';
+export * from './tooltip/tooltip';
