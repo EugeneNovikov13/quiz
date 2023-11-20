@@ -6,7 +6,7 @@ const EditContainer = ({ className }) => {
 	return (
 		<div className={className}>
 			<NavBar bgColorbrightness={false} readyToComplete={true}>
-				<Link to="/question">
+				<Link to="/">
 					<Button onClick={() => console.log('Назад')}>Назад</Button>
 				</Link>
 				<Link to="/edit">
