@@ -6,6 +6,7 @@ import styled from 'styled-components';
 
 const Page = styled.div`
 	width: 800px;
+	min-height: calc(100vh - 40px);
 	margin: 20px auto;
 	padding: 50px 20px;
 	background-color: #eee;

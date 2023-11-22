@@ -1,41 +1,45 @@
 import { ACTION_TYPE } from '../actions';
 
 const initialAppState = {
-	wasLogout: true,
-	modal: {
-		isOpen: false,
-		text: '',
-		onConfirm: () => {},
-		onCancel: () => {},
-	},
+	isEdited: false,
 };
 
 export const appReducer = (state = initialAppState, action) => {
 	switch (action.type) {
-		case ACTION_TYPE.LOGOUT:
+		case ACTION_TYPE.SET_IS_EDITED:
 			return {
 				...state,
-				wasLogout: true,
+				isEdited: true,
 			};
-
-		case ACTION_TYPE.SET_USER:
+		case ACTION_TYPE.RESET_IS_EDITED:
 			return {
 				...state,
-				wasLogout: false,
+				isEdited: false,
 			};
-
-		case ACTION_TYPE.OPEN_MODAL:
-			return {
-				...state,
-				modal: {
-					...state.modal,
-					...action.payload,
-					isOpen: true,
-				},
-			};
-
-		case ACTION_TYPE.CLOSE_MODAL:
-			return initialAppState;
+		// case ACTION_TYPE.LOGOUT:
+		// 	return {
+		// 		...state,
+		// 		wasLogout: true,
+		// 	};
+		//
+		// case ACTION_TYPE.SET_USER:
+		// 	return {
+		// 		...state,
+		// 		wasLogout: false,
+		// 	};
+		//
+		// case ACTION_TYPE.OPEN_MODAL:
+		// 	return {
+		// 		...state,
+		// 		modal: {
+		// 			...state.modal,
+		// 			...action.payload,
+		// 			isOpen: true,
+		// 		},
+		// 	};
+		//
+		// case ACTION_TYPE.CLOSE_MODAL:
+		// 	return initialAppState;
 
 		default:
 			return state;

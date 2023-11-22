@@ -33,11 +33,11 @@ const TestResultContainer = ({ className, testDate, testTime, results }) => {
 					onMouseEnter={e => onMouseEnter(e)}
 					onMouseLeave={() => setIsHovered(false)}
 				>
-					{results.map(({ id, result }) => (
+					{results.map(({ id, isCorrect }) => (
 						<AnswerResult
 							className="answer"
 							key={id}
-							res={result}
+							isCorrect={isCorrect}
 							width={200 / answersQuantity}
 						/>
 					))}

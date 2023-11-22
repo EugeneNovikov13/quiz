@@ -7,5 +7,5 @@ const AnswerResultContainer = ({ className }) => {
 export const AnswerResult = styled(AnswerResultContainer)`
 	width: ${({ width }) => width}px;
 	height: 100%;
-	background-color: ${({ res }) => (res ? 'lightgreen' : 'darkred')};
+	background-color: ${({ isCorrect }) => (isCorrect ? 'lightgreen' : 'darkred')};
 `;
