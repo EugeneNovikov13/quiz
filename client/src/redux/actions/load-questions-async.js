@@ -1,4 +1,4 @@
-import { QUESTIONS } from '../../db/questions';
+import { QUESTIONS } from '../../db';
 import { ACTION_TYPE } from './action-type';
 
 export const loadQuestionsAsync = () => dispatch => {

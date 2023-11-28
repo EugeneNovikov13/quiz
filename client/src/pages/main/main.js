@@ -2,8 +2,21 @@ import { Link } from 'react-router-dom';
 import { Button, NavBar } from '../../components';
 import { History } from './components';
 import styled from 'styled-components';
+import { useLayoutEffect } from 'react';
 
 const MainContainer = ({ className }) => {
+	useLayoutEffect(() => {
+		async function fetchData() {
+			const url = '';
+
+			const data = await fetch(url);
+
+			console.log('Получены данные', data);
+		}
+
+		fetchData();
+	}, []);
+
 	return (
 		<div className={className}>
 			<NavBar brightness={false}>

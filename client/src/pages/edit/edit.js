@@ -4,8 +4,8 @@ import { Button, NavBar } from '../../components';
 import { QuestionEditBlock } from './components';
 import { useLayoutEffect } from 'react';
 import { loadQuestionsAsync } from '../../redux/actions';
-import styled from 'styled-components';
 import { selectQuestions } from '../../redux/selectors/select-questions';
+import styled from 'styled-components';
 
 const EditContainer = ({ className }) => {
 	const dispatch = useDispatch();
