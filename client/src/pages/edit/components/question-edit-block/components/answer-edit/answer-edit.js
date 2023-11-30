@@ -1,17 +1,24 @@
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useRef } from 'react';
 import icons from '../../../../assets';
 import { Icon } from '../../../../../../components';
-import { SET_IS_EDITED } from '../../../../../../redux/actions';
+import { selectQuestions } from '../../../../../../redux/selectors/select-questions';
+import { findQuestionById } from '../../../../../../utils';
+import { deleteAnswer, setCorrectAnswer } from '../../../../../../redux/actions';
 import styled from 'styled-components';
 
-const AnswerEditContainer = ({ className, answerText, isCorrect }) => {
+const AnswerEditContainer = ({ className, answerId, answerText, questionId }) => {
 	const answerTextRef = useRef(null);
 	const dispatch = useDispatch();
+	const questions = useSelector(selectQuestions);
+	const correctAnswer = findQuestionById(questionId, questions).correctAnswer;
 
-	const onCheckedClick = () => {
-		// dispatch() изменение состояния isCorrect в Redux
-		dispatch(SET_IS_EDITED);
+	const onChangeCorrectAnswer = (id, newCorrectText) => {
+		dispatch(setCorrectAnswer(id, newCorrectText));
+	};
+
+	const onDeleteAnswer = (questionIdToDelete, answerIdToDelete) => {
+		dispatch(deleteAnswer(questionIdToDelete, answerIdToDelete));
 	};
 
 	return (
@@ -25,14 +32,20 @@ const AnswerEditContainer = ({ className, answerText, isCorrect }) => {
 				{answerText}
 			</div>
 			<div className="answer-icons">
-				<div className="checked">
+				<div
+					className="checked"
+					onClick={() => onChangeCorrectAnswer(questionId, answerText)}
+				>
 					<Icon
-						iconSrc={isCorrect ? icons.checkedMark : ''}
+						iconSrc={answerText === correctAnswer ? icons.checkedMark : ''}
 						width={'15px'}
-						onClick={() => onCheckedClick(isCorrect)}
 					/>
 				</div>
-				<Icon iconSrc={icons.trashBin} width={'15px'} />
+				<Icon
+					iconSrc={icons.trashBin}
+					width={'15px'}
+					onClick={() => onDeleteAnswer(questionId, answerId)}
+				/>
 			</div>
 		</div>
 	);

@@ -8,12 +8,8 @@ function addQuestion(question) {
 
 // edit
 
-async function editQuestion(id, newQuestion) {
-	const editedQuestion = await Question.findByIdAndUpdate(id, newQuestion, { returnDocument: 'after' });
-
-	await editedQuestion.populate('answers');
-
-	return editedQuestion;
+function editQuestion(id, newQuestion) {
+	return Question.findByIdAndUpdate(id, newQuestion, { returnDocument: 'after' });
 }
 
 // delete
@@ -25,13 +21,13 @@ function deleteQuestion(id) {
 // get list
 
 function getQuestions() {
-	return Question.find().populate('answers');
+	return Question.find();
 }
 
 // get item
 
 function getQuestion(id) {
-	return Question.findById(id).populate('answers');
+	return Question.findById(id);
 }
 
 module.exports = {

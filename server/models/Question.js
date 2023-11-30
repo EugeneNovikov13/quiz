@@ -1,4 +1,11 @@
 const mongoose = require('mongoose');
+const { Schema } = require('mongoose');
+
+const Answer = new Schema({
+	text: {
+		type: String,
+		required: true,
+	}});
 
 const QuestionSchema = mongoose.Schema({
 	text: {
@@ -6,10 +13,11 @@ const QuestionSchema = mongoose.Schema({
 		required: true,
 		unique: true,
 	},
-	answers: [{
-		type: mongoose.Schema.Types.ObjectId,
-		ref: 'Answer',
-	}],
+	correctAnswer: {
+		type: String,
+		required: true,
+	},
+	answers: [Answer],
 });
 
 const Question = mongoose.model('Question', QuestionSchema);

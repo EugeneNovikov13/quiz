@@ -4,32 +4,38 @@ import icons from '../../assets';
 import styled from 'styled-components';
 import { AnswerEdit } from './components';
 
-const QuestionEditContainer = ({ className, questionText, answers }) => {
+const QuestionEditContainer = ({ className, id: questionId, questionText, answers }) => {
 	const [isExpanded, setIsExpanded] = useState(false);
 
 	const onArrowClick = () => {
 		setIsExpanded(!isExpanded);
 	};
 
+	const onChange = () => {};
+
 	return (
 		<div className={className}>
 			{isExpanded ? (
 				<>
 					<div className="ques-header">
-						<input type="text" value={questionText} />
-						<Icon
-							iconSrc={icons.upArrow}
-							width={'20px'}
-							onClick={onArrowClick}
-						/>
+						<input type="text" value={questionText} onChange={onChange} />
+						<div className="control-panel">
+							<Icon iconSrc={icons.trashBin} width={'15px'} />
+							<Icon
+								iconSrc={icons.upArrow}
+								width={'20px'}
+								onClick={onArrowClick}
+							/>
+						</div>
 					</div>
 					<div className="add-button">+</div>
 					<div className="answers">
-						{answers.map(({ id, text: answerText, isCorrect }) => (
+						{answers.map(({ id: answerId, text: answerText }) => (
 							<AnswerEdit
-								key={id}
+								key={answerId}
+								answerId={answerId}
 								answerText={answerText}
-								isCorrect={isCorrect}
+								questionId={questionId}
 							/>
 						))}
 					</div>
