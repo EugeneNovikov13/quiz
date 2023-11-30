@@ -4,7 +4,7 @@ import icons from '../../assets';
 import styled from 'styled-components';
 import { AnswerEdit } from './components';
 
-const QuestionEditContainer = ({ className, question, answers }) => {
+const QuestionEditContainer = ({ className, questionText, answers }) => {
 	const [isExpanded, setIsExpanded] = useState(false);
 
 	const onArrowClick = () => {
@@ -16,7 +16,7 @@ const QuestionEditContainer = ({ className, question, answers }) => {
 			{isExpanded ? (
 				<>
 					<div className="ques-header">
-						<input type="text" value={question} />
+						<input type="text" value={questionText} />
 						<Icon
 							iconSrc={icons.upArrow}
 							width={'20px'}
@@ -25,14 +25,18 @@ const QuestionEditContainer = ({ className, question, answers }) => {
 					</div>
 					<div className="add-button">+</div>
 					<div className="answers">
-						{answers.map(({ id, text, isCorrect }) => (
-							<AnswerEdit key={id} text={text} isCorrect={isCorrect} />
+						{answers.map(({ id, text: answerText, isCorrect }) => (
+							<AnswerEdit
+								key={id}
+								answerText={answerText}
+								isCorrect={isCorrect}
+							/>
 						))}
 					</div>
 				</>
 			) : (
 				<div className="ques-header" onClick={onArrowClick}>
-					<div className="ques-title">{question}</div>
+					<div className="ques-title">{questionText}</div>
 					<Icon iconSrc={icons.downArrow} width={'20px'} />
 				</div>
 			)}

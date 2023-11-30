@@ -1,11 +1,11 @@
-import { QUESTIONS } from '../../db';
 import { ACTION_TYPE } from './action-type';
+import { request } from '../../utils';
 
 export const loadQuestionsAsync = () => dispatch => {
-	new Promise(resolve => resolve(QUESTIONS)).then(questions => {
+	request('/questions').then(({ data }) => {
 		dispatch({
 			type: ACTION_TYPE.SET_TEST_DATA,
-			payload: questions,
+			payload: data.questions,
 		});
 	});
 };

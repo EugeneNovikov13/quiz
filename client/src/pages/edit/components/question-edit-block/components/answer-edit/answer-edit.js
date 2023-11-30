@@ -5,11 +5,11 @@ import { Icon } from '../../../../../../components';
 import { SET_IS_EDITED } from '../../../../../../redux/actions';
 import styled from 'styled-components';
 
-const AnswerEditContainer = ({ className, text, isCorrect }) => {
+const AnswerEditContainer = ({ className, answerText, isCorrect }) => {
 	const answerTextRef = useRef(null);
 	const dispatch = useDispatch();
 
-	const onCheckedClick = correctAnswer => {
+	const onCheckedClick = () => {
 		// dispatch() изменение состояния isCorrect в Redux
 		dispatch(SET_IS_EDITED);
 	};
@@ -22,7 +22,7 @@ const AnswerEditContainer = ({ className, text, isCorrect }) => {
 				suppressContentEditableWarning={true}
 				className="answer-text"
 			>
-				{text}
+				{answerText}
 			</div>
 			<div className="answer-icons">
 				<div className="checked">

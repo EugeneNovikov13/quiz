@@ -1,4 +1,4 @@
-import { HISTORY } from '../../../../constants';
+import { HISTORY } from '../../../../db';
 import { TestResult } from './components';
 import styled from 'styled-components';
 

@@ -18,8 +18,8 @@ const EditContainer = ({ className }) => {
 	return (
 		<div className={className}>
 			<div className="test-edit-block">
-				{questions.map(({ id, question, answers }) => (
-					<QuestionEditBlock key={id} question={question} answers={answers} />
+				{questions.map(({ id, text, answers }) => (
+					<QuestionEditBlock key={id} questionText={text} answers={answers} />
 				))}
 			</div>
 			<NavBar bgColorbrightness={false} readyToComplete={true}>

@@ -11,13 +11,6 @@ export const testReducer = (state = initialTestState, action) => {
 				...state,
 				questions: action.payload,
 			};
-		// case ACTION_TYPE.SET_USER:
-		// 	return {
-		// 		...state,
-		// 		...action.payload,
-		// 	};
-		// case ACTION_TYPE.LOGOUT:
-		// 	return initialUserState;
 
 		default:
 			return state;
