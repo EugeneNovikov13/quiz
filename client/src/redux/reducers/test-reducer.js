@@ -1,8 +1,9 @@
 import { ACTION_TYPE } from '../actions';
 
 const initialTestState = {
-	questions: [],
 	editedQuestions: new Set(),
+	questions: [],
+	newQuestionId: '',
 };
 
 export const testReducer = (state = initialTestState, action) => {
@@ -20,17 +21,18 @@ export const testReducer = (state = initialTestState, action) => {
 				questions: [
 					...state.questions,
 					{
-						id: Date.now().toString(),
+						id: action.payload.id,
 						text: '',
 						correctAnswer: '',
 						answers: [
 							{
-								id: Date.now().toString(),
+								id: action.payload.answers[0].id,
 								text: '',
 							},
 						],
 					},
 				],
+				newQuestionId: action.payload.id,
 			};
 
 		case ACTION_TYPE.DELETE_QUESTION:
@@ -39,6 +41,15 @@ export const testReducer = (state = initialTestState, action) => {
 				questions: state.questions.filter(
 					question => question.id !== action.payload.id,
 				),
+			};
+
+		case ACTION_TYPE.UPDATE_QUESTION:
+			return {
+				...state,
+				questions: state.questions.map(question =>
+					question.id === action.payload.id ? action.payload : question,
+				),
+				editedQuestions: new Set(),
 			};
 
 		case ACTION_TYPE.UPDATE_QUESTION_TEXT:

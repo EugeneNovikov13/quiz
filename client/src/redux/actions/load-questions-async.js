@@ -1,12 +1,12 @@
-import { ACTION_TYPE } from './action-type';
 import { request } from '../../utils';
+import { setTestData } from './set-test-data';
 
 export const loadQuestionsAsync = () => dispatch => {
-	request('/questions').then(({ data }) => {
-		console.log(data);
-		dispatch({
-			type: ACTION_TYPE.SET_TEST_DATA,
-			payload: data.questions,
-		});
+	request('/questions').then(res => {
+		if (res.data) {
+			dispatch(setTestData(res.data.questions));
+		}
+
+		return res;
 	});
 };

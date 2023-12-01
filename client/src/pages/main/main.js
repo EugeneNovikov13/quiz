@@ -2,21 +2,8 @@ import { Link } from 'react-router-dom';
 import { Button, NavBar } from '../../components';
 import { History } from './components';
 import styled from 'styled-components';
-import { useLayoutEffect } from 'react';
 
 const MainContainer = ({ className }) => {
-	useLayoutEffect(() => {
-		async function fetchData() {
-			const url = '';
-
-			const data = await fetch(url);
-
-			console.log('Получены данные', data);
-		}
-
-		fetchData();
-	}, []);
-
 	return (
 		<div className={className}>
 			<NavBar isActive={true}>
@@ -26,9 +13,7 @@ const MainContainer = ({ className }) => {
 					</Button>
 				</Link>
 				<Link to="/edit">
-					<Button onClick={() => console.log('Редактирование теста')}>
-						Редактировать тест
-					</Button>
+					<Button>Редактировать тест</Button>
 				</Link>
 			</NavBar>
 			<History />

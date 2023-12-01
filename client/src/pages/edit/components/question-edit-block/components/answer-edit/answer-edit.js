@@ -54,7 +54,11 @@ const AnswerEditContainer = ({ className, answerId, answerText, questionId }) =>
 					onClick={() => onChangeCorrectAnswer(questionId, answerText)}
 				>
 					<Icon
-						iconSrc={answerText === correctAnswer ? icons.checkedMark : ''}
+						iconSrc={
+							answerText === correctAnswer && correctAnswer !== ''
+								? icons.checkedMark
+								: ''
+						}
 						width={'15px'}
 					/>
 				</div>

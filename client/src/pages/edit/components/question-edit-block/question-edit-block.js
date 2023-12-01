@@ -1,10 +1,17 @@
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { addAnswer, deleteQuestion, updateQuestionText } from '../../../../redux/actions';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+	addAnswer,
+	CLOSE_MODAL,
+	deleteQuestionAsync,
+	openModal,
+	updateQuestionText,
+} from '../../../../redux/actions';
 import { Icon } from '../../../../components';
 import { AnswerEdit } from './components';
 import icons from '../../assets';
 import styled from 'styled-components';
+import { selectNewQuestionId } from '../../../../redux/selectors';
 
 const QuestionEditContainer = ({
 	className,
@@ -12,9 +19,11 @@ const QuestionEditContainer = ({
 	questionText,
 	answers,
 	isNewQuestionCreated,
+	setIsNewQuestionCreated,
 }) => {
 	const [isExpanded, setIsExpanded] = useState(isNewQuestionCreated);
 	const [newQuestionText, setNewQuestionText] = useState(questionText || '');
+	const newQuestionId = useSelector(selectNewQuestionId);
 
 	const dispatch = useDispatch();
 
@@ -37,8 +46,20 @@ const QuestionEditContainer = ({
 		dispatch(addAnswer(id));
 	};
 
-	const onQuestionDelete = id => {
-		dispatch(deleteQuestion(id));
+	const onQuestionDelete = (id, checkingId) => {
+		dispatch(
+			openModal({
+				text: 'Удалить вопрос?',
+				onConfirm: () => {
+					dispatch(deleteQuestionAsync(id));
+					dispatch(CLOSE_MODAL);
+					if (checkingId === id) {
+						setIsNewQuestionCreated(false);
+					}
+				},
+				onCancel: () => dispatch(CLOSE_MODAL),
+			}),
+		);
 	};
 
 	return (
@@ -56,7 +77,9 @@ const QuestionEditContainer = ({
 							<Icon
 								iconSrc={icons.trashBin}
 								width={'15px'}
-								onClick={() => onQuestionDelete(questionId)}
+								onClick={() =>
+									onQuestionDelete(questionId, newQuestionId)
+								}
 							/>
 							<Icon
 								iconSrc={icons.upArrow}
@@ -140,6 +163,7 @@ export const QuestionEditBlock = styled(QuestionEditContainer)`
 	& .add-answer-button:hover {
 		background-color: #000;
 		color: #fff;
+		cursor: pointer;
 	}
 
 	& .answers {

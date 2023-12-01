@@ -4,6 +4,6 @@ export const addAnswer = id => ({
 	type: ACTION_TYPE.ADD_ANSWER,
 	payload: {
 		questionId: id,
-		tempAnswerId: Date.now(),
+		tempAnswerId: Date.now().toString(),
 	},
 });

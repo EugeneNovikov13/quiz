@@ -1,7 +1,7 @@
-import { ACTION_TYPE } from './action-type';
 import { request } from '../../utils';
+import { updateQuestion } from './update-question';
 
-export const updateQuestions = questions => dispatch => {
+export const updateQuestionsAsync = questions => dispatch => {
 	Promise.all(
 		questions.map(question =>
 			request(`/questions/${question.id}`, 'PATCH', {
@@ -11,20 +11,8 @@ export const updateQuestions = questions => dispatch => {
 			}),
 		),
 	).then(results => {
-		const questions = [];
-
 		results.forEach(result => {
-			questions.push(result.data);
-
-			dispatch({
-				type: ACTION_TYPE.UPDATE_QUESTION,
-				payload: result.data,
-			});
-		});
-
-		return dispatch({
-			type: ACTION_TYPE.SET_TEST_DATA,
-			payload: questions,
+			dispatch(updateQuestion(result.data));
 		});
 	});
 };
