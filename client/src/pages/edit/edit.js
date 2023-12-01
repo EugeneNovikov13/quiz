@@ -7,7 +7,7 @@ import { Button, NavBar } from '../../components';
 import { QuestionEditBlock } from './components';
 import styled from 'styled-components';
 import { updateQuestionsAsync } from '../../redux/actions/update-questions-async';
-import { filterDataByIdSet, checkErrors } from '../../utils';
+import { checkErrors, filterDataByIdSet } from '../../utils';
 
 const EditContainer = ({ className }) => {
 	const [isNewQuestionCreated, setIsNewQuestionCreated] = useState(false);
@@ -35,26 +35,24 @@ const EditContainer = ({ className }) => {
 
 	return (
 		<div className={className}>
-			{isLoading && (
-				<div className="test-edit-block">
-					{questions.map(({ id, text, correctAnswer, answers }) => (
-						<QuestionEditBlock
-							key={id}
-							id={id}
-							questionText={text}
-							correctAnswer={correctAnswer}
-							answers={answers}
-							isNewQuestionCreated={isNewQuestionCreated}
-							setIsNewQuestionCreated={setIsNewQuestionCreated}
-						/>
-					))}
-					{!isNewQuestionCreated && (
-						<div className="add-question-button" onClick={onAddQuestion}>
-							Добавить вопрос
-						</div>
-					)}
-				</div>
-			)}
+			<div className="test-edit-block">
+				{questions.map(({ id, text, correctAnswer, answers }) => (
+					<QuestionEditBlock
+						key={id}
+						id={id}
+						questionText={text}
+						correctAnswer={correctAnswer}
+						answers={answers}
+						isNewQuestionCreated={isNewQuestionCreated}
+						setIsNewQuestionCreated={setIsNewQuestionCreated}
+					/>
+				))}
+				{!isNewQuestionCreated && (
+					<div className="add-question-button" onClick={onAddQuestion}>
+						Добавить вопрос
+					</div>
+				)}
+			</div>
 			<NavBar isActive={true} readyToComplete={readyToSave}>
 				<Link to="/">
 					<Button>Назад</Button>
