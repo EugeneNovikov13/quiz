@@ -1,10 +1,14 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { useRef } from 'react';
-import icons from '../../../../assets';
-import { Icon } from '../../../../../../components';
-import { selectQuestions } from '../../../../../../redux/selectors/select-questions';
+import {
+	changeCorrectAnswer,
+	deleteAnswer,
+	updateAnswerText,
+} from '../../../../../../redux/actions';
 import { findQuestionById } from '../../../../../../utils';
-import { deleteAnswer, setCorrectAnswer } from '../../../../../../redux/actions';
+import { selectQuestions } from '../../../../../../redux/selectors';
+import { Icon } from '../../../../../../components';
+import icons from '../../../../assets';
 import styled from 'styled-components';
 
 const AnswerEditContainer = ({ className, answerId, answerText, questionId }) => {
@@ -13,8 +17,20 @@ const AnswerEditContainer = ({ className, answerId, answerText, questionId }) =>
 	const questions = useSelector(selectQuestions);
 	const correctAnswer = findQuestionById(questionId, questions).correctAnswer;
 
+	const onBlur = () => {
+		const newAnswerText = answerTextRef.current.innerText;
+
+		if (newAnswerText === answerText) {
+			return;
+		}
+		dispatch(updateAnswerText(questionId, answerId, newAnswerText));
+	};
+
 	const onChangeCorrectAnswer = (id, newCorrectText) => {
-		dispatch(setCorrectAnswer(id, newCorrectText));
+		if (newCorrectText === correctAnswer) {
+			return;
+		}
+		dispatch(changeCorrectAnswer(id, newCorrectText));
 	};
 
 	const onDeleteAnswer = (questionIdToDelete, answerIdToDelete) => {
@@ -28,6 +44,7 @@ const AnswerEditContainer = ({ className, answerId, answerText, questionId }) =>
 				contentEditable={true}
 				suppressContentEditableWarning={true}
 				className="answer-text"
+				onBlur={() => onBlur()}
 			>
 				{answerText}
 			</div>
@@ -61,10 +78,13 @@ export const AnswerEdit = styled(AnswerEditContainer)`
 		border: 1px solid #ccc;
 		border-radius: 10px;
 		padding: 5px;
+		transition: width 0.5s ease-in;
 	}
 
 	& .answer-text:focus {
+		width: 600px;
 		background-color: #fff;
+		outline: 1px solid #000;
 	}
 
 	& .answer-icons {

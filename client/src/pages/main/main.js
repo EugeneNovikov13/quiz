@@ -19,7 +19,7 @@ const MainContainer = ({ className }) => {
 
 	return (
 		<div className={className}>
-			<NavBar brightness={false}>
+			<NavBar isActive={true}>
 				<Link to="/question">
 					<Button onClick={() => console.log('Запуск теста')}>
 						Запустить тест

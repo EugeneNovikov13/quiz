@@ -1,26 +1,63 @@
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { addAnswer, deleteQuestion, updateQuestionText } from '../../../../redux/actions';
 import { Icon } from '../../../../components';
+import { AnswerEdit } from './components';
 import icons from '../../assets';
 import styled from 'styled-components';
-import { AnswerEdit } from './components';
 
-const QuestionEditContainer = ({ className, id: questionId, questionText, answers }) => {
-	const [isExpanded, setIsExpanded] = useState(false);
+const QuestionEditContainer = ({
+	className,
+	id: questionId,
+	questionText,
+	answers,
+	isNewQuestionCreated,
+}) => {
+	const [isExpanded, setIsExpanded] = useState(isNewQuestionCreated);
+	const [newQuestionText, setNewQuestionText] = useState(questionText || '');
+
+	const dispatch = useDispatch();
 
 	const onArrowClick = () => {
 		setIsExpanded(!isExpanded);
 	};
 
-	const onChange = () => {};
+	const onChange = text => {
+		setNewQuestionText(text);
+	};
+
+	const onBlur = () => {
+		if (newQuestionText === questionText) {
+			return;
+		}
+		dispatch(updateQuestionText(questionId, newQuestionText));
+	};
+
+	const onAddAnswer = id => {
+		dispatch(addAnswer(id));
+	};
+
+	const onQuestionDelete = id => {
+		dispatch(deleteQuestion(id));
+	};
 
 	return (
 		<div className={className}>
 			{isExpanded ? (
 				<>
 					<div className="ques-header">
-						<input type="text" value={questionText} onChange={onChange} />
+						<input
+							type="text"
+							value={newQuestionText}
+							onChange={({ target }) => onChange(target.value)}
+							onBlur={() => onBlur()}
+						/>
 						<div className="control-panel">
-							<Icon iconSrc={icons.trashBin} width={'15px'} />
+							<Icon
+								iconSrc={icons.trashBin}
+								width={'15px'}
+								onClick={() => onQuestionDelete(questionId)}
+							/>
 							<Icon
 								iconSrc={icons.upArrow}
 								width={'20px'}
@@ -28,7 +65,12 @@ const QuestionEditContainer = ({ className, id: questionId, questionText, answer
 							/>
 						</div>
 					</div>
-					<div className="add-button">+</div>
+					<div
+						className="add-answer-button"
+						onClick={() => onAddAnswer(questionId)}
+					>
+						+
+					</div>
 					<div className="answers">
 						{answers.map(({ id: answerId, text: answerText }) => (
 							<AnswerEdit
@@ -58,6 +100,12 @@ export const QuestionEditBlock = styled(QuestionEditContainer)`
 	border-radius: 10px;
 	padding: 5px 15px;
 
+	& .control-panel {
+		height: 20px;
+		display: flex;
+		gap: 10px;
+	}
+
 	& input {
 		width: 300px;
 		height: 30px;
@@ -72,6 +120,7 @@ export const QuestionEditBlock = styled(QuestionEditContainer)`
 	& input:focus {
 		width: 600px;
 		background-color: #fff;
+		outline: 1px solid #000;
 	}
 
 	& .ques-header {
@@ -79,13 +128,18 @@ export const QuestionEditBlock = styled(QuestionEditContainer)`
 		justify-content: space-between;
 	}
 
-	& .add-button {
+	& .add-answer-button {
 		width: 300px;
 		height: 30px;
 		line-height: 26px;
 		border: 1px solid #ccc;
 		border-radius: 10px;
 		text-align: center;
+	}
+
+	& .add-answer-button:hover {
+		background-color: #000;
+		color: #fff;
 	}
 
 	& .answers {

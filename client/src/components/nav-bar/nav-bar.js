@@ -18,14 +18,16 @@ export const NavBar = styled(NavBarContainer)`
 	}
 
 	& button:hover {
-		filter: ${({ brightness }) => (brightness ? 'brightness(0.9)' : 'none')};
+		filter: ${({ isActive }) => (isActive ? 'brightness(0.9)' : 'none')};
 		border: none;
 		background-color: #000;
-		color: ${({ brightness }) => (brightness ? '#000' : '#fff')};
+		color: ${({ isActive }) => (isActive ? '#fff' : '#000')};
 		box-shadow: 0 4px 2px -1px rgba(188, 188, 188, 1);
 	}
 
-	& button.right-button {
-		background-color: ${readyToComplete => (readyToComplete ? 'lightgreen' : '')};
+	& button.right-button,
+	button.right-button:hover {
+		background-color: ${({ readyToComplete }) =>
+			readyToComplete ? 'lightgreen' : ''};
 	}
 `;
