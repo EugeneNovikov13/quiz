@@ -1,11 +1,7 @@
-import { ACTION_TYPE } from './action-type';
 import { request } from '../../utils';
+import { deleteQuestion } from './delete-question';
 
-export const deleteQuestionAsync = id => dispatch => {
+export const deleteQuestionAsync = id => dispatch =>
 	request(`/questions/${id}`, 'DELETE').then(() => {
-		dispatch({
-			type: ACTION_TYPE.DELETE_QUESTION,
-			payload: { id },
-		});
+		dispatch(deleteQuestion(id));
 	});
-};

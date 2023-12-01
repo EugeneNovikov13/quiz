@@ -1,7 +1,7 @@
 import { request } from '../../utils';
 import { updateQuestion } from './update-question';
 
-export const updateQuestionsAsync = questions => dispatch => {
+export const updateQuestionsAsync = questions => dispatch =>
 	Promise.all(
 		questions.map(question =>
 			request(`/questions/${question.id}`, 'PATCH', {
@@ -15,4 +15,3 @@ export const updateQuestionsAsync = questions => dispatch => {
 			dispatch(updateQuestion(result.data));
 		});
 	});
-};
