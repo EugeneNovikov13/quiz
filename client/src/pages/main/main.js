@@ -6,11 +6,9 @@ import styled from 'styled-components';
 const MainContainer = ({ className }) => {
 	return (
 		<div className={className}>
-			<NavBar isActive={true}>
-				<Link to="/question">
-					<Button onClick={() => console.log('Запуск теста')}>
-						Запустить тест
-					</Button>
+			<NavBar isMonochrome={true}>
+				<Link to={'/question/1'}>
+					<Button>Запустить тест</Button>
 				</Link>
 				<Link to="/edit">
 					<Button>Редактировать тест</Button>

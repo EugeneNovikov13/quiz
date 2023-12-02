@@ -1,15 +1,11 @@
-import { ACTION_TYPE } from './action-type';
 import { request } from '../../utils';
+import { addQuestion } from './add-question';
 
-export const addQuestionAsync = () => dispatch => {
+export const addQuestionAsync = () => dispatch =>
 	request('/questions', 'POST', {
 		text: 'Неотредактированный вопрос',
-		correctAnswer: '1',
+		correctAnswer: 'label',
 		answers: ['Неотредактированный ответ'],
 	}).then(({ data }) => {
-		dispatch({
-			type: ACTION_TYPE.ADD_QUESTION,
-			payload: data,
-		});
+		dispatch(addQuestion(data));
 	});
-};

@@ -1,8 +1,8 @@
 import styled from 'styled-components';
 
-const ButtonContainer = ({ className, children, isDisabled, onClick }) => {
+const ButtonContainer = ({ className, children, isDisable, onClick }) => {
 	return (
-		<button className={className} disabled={isDisabled} onClick={onClick}>
+		<button className={className} disabled={isDisable} onClick={onClick}>
 			{children}
 		</button>
 	);
@@ -16,8 +16,12 @@ export const Button = styled(ButtonContainer)`
 	width: 350px;
 	height: 50px;
 	border-radius: 5px;
+	border: none;
+	background-color: ${({ activeColor, isDisable }) =>
+		!isDisable ? activeColor : '#ccc'};
 
 	&:hover {
-		cursor: ${({ isDisabled }) => (isDisabled ? '' : 'pointer')};
+		cursor: ${({ isDisable }) => (isDisable ? '' : 'pointer')};
+		filter: ${({ isDisable }) => (!isDisable ? 'brightness(0.9)' : '')};
 	}
 `;

@@ -11,6 +11,7 @@ import { checkErrors, filterDataByIdSet } from '../../utils';
 
 const EditContainer = ({ className }) => {
 	const [isNewQuestionCreated, setIsNewQuestionCreated] = useState(false);
+	const [isLoading, setIsLoading] = useState(false);
 
 	const dispatch = useDispatch();
 	const questions = useSelector(selectQuestions);
@@ -19,7 +20,9 @@ const EditContainer = ({ className }) => {
 	const readyToSave = !checkErrors(questions) && !!editedQuestions.size;
 
 	useEffect(() => {
-		dispatch(loadQuestionsAsync());
+		dispatch(loadQuestionsAsync()).then(() => {
+			setIsLoading(true);
+		});
 	}, [dispatch]);
 
 	const onAddQuestion = () => {
@@ -35,25 +38,27 @@ const EditContainer = ({ className }) => {
 
 	return (
 		<div className={className}>
-			<div className="test-edit-block">
-				{questions.map(({ id, text, correctAnswer, answers }) => (
-					<QuestionEditBlock
-						key={id}
-						id={id}
-						questionText={text}
-						correctAnswer={correctAnswer}
-						answers={answers}
-						isNewQuestionCreated={isNewQuestionCreated}
-						setIsNewQuestionCreated={setIsNewQuestionCreated}
-					/>
-				))}
-				{!isNewQuestionCreated && (
-					<div className="add-question-button" onClick={onAddQuestion}>
-						Добавить вопрос
-					</div>
-				)}
-			</div>
-			<NavBar isActive={true} readyToComplete={readyToSave}>
+			{isLoading && (
+				<div className="test-edit-block">
+					{questions.map(({ id, text, correctAnswer, answers }) => (
+						<QuestionEditBlock
+							key={id}
+							id={id}
+							questionText={text}
+							correctAnswer={correctAnswer}
+							answers={answers}
+							isNewQuestionCreated={isNewQuestionCreated}
+							setIsNewQuestionCreated={setIsNewQuestionCreated}
+						/>
+					))}
+					{!isNewQuestionCreated && (
+						<div className="add-question-button" onClick={onAddQuestion}>
+							Добавить вопрос
+						</div>
+					)}
+				</div>
+			)}
+			<NavBar readyToComplete={readyToSave}>
 				<Link to="/">
 					<Button>Назад</Button>
 				</Link>

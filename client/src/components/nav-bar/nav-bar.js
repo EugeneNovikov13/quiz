@@ -12,22 +12,24 @@ export const NavBar = styled(NavBarContainer)`
 	padding: 20px 0;
 
 	& button {
-		background-color: ${({ bgColor }) => (bgColor ? bgColor : '#fff')};
-		border: ${({ bgColor }) => (bgColor ? 'none' : '1px solid #ccc')};
 		color: #000;
+		background-color: #fff;
+		border: 1px solid #ccc;
 	}
 
 	& button:hover {
-		filter: ${({ isActive }) => (isActive ? 'brightness(0.9)' : 'none')};
 		border: none;
 		background-color: #000;
-		color: ${({ isActive }) => (isActive ? '#fff' : '#000')};
-		box-shadow: 0 4px 2px -1px rgba(188, 188, 188, 1);
+		color: #fff;
+		box-shadow: 0 4px 2 px - 1 px rgba(188, 188, 188, 1);
 	}
 
-	& button.right-button,
-	button.right-button:hover {
+	& button.right-button {
 		background-color: ${({ readyToComplete }) =>
 			readyToComplete ? 'lightgreen' : ''};
+	}
+
+	& button.right-button:hover {
+		filter: ${({ readyToComplete }) => (readyToComplete ? 'brightness(0.9)' : '')};
 	}
 `;
