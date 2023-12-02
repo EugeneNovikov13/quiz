@@ -1,8 +1,8 @@
-import styled from 'styled-components';
 import { useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import { selectLastQuestionNumber } from '../../../../redux/selectors';
 import { AnswerOption } from './components';
-import { useParams } from 'react-router-dom';
+import styled from 'styled-components';
 
 const TaskContainer = ({ className, text, correctAnswer, answers }) => {
 	const params = useParams();
