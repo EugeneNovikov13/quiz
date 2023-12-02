@@ -58,7 +58,7 @@ const EditContainer = ({ className }) => {
 					)}
 				</div>
 			)}
-			<NavBar isActive={true} readyToComplete={readyToSave}>
+			<NavBar isMonochrome={true} readyToComplete={readyToSave}>
 				<Link to="/">
 					<Button>Назад</Button>
 				</Link>
