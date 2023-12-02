@@ -13,26 +13,23 @@ export const NavBar = styled(NavBarContainer)`
 
 	& button {
 		color: #000;
-		${({ isMonochrome }) =>
-			isMonochrome
-				? 'background-color: #fff; border: 1px solid #ccc;'
-				: 'background-color: #ccc; border: none;'}
+		background-color: #fff;
+		border: 1px solid #ccc;
 	}
 
 	& button:hover {
 		border: none;
-		${({ isMonochrome }) =>
-			isMonochrome
-				? 'filter: brightness(0.9);' +
-				  'background-color: #000;' +
-				  'color: #fff;' +
-				  'box-shadow: 0 4px 2px -1px rgba(188, 188, 188, 1);'
-				: 'color: #000;'}
+		background-color: #000;
+		color: #fff;
+		box-shadow: 0 4px 2 px - 1 px rgba(188, 188, 188, 1);
 	}
 
-	& button.right-button,
-	button.right-button:hover {
+	& button.right-button {
 		background-color: ${({ readyToComplete }) =>
 			readyToComplete ? 'lightgreen' : ''};
+	}
+
+	& button.right-button:hover {
+		filter: ${({ readyToComplete }) => (readyToComplete ? 'brightness(0.9)' : '')};
 	}
 `;

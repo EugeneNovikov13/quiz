@@ -20,8 +20,18 @@ function deleteQuestion(id) {
 
 // get list
 
-function getQuestions() {
-	return Question.find();
+async function getQuestions(limit = 0, page = 1) {
+	const [questions, quantity] = await Promise.all([
+		Question.find()
+			.limit(limit)
+			.skip((page - 1) * limit),
+		Question.countDocuments(),
+	]);
+
+	return {
+		questions,
+		lastQuestionNumber: quantity,
+	};
 }
 
 // get item

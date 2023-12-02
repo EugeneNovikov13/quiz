@@ -10,9 +10,12 @@ app.use(express.json());
 
 app.get('/questions', async (req, res) => {
 	try {
-		const questions = await getQuestions();
+		const { questions, lastQuestionNumber } = await getQuestions(
+			req.query?.limit,
+			req.query?.page,
+		);
 
-		res.send({ data: { questions: questions.map(mapQuestion) }, error: null });
+		res.send({ data: {lastQuestionNumber, questions: questions.map(mapQuestion) }, error: null });
 	} catch (e) {
 		res.send({ data: null, error: 'Error! Maybe... There isn\'t questions' });
 		console.log(e);

@@ -1,17 +1,20 @@
 import styled from 'styled-components';
 import { useSelector } from 'react-redux';
-import { selectQuestions } from '../../../../redux/selectors';
+import { selectLastQuestionNumber } from '../../../../redux/selectors';
 import { AnswerOption } from './components';
+import { useParams } from 'react-router-dom';
 
-const TaskContainer = ({ className }) => {
-	const questions = useSelector(selectQuestions);
+const TaskContainer = ({ className, text, correctAnswer, answers }) => {
+	const params = useParams();
+	const currentPage = Number(params.id);
+	const lastPage = useSelector(selectLastQuestionNumber);
 
 	return (
 		<div className={className}>
-			<div className="task-number">{`9/${questions.length}`}</div>
-			<div className="question">{questions[8].text}</div>
+			<div className="task-number">{`${currentPage}/${lastPage}`}</div>
+			<div className="question">{text}</div>
 			<div className="answer-options">
-				{questions[8].answers.map(({ id, text }) => (
+				{answers.map(({ id, text }) => (
 					<AnswerOption key={id} id={id} text={text} />
 				))}
 			</div>
@@ -29,7 +32,7 @@ export const Task = styled(TaskContainer)`
 	& .question {
 		margin: 10px 0 20px;
 		width: 400px;
-		text-align: justify;
+		text-align: center;
 	}
 
 	& .answer-options {

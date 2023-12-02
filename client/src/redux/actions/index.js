@@ -9,6 +9,7 @@ export * from './delete-question-async';
 export * from './delete-question';
 export * from './load-questions-async';
 export * from './open-modal';
+export * from './set-question-data';
 export * from './set-test-data';
 export * from './update-answer-text';
 export * from './update-question-text';
