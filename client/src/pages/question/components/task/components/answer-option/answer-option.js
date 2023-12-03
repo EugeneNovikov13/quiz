@@ -1,20 +1,17 @@
 import styled from 'styled-components';
-import { useState } from 'react';
 
-const AnswerOptionContainer = ({ className, id, text }) => {
-	const [isSelected, setIsSelected] = useState(false);
-
+const AnswerOptionContainer = ({ className, id, text, checked, checkboxChange }) => {
 	return (
 		<div className={className}>
 			<input
 				type="checkbox"
-				id={`selected-answer-${id}`}
+				id={id}
 				name="selected-answer"
-				checked={isSelected}
-				onChange={() => setIsSelected(!isSelected)}
+				checked={checked}
+				onChange={() => checkboxChange(id)}
 			/>
 			<div className="custom-check-icon"></div>
-			<label htmlFor={`selected-answer-${id}`} className="answer-text">
+			<label htmlFor={id} className="answer-text">
 				{text}
 			</label>
 		</div>
@@ -22,14 +19,15 @@ const AnswerOptionContainer = ({ className, id, text }) => {
 };
 
 export const AnswerOption = styled(AnswerOptionContainer)`
+	width: 330px;
 	display: flex;
 	gap: 10px;
-	align-items: center;
 	position: relative;
 
 	& .custom-check-icon {
 		position: relative;
-		width: 15px;
+		top: 2px;
+		min-width: 15px;
 		height: 15px;
 		border: 1px solid #000;
 		border-radius: 50%;
@@ -54,7 +52,6 @@ export const AnswerOption = styled(AnswerOptionContainer)`
 	}
 
 	& .answer-text {
-		width: 300px;
 		margin-top: -2px;
 		user-select: none;
 	}

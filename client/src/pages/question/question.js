@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useLayoutEffect, useRef, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { loadQuestionsAsync } from '../../redux/actions';
@@ -14,14 +14,24 @@ const QuestionContainer = ({ className }) => {
 	const currentPage = Number(params.id);
 	const lastPage = useSelector(selectLastQuestionNumber);
 	const { text, correctAnswer, answers } = useSelector(selectQuestion);
+	const userAnswers = useRef([1, 2, 3]);
 
-	useEffect(() => {
+	useLayoutEffect(() => {
 		dispatch(loadQuestionsAsync(1, currentPage));
 	}, [currentPage, dispatch]);
 
+	const onNextButtonClick = () => {
+		console.log(userAnswers.current);
+	};
+
 	return (
 		<div className={className}>
-			<Task text={text} correctAnswer={correctAnswer} answers={answers} />
+			<Task
+				text={text}
+				correctAnswer={correctAnswer}
+				answers={answers}
+				setReadyToContinue={setReadyToContinue}
+			/>
 			<div className="navigate-buttons">
 				<Link to={`${currentPage === 1 ? '/' : `/question/${currentPage - 1}`}`}>
 					<Button activeColor={'#fddb5d'} isDisable={false}>
@@ -35,7 +45,11 @@ const QuestionContainer = ({ className }) => {
 							: `/question/${currentPage + 1}`
 					}`}
 				>
-					<Button activeColor={'#fddb5d'} isDisable={!readyToContinue}>
+					<Button
+						activeColor={'#fddb5d'}
+						isDisable={!readyToContinue}
+						onClick={onNextButtonClick}
+					>
 						Следующий вопрос
 					</Button>
 				</Link>
