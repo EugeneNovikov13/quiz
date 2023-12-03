@@ -5,13 +5,7 @@ import { selectLastQuestionNumber } from '../../../../redux/selectors';
 import { AnswerOption } from './components';
 import styled from 'styled-components';
 
-const TaskContainer = ({
-	className,
-	text,
-	correctAnswer,
-	answers,
-	setReadyToContinue,
-}) => {
+const TaskContainer = ({ className, text, answers, userAnswers, setReadyToContinue }) => {
 	const params = useParams();
 	const currentPage = Number(params.id);
 	const lastPage = useSelector(selectLastQuestionNumber);
@@ -25,21 +19,34 @@ const TaskContainer = ({
 		setCheckboxes(checkboxesInitialState);
 	}, [answers]);
 
-	const checkboxChange = changedId => {
+	useEffect(() => {
+		const selectedAnswerId = Object.keys(checkboxes).find(id => checkboxes[id]);
+
+		if (selectedAnswerId) {
+			setReadyToContinue(true);
+			userAnswers.current[currentPage - 1] = checkboxes[selectedAnswerId];
+			return;
+		}
+		setReadyToContinue(false);
+		userAnswers.current[currentPage - 1] = '';
+
+		// eslint-disable-next-line
+	}, [checkboxes, currentPage, setReadyToContinue]);
+
+	const checkboxChange = (changedId, changedText) => {
 		const updatedCheckboxes = { ...checkboxes };
 		for (let id in updatedCheckboxes) {
 			if (id !== changedId) {
 				updatedCheckboxes[id] = false;
 			}
 		}
-		updatedCheckboxes[changedId] = !updatedCheckboxes[changedId];
-		setCheckboxes(updatedCheckboxes);
 
-		if (updatedCheckboxes[changedId]) {
-			setReadyToContinue(true);
-			return;
+		if (!updatedCheckboxes[changedId]) {
+			updatedCheckboxes[changedId] = changedText;
+		} else {
+			updatedCheckboxes[changedId] = false;
 		}
-		setReadyToContinue(false);
+		setCheckboxes(updatedCheckboxes);
 	};
 
 	return (
@@ -52,7 +59,7 @@ const TaskContainer = ({
 						key={id}
 						id={id}
 						text={text}
-						checked={checkboxes[id] || false}
+						checked={!!checkboxes[id] || false}
 						checkboxChange={checkboxChange}
 					/>
 				))}

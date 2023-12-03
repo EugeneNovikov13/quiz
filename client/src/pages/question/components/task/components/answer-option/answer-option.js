@@ -8,7 +8,7 @@ const AnswerOptionContainer = ({ className, id, text, checked, checkboxChange })
 				id={id}
 				name="selected-answer"
 				checked={checked}
-				onChange={() => checkboxChange(id)}
+				onChange={() => checkboxChange(id, text)}
 			/>
 			<div className="custom-check-icon"></div>
 			<label htmlFor={id} className="answer-text">
