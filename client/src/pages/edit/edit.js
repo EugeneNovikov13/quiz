@@ -1,13 +1,16 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { addQuestionAsync, loadQuestionsAsync } from '../../redux/actions';
+import {
+	addQuestionAsync,
+	loadQuestionsAsync,
+	updateQuestionsAsync,
+} from '../../redux/actions';
 import { selectEditedQuestions, selectQuestions } from '../../redux/selectors';
+import { checkErrors, filterDataByIdSet } from '../../utils';
 import { Button, NavBar } from '../../components';
 import { QuestionEditBlock } from './components';
 import styled from 'styled-components';
-import { updateQuestionsAsync } from '../../redux/actions/update-questions-async';
-import { checkErrors, filterDataByIdSet } from '../../utils';
 
 const EditContainer = ({ className }) => {
 	const [isNewQuestionCreated, setIsNewQuestionCreated] = useState(false);
@@ -62,7 +65,7 @@ const EditContainer = ({ className }) => {
 				<Link to="/">
 					<Button>Назад</Button>
 				</Link>
-				{readyToSave && (
+				{readyToSave && isLoading && (
 					<Link to="/edit">
 						<Button
 							className="right-button"

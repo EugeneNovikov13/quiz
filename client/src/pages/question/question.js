@@ -3,6 +3,11 @@ import { Link, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { loadQuestionsAsync } from '../../redux/actions';
 import { selectLastQuestionNumber, selectQuestion } from '../../redux/selectors';
+import {
+	checkTestResult,
+	generateDataForHistory,
+	updateItemInLocalStorage,
+} from '../../utils';
 import { Button } from '../../components';
 import { Task } from './components';
 import styled from 'styled-components';
@@ -29,8 +34,20 @@ const QuestionContainer = ({ className }) => {
 		readyToComplete = true;
 	}
 
-	const onNextButtonClick = selectedAnswers => {
-		console.log('Ваши выбранные ответы: ', ...selectedAnswers);
+	const onNextButtonClick = async selectedAnswers => {
+		if (!readyToComplete) return;
+
+		let testData;
+
+		await dispatch(loadQuestionsAsync()).then(({ data }) => {
+			testData = data.questions;
+		});
+
+		const testResult = checkTestResult(testData, selectedAnswers);
+
+		const dataForHistory = generateDataForHistory(testResult);
+
+		updateItemInLocalStorage('history', dataForHistory);
 	};
 
 	return (
