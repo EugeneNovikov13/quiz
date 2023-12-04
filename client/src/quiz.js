@@ -1,6 +1,6 @@
 import { Route, Routes } from 'react-router-dom';
 import { Edit, Main, Question, Result } from './pages';
-import { Modal } from './components/modal/modal';
+import { Modal } from './components';
 import { Error } from './components';
 import { ERROR } from './constants';
 import styled from 'styled-components';

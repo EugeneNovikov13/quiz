@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import { selectLastQuestionNumber } from '../../../../redux/selectors';
 import { AnswerOption } from './components';
 import styled from 'styled-components';
+import { updateObjectOfStates } from '../../../../utils';
 
 const TaskContainer = ({ className, text, answers, userAnswers, setReadyToContinue }) => {
 	const params = useParams();
@@ -33,22 +34,6 @@ const TaskContainer = ({ className, text, answers, userAnswers, setReadyToContin
 		// eslint-disable-next-line
 	}, [checkboxes, currentPage, setReadyToContinue]);
 
-	const checkboxChange = (changedId, changedText) => {
-		const updatedCheckboxes = { ...checkboxes };
-		for (let id in updatedCheckboxes) {
-			if (id !== changedId) {
-				updatedCheckboxes[id] = false;
-			}
-		}
-
-		if (!updatedCheckboxes[changedId]) {
-			updatedCheckboxes[changedId] = changedText;
-		} else {
-			updatedCheckboxes[changedId] = false;
-		}
-		setCheckboxes(updatedCheckboxes);
-	};
-
 	return (
 		<div className={className}>
 			<div className="task-number">{`${currentPage}/${lastPage}`}</div>
@@ -60,7 +45,14 @@ const TaskContainer = ({ className, text, answers, userAnswers, setReadyToContin
 						id={id}
 						text={text}
 						checked={!!checkboxes[id] || false}
-						checkboxChange={checkboxChange}
+						checkboxChange={() =>
+							updateObjectOfStates(
+								id,
+								checkboxes,
+								setCheckboxes,
+								!!checkboxes[id] ? false : text,
+							)
+						}
 					/>
 				))}
 			</div>

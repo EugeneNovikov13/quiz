@@ -1,7 +1,7 @@
-export const countNumberCorrectAnswers = data => {
-	const rightAnswersCount = data.testResult.filter(answer => answer.result).length;
+export const countNumberCorrectAnswers = (data, separator) => {
+	const rightAnswersCount = data.filter(answer => answer.result).length;
 
-	const countQuestions = data.testResult.length;
+	const countQuestions = data.length;
 
-	return `${rightAnswersCount}/${countQuestions}`;
+	return `${rightAnswersCount}${separator}${countQuestions}`;
 };

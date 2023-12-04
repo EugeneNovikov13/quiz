@@ -1,17 +1,14 @@
-import styled from 'styled-components';
-import { Button, NavBar } from '../../components';
 import { Link } from 'react-router-dom';
-import { getItemFromLocalStorage } from '../../utils';
-import { countNumberCorrectAnswers } from '../../utils/count-number-correct-answers';
+import { countNumberCorrectAnswers, getItemFromLocalStorage } from '../../utils';
+import { Button, NavBar } from '../../components';
+import styled from 'styled-components';
 
 const ResultContainer = ({ className }) => {
 	const history = getItemFromLocalStorage('history');
 
-	console.log(history);
-
 	const lastTestResult = history[history.length - 1];
 
-	const rightAnswersCount = countNumberCorrectAnswers(lastTestResult);
+	const rightAnswersCount = countNumberCorrectAnswers(lastTestResult.testResult, '/');
 
 	return (
 		<div className={className}>
@@ -50,5 +47,6 @@ export const Result = styled(ResultContainer)`
 	& .right-answers-count {
 		color: lightgreen;
 		filter: brightness(0.9);
+		text-align: center;
 	}
 `;

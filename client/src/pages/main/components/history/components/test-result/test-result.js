@@ -1,19 +1,57 @@
-import { useState } from 'react';
-import { correctAnswerCounting } from '../../../../../../utils';
+import { useEffect, useRef, useState } from 'react';
+import { useDebounce } from '../../../../../../hooks';
+import { countNumberCorrectAnswers, updateObjectOfStates } from '../../../../../../utils';
 import { AnswerResult } from './components';
-import { Tooltip } from '../../../../../../components';
 import styled from 'styled-components';
 
-const TestResultContainer = ({ className, testDate, testTime, results }) => {
-	const [isHovered, setIsHovered] = useState(false);
+const TestResultContainer = ({ className, testDate, testTime, testResult }) => {
+	const [isHovered, setIsHovered] = useState({});
 	const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+	let refs = useRef(null);
 
-	const answersQuantity = results.length;
-	const correctAnswersQuantity = correctAnswerCounting(results);
+	useEffect(() => {
+		const isHoveredInitialState = testResult.reduce(
+			(acc, result) => ({ ...acc, [result.id]: false }),
+			{},
+		);
+		setIsHovered(isHoveredInitialState);
+	}, [testResult]);
 
-	const onMouseEnter = event => {
-		setIsHovered(true);
+	const answersQuantity = testResult.length;
+	const rightAnswersCount = countNumberCorrectAnswers(testResult, ' из ');
+
+	const onMouseEnter = (
+		event,
+		hoveredElementId,
+		isHoveredState,
+		setIsHoveredState,
+		newStateValue,
+	) => {
+		updateObjectOfStates(
+			hoveredElementId,
+			isHoveredState,
+			setIsHoveredState,
+			newStateValue,
+		);
 		setMousePosition({ x: event.clientX, y: event.clientY });
+	};
+
+	const debouncedOnMouseEnter = useDebounce(refs, onMouseEnter, 200);
+
+	const onMouseLeave = (
+		ref,
+		leaveElementId,
+		isHoveredState,
+		setIsHoveredState,
+		newStateValue,
+	) => {
+		updateObjectOfStates(
+			leaveElementId,
+			isHoveredState,
+			setIsHoveredState,
+			newStateValue,
+		);
+		clearTimeout(ref.current);
 	};
 
 	return (
@@ -23,28 +61,35 @@ const TestResultContainer = ({ className, testDate, testTime, results }) => {
 				<div className="time">{testTime}</div>
 			</div>
 			<div className="test-process-line">
-				<Tooltip
-					isHovered={isHovered}
-					mousePosition={mousePosition}
-				>{`Пройдено: ${correctAnswersQuantity} из ${answersQuantity}`}</Tooltip>
 				<div>0</div>
-				<div
-					className="process-visualisation"
-					onMouseEnter={e => onMouseEnter(e)}
-					onMouseLeave={() => setIsHovered(false)}
-				>
-					{results.map(({ id, isCorrect }) => (
+				<div className="process-visualisation">
+					{testResult.map(({ id, answer, question, result }) => (
 						<AnswerResult
-							className="answer"
 							key={id}
-							isCorrect={isCorrect}
+							answer={answer}
+							question={question}
+							isCorrect={result}
 							width={200 / answersQuantity}
+							isHovered={isHovered[id]}
+							mousePosition={mousePosition}
+							onMouseEnter={e =>
+								debouncedOnMouseEnter(
+									e,
+									id,
+									isHovered,
+									setIsHovered,
+									true,
+								)
+							}
+							onMouseLeave={() =>
+								onMouseLeave(refs, id, isHovered, setIsHovered, false)
+							}
 						/>
 					))}
 				</div>
-				<div>{results.length}</div>
+				<div>{testResult.length}</div>
 			</div>
-			<div className="final-result">{`Верно: ${correctAnswersQuantity} из ${answersQuantity}`}</div>
+			<div className="final-result">{`Верно: ${rightAnswersCount}`}</div>
 		</div>
 	);
 };

@@ -46,12 +46,24 @@ const QuestionEditContainer = ({
 		dispatch(addAnswer(id));
 	};
 
+	const errorDemonstration = error => {
+		dispatch(
+			openModal({
+				text: error,
+				onConfirm: () => dispatch(CLOSE_MODAL),
+				onCancel: () => dispatch(CLOSE_MODAL),
+			}),
+		);
+	};
+
 	const onQuestionDelete = (id, checkingId) => {
 		dispatch(
 			openModal({
 				text: 'Удалить вопрос?',
 				onConfirm: () => {
-					dispatch(deleteQuestionAsync(id));
+					dispatch(deleteQuestionAsync(id)).then(res => {
+						if (res.error) errorDemonstration(res.error);
+					});
 					dispatch(CLOSE_MODAL);
 					if (checkingId === id) {
 						setIsNewQuestionCreated(false);
