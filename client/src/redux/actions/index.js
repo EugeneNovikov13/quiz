@@ -13,3 +13,4 @@ export * from './set-question-data';
 export * from './set-test-data';
 export * from './update-answer-text';
 export * from './update-question-text';
+export * from './update-questions-async';

@@ -1,18 +1,20 @@
-import { HISTORY } from '../../../../db';
+import { getItemFromLocalStorage } from '../../../../utils';
 import { TestResult } from './components';
 import styled from 'styled-components';
 
 const HistoryContainer = ({ className }) => {
+	const history = getItemFromLocalStorage('history') || [];
+
 	return (
 		<div className={className}>
-			<h4>История прохождений</h4>
+			<h4>{history.length ? 'История прохождений' : 'Нет истории'}</h4>
 			<div className="test-history">
-				{HISTORY.map(({ id, date, results }) => (
+				{history.map(({ id, createdDate, createdTime, testResult }) => (
 					<TestResult
 						key={id}
-						testDate={date[0]}
-						testTime={date[1]}
-						results={results}
+						testDate={createdDate}
+						testTime={createdTime}
+						testResult={testResult}
 					></TestResult>
 				))}
 			</div>

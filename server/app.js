@@ -69,9 +69,14 @@ app.patch('/questions/:id', async (req, res) => {
 
 app.delete('/questions/:id', async (req, res) => {
 	try {
-		await deleteQuestion(req.params.id);
+		const { lastQuestionNumber } = await getQuestions();
+		if (lastQuestionNumber > 1) {
+			await deleteQuestion(req.params.id);
 
-		res.send({ error: null });
+			res.send({ error: null });
+			return;
+		}
+		res.send({ error: 'Error. You can\'t delete the last question' });
 	} catch (e) {
 		res.send({ error: 'Error. Failed to delete question' });
 		console.log(e);

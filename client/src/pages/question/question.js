@@ -1,8 +1,13 @@
 import { useLayoutEffect, useRef, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { loadQuestionsAsync } from '../../redux/actions';
 import { selectLastQuestionNumber, selectQuestion } from '../../redux/selectors';
+import {
+	checkTestResult,
+	generateDataForHistory,
+	updateItemInLocalStorage,
+} from '../../utils';
 import { Button } from '../../components';
 import { Task } from './components';
 import styled from 'styled-components';
@@ -15,6 +20,7 @@ const QuestionContainer = ({ className }) => {
 	const lastPage = useSelector(selectLastQuestionNumber);
 	const { text, answers } = useSelector(selectQuestion);
 	const userAnswers = useRef([]);
+	const navigate = useNavigate();
 
 	useLayoutEffect(() => {
 		dispatch(loadQuestionsAsync(1, currentPage));
@@ -23,14 +29,22 @@ const QuestionContainer = ({ className }) => {
 	const isLastPage = currentPage === lastPage;
 	const isAllAnswersTaken =
 		userAnswers.current.filter(answer => answer).length === lastPage;
-	let readyToComplete = false;
+	const readyToComplete = isLastPage && isAllAnswersTaken;
 
-	if (isLastPage && isAllAnswersTaken) {
-		readyToComplete = true;
-	}
+	const onNextButtonClick = async selectedAnswers => {
+		if (!readyToComplete) return;
 
-	const onNextButtonClick = selectedAnswers => {
-		console.log('Ваши выбранные ответы: ', ...selectedAnswers);
+		let testData;
+
+		await dispatch(loadQuestionsAsync()).then(({ data }) => {
+			testData = data.questions;
+		});
+
+		const testResult = checkTestResult(testData, selectedAnswers);
+		const dataForHistory = generateDataForHistory(testResult);
+		updateItemInLocalStorage('history', dataForHistory);
+
+		navigate('/result');
 	};
 
 	return (
@@ -49,9 +63,7 @@ const QuestionContainer = ({ className }) => {
 				</Link>
 				<Link
 					to={`${
-						currentPage === lastPage
-							? '/result'
-							: `/question/${currentPage + 1}`
+						currentPage === lastPage ? '' : `/question/${currentPage + 1}`
 					}`}
 				>
 					<Button
@@ -59,7 +71,7 @@ const QuestionContainer = ({ className }) => {
 						isDisable={isLastPage ? !readyToComplete : !readyToContinue}
 						onClick={() => onNextButtonClick(userAnswers.current)}
 					>
-						Следующий вопрос
+						{isLastPage ? 'Завершить тест' : 'Следующий вопрос'}
 					</Button>
 				</Link>
 			</div>
