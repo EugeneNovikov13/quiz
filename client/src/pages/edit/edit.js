@@ -35,7 +35,7 @@ const EditContainer = ({ className }) => {
 
 	const onSave = async (allQuestions, requiredIds) => {
 		const questionsToSave = filterDataByIdSet(allQuestions, requiredIds);
-		await dispatch(updateQuestionsAsync(questionsToSave));
+		if (questionsToSave.length) await dispatch(updateQuestionsAsync(questionsToSave));
 		setIsNewQuestionCreated(false);
 	};
 

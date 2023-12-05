@@ -3,9 +3,9 @@ import { addQuestion } from './add-question';
 
 export const addQuestionAsync = () => dispatch =>
 	request('/questions', 'POST', {
-		text: 'Неотредактированный вопрос',
-		correctAnswer: 'label',
-		answers: ['Неотредактированный ответ'],
+		text: 'Введите вопрос...',
+		correctAnswer: 'noCorrectAnswer',
+		answers: ['Введите ответ...'],
 	}).then(({ data }) => {
 		dispatch(addQuestion(data));
 	});

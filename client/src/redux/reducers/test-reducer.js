@@ -41,6 +41,11 @@ export const testReducer = (state = initialTestState, action) => {
 				questions: state.questions.filter(
 					question => question.id !== action.payload.id,
 				),
+				editedQuestions: new Set(
+					[...state.editedQuestions].filter(
+						value => value !== action.payload.id,
+					),
+				),
 			};
 
 		case ACTION_TYPE.UPDATE_QUESTION:
