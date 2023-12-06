@@ -10,8 +10,11 @@ const TaskContainer = ({ className, text, answers, userAnswers, setReadyToContin
 	const params = useParams();
 	const currentPage = Number(params.id);
 	const lastPage = useSelector(selectLastQuestionNumber);
+
+	//состояние для хранения состояний чекбоксов  -------------------
 	const [checkboxes, setCheckboxes] = useState({});
 
+	//useEffect для создания объекта состояний чекбоксов -------------------
 	useEffect(() => {
 		const checkboxesInitialState = answers.reduce(
 			(acc, answer) => ({ ...acc, [answer.id]: false }),
@@ -20,6 +23,8 @@ const TaskContainer = ({ className, text, answers, userAnswers, setReadyToContin
 		setCheckboxes(checkboxesInitialState);
 	}, [answers]);
 
+	//useEffect для занесения ответа из состояния checkboxes в текущее значение userAnswers
+	//а также для изменения readyToContinue - готовности к продолжению
 	useEffect(() => {
 		const selectedAnswerId = Object.keys(checkboxes).find(id => checkboxes[id]);
 

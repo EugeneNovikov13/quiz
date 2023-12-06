@@ -10,27 +10,39 @@ import {
 } from '../../utils';
 import { Button } from '../../components';
 import { Task } from './components';
+import { QUESTIONS_AMOUNT_TO_LOAD } from '../../constants';
 import styled from 'styled-components';
 
 const QuestionContainer = ({ className }) => {
+	//есть выбранный ответ, готов переходить на следующий вопрос
 	const [readyToContinue, setReadyToContinue] = useState(false);
 	const dispatch = useDispatch();
+
+	//получаем текущий номер страницы вопроса, чтобы при переключении страницы  менялась зависимость в useLayoutEffect
 	const params = useParams();
 	const currentPage = Number(params.id);
+
+	//последнюю страницу, вопросы и ответы получаем из редюсера, куда эти данные приходят после запроса в useLayoutEffect
 	const lastPage = useSelector(selectLastQuestionNumber);
 	const { text, answers } = useSelector(selectQuestion);
+
+	//ответы на текущий тест храним здесь
 	const userAnswers = useRef([]);
+
 	const navigate = useNavigate();
 
+	//загрузка вопроса и ответов
 	useLayoutEffect(() => {
-		dispatch(loadQuestionsAsync(1, currentPage));
+		dispatch(loadQuestionsAsync(QUESTIONS_AMOUNT_TO_LOAD.ONE_QUESTION, currentPage));
 	}, [currentPage, dispatch]);
 
+	//проверка на последнюю страницу и наличие ответов на ВСЕ вопросы теста
 	const isLastPage = currentPage === lastPage;
 	const isAllAnswersTaken =
 		userAnswers.current.filter(answer => answer).length === lastPage;
 	const readyToComplete = isLastPage && isAllAnswersTaken;
 
+	//обработка нажатия кнопки "Следующий" для записи результатов теста и переключения на страницу "Результат"
 	const onNextButtonClick = async selectedAnswers => {
 		if (!readyToComplete) return;
 
