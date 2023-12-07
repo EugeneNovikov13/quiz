@@ -1,6 +1,6 @@
 module.exports = function (answer) {
 	return {
-		id: answer._id,
+		id: answer.id,
 		text: answer.text,
 	}
 }

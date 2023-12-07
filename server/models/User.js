@@ -31,10 +31,6 @@ const UserSchema = mongoose.Schema({
 			message: 'Image should be a valid url',
 		},
 	},
-	tests: [{
-		type: mongoose.Schema.Types.ObjectId,
-		ref: 'Test',
-	}],
 });
 
 const User = mongoose.model('User', UserSchema);

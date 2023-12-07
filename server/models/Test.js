@@ -31,10 +31,6 @@ const TestSchema = mongoose.Schema({
 		ref: 'User',
 	},
 	questions: [Question],
-	history: [{
-		type: mongoose.Schema.Types.ObjectId,
-		ref: 'History',
-	}],
 }, { timestamps: true });
 
 const Test = mongoose.model('Test', TestSchema);
