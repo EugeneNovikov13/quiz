@@ -17,12 +17,12 @@ const Result = new Schema({
 });
 
 const HistorySchema = mongoose.Schema({
-	testId: {
+	test: {
 		type: mongoose.Schema.Types.ObjectId,
 		ref: 'Test',
 		required: true,
 	},
-	userId: {
+	user: {
 		type: mongoose.Schema.Types.ObjectId,
 		ref: 'User',
 		required: true,

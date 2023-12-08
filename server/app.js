@@ -3,9 +3,11 @@ const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const { register, login } = require('./controllers/user');
 const { addTest, editTest, deleteTest, getTests, getTest } = require('./controllers/test');
+const { addHistory, deleteHistory, getHistories } = require('./controllers/history');
 const authenticated = require('./middlewares/authenticated');
 const mapUser = require('./helpers/mapUser');
 const mapTest = require('./helpers/mapTest');
+const mapHistory = require('./helpers/mapHistory');
 
 const port = 3001;
 const app = express();
@@ -105,6 +107,43 @@ app.delete('/tests/:id', async (req, res) => {
 		res.send({ error: null });
 	} catch (e) {
 		res.send({ error: 'Error. Failed to delete test' });
+		console.log(e);
+	}
+});
+
+app.get('/histories/:id', async (req, res) => {
+	try {
+		const histories = await getHistories(req.params.id);
+
+		res.send({ data: histories.map(mapHistory), error: null });
+	} catch (e) {
+		res.send({ data: null, error: 'Error! Can\'t get histories' });
+		console.log(e);
+	}
+});
+
+app.post('/histories', async (req, res) => {
+	try {
+		const newHistory = await addHistory({
+			user: req.user.id,
+			test: req.body.test,
+			results: req.body.results,
+		});
+
+		res.send({ data: mapHistory(newHistory), error: null });
+	} catch (e) {
+		res.send({ data: null, error: 'Creation of history is impossible' });
+		console.log(e);
+	}
+});
+
+app.delete('/histories/:id', async (req, res) => {
+	try {
+		await deleteHistory(req.params.id);
+
+		res.send({ error: null });
+	} catch (e) {
+		res.send({ error: 'Error. Failed to delete histories' });
 		console.log(e);
 	}
 });
