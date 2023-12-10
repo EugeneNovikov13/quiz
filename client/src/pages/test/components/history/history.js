@@ -1,5 +1,5 @@
 import { getItemFromLocalStorage } from '../../../../utils';
-import { TestResult } from './components/index';
+import { TestResult } from './components';
 import styled from 'styled-components';
 
 const HistoryContainer = ({ className }) => {

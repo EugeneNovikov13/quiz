@@ -42,7 +42,7 @@ export const Header = styled(HeaderContainer)`
 	flex-direction: row;
 	justify-content: space-between;
 	max-width: 1000px;
-	min-width: 400px;
+	min-width: 340px;
 	height: 70px;
 	background-color: #eee;
 	padding: 10px 30px;

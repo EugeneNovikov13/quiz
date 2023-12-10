@@ -11,6 +11,7 @@ export * from './load-questions-async';
 export * from './open-modal';
 export * from './set-question-data';
 export * from './set-test-data';
+export * from './set-user';
 export * from './update-answer-text';
 export * from './update-question-text';
 export * from './update-questions-async';

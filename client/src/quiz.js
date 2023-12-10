@@ -28,7 +28,7 @@ const AppColumn = styled.div`
 
 const Page = styled.div`
 	max-width: 1000px;
-	min-width: 400px;
+	min-width: 360px;
 	min-height: calc(100vh - 70px);
 	margin: 0 auto;
 	padding: 50px 20px;

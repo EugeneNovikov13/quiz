@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useDebounce } from '../../../../../../hooks';
 import { countNumberCorrectAnswers, updateObjectOfStates } from '../../../../../../utils';
-import { AnswerResult } from './components/index';
+import { AnswerResult } from './components';
 import styled from 'styled-components';
 
 const TestResultContainer = ({ className, testDate, testTime, testResult }) => {
