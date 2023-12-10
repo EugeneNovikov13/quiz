@@ -10,7 +10,6 @@ export const Tooltip = styled(TooltipContainer)`
 	right: ${({ tooltipPosition }) => tooltipPosition.right}px;
 	display: ${({ isHovered }) => (isHovered ? 'flex' : 'none')};
 	flex-direction: column;
-	gap: 5px;
 	border: ${({ isInvisible }) => (isInvisible ? 'none' : '1px solid #000')};
 	border-radius: 5px;
 	background: ${({ isInvisible }) => (isInvisible ? 'transparent' : 'white')};

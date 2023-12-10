@@ -23,6 +23,8 @@ const HistoryContainer = ({ className }) => {
 };
 
 export const History = styled(HistoryContainer)`
+	padding-bottom: 150px;
+
 	.test-history {
 		display: flex;
 		flex-direction: column;
