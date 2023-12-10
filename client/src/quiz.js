@@ -10,27 +10,41 @@ import {
 	Test,
 	UserTests,
 } from './pages';
-import { Error, Modal } from './components';
+import { Error, Header, Modal } from './components';
 import { ERROR } from './constants';
 import styled from 'styled-components';
 
+const AppColumn = styled.div`
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	position: relative;
+	max-width: 1000px;
+	min-width: 400px;
+	min-height: 100%;
+	margin: 0 auto;
+	background-color: #fff;
+`;
+
 const Page = styled.div`
-	width: 800px;
-	min-height: calc(100vh - 40px);
-	margin: 20px auto;
+	max-width: 1000px;
+	min-width: 400px;
+	min-height: calc(100vh - 70px);
+	margin: 0 auto;
 	padding: 50px 20px;
-	background-color: #eee;
+	background-color: #fff;
 `;
 
 export const Quiz = () => {
 	return (
-		<>
+		<AppColumn>
+			<Header />
 			<Page>
 				<Routes>
 					<Route path="/" element={<Main />}></Route>
 					<Route path="/login" alement={<Authorization />}></Route>
 					<Route path="/register" element={<Registration />}></Route>
-					<Route path="/test" element={<Test />}></Route>
+					<Route path="/test/:id" element={<Test />}></Route>
 					<Route path="/question/:id" element={<Question />}></Route>
 					<Route path="/result" element={<Result />}></Route>
 					<Route path="/user-tests" element={<UserTests />}></Route>
@@ -43,6 +57,6 @@ export const Quiz = () => {
 				</Routes>
 			</Page>
 			<Modal />
-		</>
+		</AppColumn>
 	);
 };

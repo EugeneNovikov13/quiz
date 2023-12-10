@@ -1,3 +1,4 @@
+export * from './create-array-from-number';
 export * from './check-errors';
 export * from './check-test-result';
 export * from './count-number-correct-answers';

@@ -7,7 +7,7 @@ const AnswerResultContainer = ({
 	question,
 	isCorrect,
 	isHovered,
-	mousePosition,
+	tooltipPosition,
 	onMouseEnter,
 	onMouseLeave,
 }) => {
@@ -17,7 +17,7 @@ const AnswerResultContainer = ({
 			onMouseEnter={onMouseEnter}
 			onMouseLeave={onMouseLeave}
 		>
-			<Tooltip isHovered={isHovered} mousePosition={mousePosition}>
+			<Tooltip isHovered={isHovered} tooltipPosition={{ x: -20, y: 10 }}>
 				<div className="question">{`Вопрос: ${question}`}</div>
 				<div className="answer">{`Ваш ответ: ${answer}`}</div>
 				<div className="is-correct">{`Верно: ${isCorrect ? 'Да' : 'Нет'}`}</div>
@@ -27,6 +27,7 @@ const AnswerResultContainer = ({
 };
 
 export const AnswerResult = styled(AnswerResultContainer)`
+	position: relative;
 	width: ${({ width }) => width}px;
 	height: 100%;
 	background-color: ${({ isCorrect }) => (isCorrect ? 'lightgreen' : 'darkred')};

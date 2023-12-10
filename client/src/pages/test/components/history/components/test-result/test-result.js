@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
 import { useDebounce } from '../../../../../../hooks';
 import { countNumberCorrectAnswers, updateObjectOfStates } from '../../../../../../utils';
-import { AnswerResult } from './components';
+import { AnswerResult } from './components/index';
 import styled from 'styled-components';
 
 const TestResultContainer = ({ className, testDate, testTime, testResult }) => {
 	const [isHovered, setIsHovered] = useState({});
-	const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+	const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
 	let refs = useRef(null);
 
 	useEffect(() => {
@@ -33,7 +33,7 @@ const TestResultContainer = ({ className, testDate, testTime, testResult }) => {
 			setIsHoveredState,
 			newStateValue,
 		);
-		setMousePosition({ x: event.clientX, y: event.clientY });
+		setTooltipPosition({ x: event.clientX, y: event.clientY });
 	};
 
 	const debouncedOnMouseEnter = useDebounce(refs, onMouseEnter, 200);
@@ -71,7 +71,7 @@ const TestResultContainer = ({ className, testDate, testTime, testResult }) => {
 							isCorrect={result}
 							width={200 / answersQuantity}
 							isHovered={isHovered[id]}
-							mousePosition={mousePosition}
+							tooltipPosition={tooltipPosition}
 							onMouseEnter={e =>
 								debouncedOnMouseEnter(
 									e,
@@ -122,7 +122,7 @@ export const TestResult = styled(TestResultContainer)`
 		height: 20px;
 		border: 1px solid black;
 		border-radius: 10px;
-		overflow: hidden;
+		//overflow: hidden;
 	}
 
 	& .final-result {
