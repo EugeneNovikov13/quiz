@@ -1,3 +1,4 @@
+export * from './auth-error/auth-error';
 export * from './button/button';
 export * from './error/error';
 export * from './header/header';

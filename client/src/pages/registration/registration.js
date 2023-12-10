@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, Navigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -7,8 +7,8 @@ import { useResetForm } from '../../hooks';
 import { request } from '../../utils';
 import { setUser } from '../../redux/actions';
 import { selectAppWasLogout } from '../../redux/selectors';
-import { Button, Input } from '../../components';
-import { registrationFormSchema } from '../../constants';
+import { AuthFormError, Button, Input } from '../../components';
+import { registrationFormSchema } from '../../settings';
 import styled from 'styled-components';
 
 const RegistrationContainer = ({ className }) => {
@@ -38,7 +38,6 @@ const RegistrationContainer = ({ className }) => {
 	useResetForm(reset, wasLogout);
 
 	const onSubmit = ({ name, surname, email, password, image }) => {
-		console.log(formError);
 		request('/register', 'POST', { name, surname, email, password, image }).then(
 			({ error, user }) => {
 				if (error) {
@@ -51,7 +50,6 @@ const RegistrationContainer = ({ className }) => {
 			},
 		);
 	};
-
 	const formError =
 		errors?.name?.message ||
 		errors?.surname?.message ||
@@ -59,12 +57,6 @@ const RegistrationContainer = ({ className }) => {
 		errors?.password?.message ||
 		errors?.passCheck?.message ||
 		errors?.image?.message;
-
-	const errorMessage = formError || serverError;
-
-	if (!wasLogout) {
-		return <Navigate to="/" />;
-	}
 
 	return (
 		<div className={className}>
@@ -112,16 +104,16 @@ const RegistrationContainer = ({ className }) => {
 				/>
 				<Input
 					type="url"
-					label={errors?.image?.message}
-					error=""
+					label="URL аватарки (необязательно)"
+					error={errors?.image?.message}
 					{...register('image', {
 						onChange: () => setServerError(null),
 					})}
 				/>
+				<AuthFormError>{serverError}</AuthFormError>
 				<Button
 					type="submit"
 					isDisable={!!formError}
-					onClick={() => {}}
 					activeColor="#000"
 					width="180px"
 					height="35px"

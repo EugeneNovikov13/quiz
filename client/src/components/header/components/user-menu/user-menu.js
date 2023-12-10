@@ -1,7 +1,17 @@
+import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import { logout } from '../../../../redux/actions';
 
 const UserMenuContainer = ({ className, onMouseLeave }) => {
+	const dispatch = useDispatch();
+
+	const onLogout = () => {
+		onMouseLeave();
+		dispatch(logout());
+		sessionStorage.removeItem('userData');
+	};
+
 	return (
 		<div className={className} onMouseLeave={onMouseLeave}>
 			<div className="menu">
@@ -9,7 +19,7 @@ const UserMenuContainer = ({ className, onMouseLeave }) => {
 					<span onClick={() => onMouseLeave()}>Профиль</span>
 				</Link>
 				<Link to="/">
-					<span onClick={() => onMouseLeave()}>Выход</span>
+					<span onClick={() => onLogout()}>Выход</span>
 				</Link>
 			</div>
 		</div>

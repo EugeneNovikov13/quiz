@@ -8,6 +8,7 @@ export * from './delete-answer';
 export * from './delete-question-async';
 export * from './delete-question';
 export * from './load-questions-async';
+export * from './logout';
 export * from './open-modal';
 export * from './set-question-data';
 export * from './set-test-data';
