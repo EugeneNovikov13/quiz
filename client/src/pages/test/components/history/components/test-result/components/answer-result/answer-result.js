@@ -1,4 +1,5 @@
 import { Tooltip } from '../../../../../../../../components';
+import { TOOLTIP_POSITION } from '../../../../../../../../constants';
 import styled from 'styled-components';
 
 const AnswerResultContainer = ({
@@ -7,7 +8,6 @@ const AnswerResultContainer = ({
 	question,
 	isCorrect,
 	isHovered,
-	tooltipPosition,
 	onMouseEnter,
 	onMouseLeave,
 }) => {
@@ -17,7 +17,7 @@ const AnswerResultContainer = ({
 			onMouseEnter={onMouseEnter}
 			onMouseLeave={onMouseLeave}
 		>
-			<Tooltip isHovered={isHovered} tooltipPosition={{ x: -20, y: 10 }}>
+			<Tooltip isHovered={isHovered} tooltipPosition={TOOLTIP_POSITION.HISTORY}>
 				<div className="question">{`Вопрос: ${question}`}</div>
 				<div className="answer">{`Ваш ответ: ${answer}`}</div>
 				<div className="is-correct">{`Верно: ${isCorrect ? 'Да' : 'Нет'}`}</div>
@@ -32,4 +32,12 @@ export const AnswerResult = styled(AnswerResultContainer)`
 	height: 100%;
 	background-color: ${({ isCorrect }) => (isCorrect ? 'lightgreen' : 'darkred')};
 	border-right: 1px dotted #fff;
+
+	&:first-child {
+		border-radius: 10px 0 0 10px;
+	}
+
+	&:last-child {
+		border-radius: 0 10px 10px 0;
+	}
 `;

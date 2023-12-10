@@ -2,14 +2,15 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Icon } from '../icon/icon';
 import { Tooltip } from '../tooltip/tooltip';
+import { TOOLTIP_POSITION } from '../../constants';
 import user from './assets/user.svg';
 import styled from 'styled-components';
+import { UserMenu } from './components';
 
 const HeaderContainer = ({ className }) => {
 	const [isHovered, setIsHovered] = useState(false);
-	const tooltipPosition = { x: 80, y: 65 };
 
-	const onMouseEnter = event => {
+	const onMouseEnter = () => {
 		setIsHovered(true);
 	};
 
@@ -23,19 +24,13 @@ const HeaderContainer = ({ className }) => {
 				<Link to="/">Главная</Link>
 				<Link to="/user-tests">Мои тесты</Link>
 			</div>
-			<Icon
-				width={'50px'}
-				iconSrc={user}
-				onMouseEnter={e => onMouseEnter(e)}
-				onMouseLeave={() => onMouseLeave()}
-			/>
-			<Tooltip isHovered={isHovered} tooltipPosition={tooltipPosition}>
-				<div className="user-menu">
-					<Link to="/account">
-						<span>Профиль</span>
-					</Link>
-					<span>Выход</span>
-				</div>
+			<Icon width={'50px'} iconSrc={user} onMouseEnter={() => onMouseEnter()} />
+			<Tooltip
+				isHovered={isHovered}
+				tooltipPosition={TOOLTIP_POSITION.USER_MENU}
+				isInvisible={true}
+			>
+				<UserMenu onMouseLeave={onMouseLeave} />
 			</Tooltip>
 		</header>
 	);
@@ -66,10 +61,5 @@ export const Header = styled(HeaderContainer)`
 
 	& .nav-menu a:hover {
 		transform: scale(1.05);
-	}
-
-	& .user-menu {
-		display: flex;
-		flex-direction: column;
 	}
 `;

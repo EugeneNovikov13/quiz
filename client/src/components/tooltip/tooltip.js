@@ -6,14 +6,14 @@ const TooltipContainer = ({ className, children }) => {
 
 export const Tooltip = styled(TooltipContainer)`
 	position: absolute;
-	top: ${({ tooltipPosition }) => tooltipPosition.y}px;
-	right: ${({ tooltipPosition }) => tooltipPosition.x}px;
+	top: ${({ tooltipPosition }) => tooltipPosition.top}px;
+	right: ${({ tooltipPosition }) => tooltipPosition.right}px;
 	display: ${({ isHovered }) => (isHovered ? 'flex' : 'none')};
 	flex-direction: column;
 	gap: 5px;
-	border: 1px solid #000;
+	border: ${({ isInvisible }) => (isInvisible ? 'none' : '1px solid #000')};
 	border-radius: 5px;
-	background: white;
+	background: ${({ isInvisible }) => (isInvisible ? 'transparent' : 'white')};
 	padding: 8px;
 	z-index: 10;
 `;
