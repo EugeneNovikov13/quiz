@@ -22,7 +22,11 @@ app.post('/register', async (req, res) => {
 		res.cookie('token', token, { httpOnly: true })
 			.send({ error: null, user: mapUser(user) });
 	} catch (e) {
-		res.send({ error: e.message || 'Unknown error' });
+		if (e.code === 11000) {
+			res.send({ error: 'Пользователь с такой почтой уже зарегистрирован' });
+			return;
+		}
+		res.send({ error: e || 'Unknown error' });
 	}
 })
 
@@ -40,8 +44,6 @@ app.post('/login', async (req, res) => {
 app.post('/logout', (req, res) => {
 	res.cookie('token', '', { httpOnly: true })
 		.send({})
-		// TODO: разобраться работает ли redirect на клиенте
-		.redirect('/');
 });
 
 app.get('/tests', async (req, res) => {

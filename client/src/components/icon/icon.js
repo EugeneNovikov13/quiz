@@ -1,7 +1,16 @@
 import styled from 'styled-components';
 
-const IconContainer = ({ className, iconSrc, onClick }) => {
-	return <img className={className} onClick={onClick} src={iconSrc} alt="" />;
+const IconContainer = ({ className, iconSrc, onClick, onMouseEnter, onMouseLeave }) => {
+	return (
+		<img
+			className={className}
+			onClick={onClick}
+			onMouseEnter={onMouseEnter}
+			onMouseLeave={onMouseLeave}
+			src={iconSrc}
+			alt=""
+		/>
+	);
 };
 
 export const Icon = styled(IconContainer)`

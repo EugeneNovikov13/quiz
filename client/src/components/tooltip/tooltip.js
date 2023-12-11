@@ -5,15 +5,14 @@ const TooltipContainer = ({ className, children }) => {
 };
 
 export const Tooltip = styled(TooltipContainer)`
+	position: absolute;
+	top: ${({ tooltipPosition }) => tooltipPosition.top}px;
+	right: ${({ tooltipPosition }) => tooltipPosition.right}px;
 	display: ${({ isHovered }) => (isHovered ? 'flex' : 'none')};
 	flex-direction: column;
-	gap: 5px;
-	position: absolute;
-	top: ${({ mousePosition }) => mousePosition.y + 10}px;
-	left: ${({ mousePosition }) => mousePosition.x - 75}px;
-	border: 1px solid #000;
+	border: ${({ isInvisible }) => (isInvisible ? 'none' : '1px solid #000')};
 	border-radius: 5px;
-	background: white;
+	background: ${({ isInvisible }) => (isInvisible ? 'transparent' : 'white')};
 	padding: 8px;
 	z-index: 10;
 `;

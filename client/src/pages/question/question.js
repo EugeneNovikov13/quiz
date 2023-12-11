@@ -107,15 +107,6 @@ export const Question = styled(QuestionContainer)`
 	}
 
 	& button:hover {
-		box-shadow: 0 4px 2 px - 1 px rgba(188, 188, 188, 1);
-	}
-
-	& button.right-button {
-		background-color: ${({ readyToComplete }) =>
-			readyToComplete ? 'lightgreen' : ''};
-	}
-
-	& button.right-button:hover {
-		filter: ${({ readyToComplete }) => (readyToComplete ? 'brightness(0.9)' : '')};
+		box-shadow: 0 4px 2px -1px rgba(188, 188, 188, 1);
 	}
 `;

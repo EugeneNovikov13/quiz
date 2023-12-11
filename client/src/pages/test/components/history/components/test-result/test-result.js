@@ -6,7 +6,6 @@ import styled from 'styled-components';
 
 const TestResultContainer = ({ className, testDate, testTime, testResult }) => {
 	const [isHovered, setIsHovered] = useState({});
-	const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 	let refs = useRef(null);
 
 	useEffect(() => {
@@ -20,37 +19,14 @@ const TestResultContainer = ({ className, testDate, testTime, testResult }) => {
 	const answersQuantity = testResult.length;
 	const rightAnswersCount = countNumberCorrectAnswers(testResult, ' из ');
 
-	const onMouseEnter = (
-		event,
-		hoveredElementId,
-		isHoveredState,
-		setIsHoveredState,
-		newStateValue,
-	) => {
-		updateObjectOfStates(
-			hoveredElementId,
-			isHoveredState,
-			setIsHoveredState,
-			newStateValue,
-		);
-		setMousePosition({ x: event.clientX, y: event.clientY });
+	const onMouseEnter = (...args) => {
+		updateObjectOfStates(...args);
 	};
 
 	const debouncedOnMouseEnter = useDebounce(refs, onMouseEnter, 200);
 
-	const onMouseLeave = (
-		ref,
-		leaveElementId,
-		isHoveredState,
-		setIsHoveredState,
-		newStateValue,
-	) => {
-		updateObjectOfStates(
-			leaveElementId,
-			isHoveredState,
-			setIsHoveredState,
-			newStateValue,
-		);
+	const onMouseLeave = (ref, ...args) => {
+		updateObjectOfStates(...args);
 		clearTimeout(ref.current);
 	};
 
@@ -71,15 +47,8 @@ const TestResultContainer = ({ className, testDate, testTime, testResult }) => {
 							isCorrect={result}
 							width={200 / answersQuantity}
 							isHovered={isHovered[id]}
-							mousePosition={mousePosition}
-							onMouseEnter={e =>
-								debouncedOnMouseEnter(
-									e,
-									id,
-									isHovered,
-									setIsHovered,
-									true,
-								)
+							onMouseEnter={() =>
+								debouncedOnMouseEnter(id, isHovered, setIsHovered, true)
 							}
 							onMouseLeave={() =>
 								onMouseLeave(refs, id, isHovered, setIsHovered, false)
@@ -122,7 +91,6 @@ export const TestResult = styled(TestResultContainer)`
 		height: 20px;
 		border: 1px solid black;
 		border-radius: 10px;
-		overflow: hidden;
 	}
 
 	& .final-result {

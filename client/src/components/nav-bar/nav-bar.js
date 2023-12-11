@@ -21,7 +21,7 @@ export const NavBar = styled(NavBarContainer)`
 		border: none;
 		background-color: #000;
 		color: #fff;
-		box-shadow: 0 4px 2 px - 1 px rgba(188, 188, 188, 1);
+		box-shadow: 0 4px 2px -1px rgba(188, 188, 188, 1);
 	}
 
 	& button.right-button {
