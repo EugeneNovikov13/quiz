@@ -1,4 +1,4 @@
-export * from './select-app-waslogout';
+export * from './select-app-waslogin';
 export * from './select-edited-questions';
 export * from './select-last-question-number';
 export * from './select-modal-is-open';

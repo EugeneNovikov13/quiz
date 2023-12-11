@@ -1,9 +1,9 @@
 import { useEffect } from 'react';
 
-export const useResetForm = (reset, wasLogout) => {
+export const useResetForm = (reset, wasLogin) => {
 	useEffect(() => {
-		if (wasLogout) {
+		if (wasLogin) {
 			reset();
 		}
-	}, [reset, wasLogout]);
+	}, [reset, wasLogin]);
 };

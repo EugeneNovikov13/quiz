@@ -7,7 +7,7 @@ import { useResetForm } from '../../hooks';
 import { request } from '../../utils';
 import { AuthFormError, Button, Input } from '../../components';
 import { setUser } from '../../redux/actions';
-import { selectAppWasLogout } from '../../redux/selectors';
+import { selectAppWasLogin } from '../../redux/selectors';
 import { authorizationFormSchema } from '../../settings';
 import styled from 'styled-components';
 
@@ -29,9 +29,9 @@ const AuthorizationContainer = ({ className }) => {
 
 	const dispatch = useDispatch();
 
-	const wasLogout = useSelector(selectAppWasLogout);
+	const wasLogin = useSelector(selectAppWasLogin);
 
-	useResetForm(reset, wasLogout);
+	useResetForm(reset, wasLogin);
 
 	const onSubmit = ({ email, password }) => {
 		request('/login', 'POST', { email, password }).then(({ error, user }) => {
@@ -45,7 +45,7 @@ const AuthorizationContainer = ({ className }) => {
 		});
 	};
 
-	if (!wasLogout) {
+	if (wasLogin) {
 		return <Navigate to="/" />;
 	}
 

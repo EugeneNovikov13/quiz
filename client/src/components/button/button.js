@@ -15,7 +15,7 @@ export const Button = styled(ButtonContainer)`
 	font-size: ${({ fontSize }) => (fontSize ? fontSize : '24px')};
 	width: ${({ width }) => (width ? width : '350px')};
 	height: ${({ height }) => (height ? height : '50px')};
-	border-radius: 5px;
+	border-radius: 8px;
 	border: none;
 	color: ${({ activeColor }) => (activeColor ? '#fff' : '#000')};
 	background-color: ${({ activeColor, isDisable }) =>

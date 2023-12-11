@@ -6,7 +6,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useResetForm } from '../../hooks';
 import { request } from '../../utils';
 import { setUser } from '../../redux/actions';
-import { selectAppWasLogout } from '../../redux/selectors';
+import { selectAppWasLogin } from '../../redux/selectors';
 import { AuthFormError, Button, Input } from '../../components';
 import { registrationFormSchema } from '../../settings';
 import styled from 'styled-components';
@@ -33,9 +33,9 @@ const RegistrationContainer = ({ className }) => {
 
 	const dispatch = useDispatch();
 
-	const wasLogout = useSelector(selectAppWasLogout);
+	const wasLogin = useSelector(selectAppWasLogin);
 
-	useResetForm(reset, wasLogout);
+	useResetForm(reset, wasLogin);
 
 	const onSubmit = ({ name, surname, email, password, image }) => {
 		request('/register', 'POST', { name, surname, email, password, image }).then(
@@ -51,7 +51,7 @@ const RegistrationContainer = ({ className }) => {
 		);
 	};
 
-	if (!wasLogout) {
+	if (wasLogin) {
 		return <Navigate to="/" />;
 	}
 

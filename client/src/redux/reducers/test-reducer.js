@@ -2,8 +2,12 @@ import { ACTION_TYPE } from '../actions';
 
 const initialTestState = {
 	editedQuestions: new Set(),
-	questions: [],
 	newQuestionId: '',
+	id: '',
+	title: '',
+	createdAt: '',
+	author: { name: '', surname: '' },
+	questions: [],
 };
 
 export const testReducer = (state = initialTestState, action) => {

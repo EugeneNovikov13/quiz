@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
-import { createArrayFromNumber, request } from '../../utils';
-import { Pagination } from './components';
-import { Button, TestInfo } from '../../components';
 import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { createArrayFromNumber, request } from '../../utils';
+import { selectAppWasLogin } from '../../redux/selectors';
+import { Button, TestInfo } from '../../components';
+import { Pagination } from './components';
 import styled from 'styled-components';
 
 const MainContainer = ({ className }) => {
@@ -11,6 +13,8 @@ const MainContainer = ({ className }) => {
 	const [lastPage, setLastPage] = useState(1);
 
 	const pages = createArrayFromNumber(lastPage);
+
+	const wasLogin = useSelector(selectAppWasLogin);
 
 	useEffect(() => {
 		request(`/tests?limit=12&page=${page}`).then(({ data: { tests, lastPage } }) => {
@@ -30,16 +34,18 @@ const MainContainer = ({ className }) => {
 							author={author.surname + ' ' + author.name}
 							questionsCount={questions.length}
 						/>
-						<Link to={`/test/${id}`}>
-							<Button
-								children={'Открыть'}
-								onClick={() => {}}
-								activeColor="#000"
-								width="140px"
-								height="35px"
-								fontSize="16px"
-							/>
-						</Link>
+						{wasLogin && (
+							<Link to={`/test/${id}`}>
+								<Button
+									activeColor="#000"
+									width="140px"
+									height="35px"
+									fontSize="16px"
+								>
+									Открыть
+								</Button>
+							</Link>
+						)}
 					</div>
 				))}
 			</div>
