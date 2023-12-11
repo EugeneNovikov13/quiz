@@ -11,19 +11,11 @@ const initialQuestionState = {
 };
 
 export const questionReducer = (state = initialQuestionState, action) => {
-	const { type, payload } = action;
-
-	switch (type) {
+	switch (action.type) {
 		case ACTION_TYPE.SET_QUESTION_DATA:
 			return {
 				...state,
-				question: {
-					id: payload.question.id,
-					text: payload.question.text,
-					correctAnswer: payload.question.correctAnswer,
-					answers: payload.question.answers,
-				},
-				lastQuestionNumber: payload.lastQuestionNumber,
+				...action.payload,
 			};
 
 		default:

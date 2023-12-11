@@ -1,17 +1,16 @@
 import { useLayoutEffect, useRef, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { loadQuestionsAsync } from '../../redux/actions';
-import { selectLastQuestionNumber, selectQuestion } from '../../redux/selectors';
+import { loadQuestionAsync } from '../../redux/actions';
+import { selectLastPage, selectQuestion } from '../../redux/selectors';
+import { Button } from '../../components';
+import { Task } from './components';
+import styled from 'styled-components';
 import {
 	checkTestResult,
 	generateDataForHistory,
 	updateItemInLocalStorage,
 } from '../../utils';
-import { Button } from '../../components';
-import { Task } from './components';
-import { QUESTIONS_AMOUNT_TO_LOAD } from '../../constants';
-import styled from 'styled-components';
 
 const QuestionContainer = ({ className }) => {
 	//есть выбранный ответ, готов переходить на следующий вопрос
@@ -20,11 +19,11 @@ const QuestionContainer = ({ className }) => {
 
 	//получаем текущий номер страницы вопроса, чтобы при переключении страницы  менялась зависимость в useLayoutEffect
 	const params = useParams();
-	const currentPage = Number(params.id);
+	const currentPage = Number(params.page);
 
-	//последнюю страницу, вопросы и ответы получаем из редюсера, куда эти данные приходят после запроса в useLayoutEffect
-	const lastPage = useSelector(selectLastQuestionNumber);
-	const { text, answers } = useSelector(selectQuestion);
+	//вопросы получаем из редюсера, куда эти данные приходят после запроса в useLayoutEffect
+	const question = useSelector(selectQuestion);
+	const lastPage = useSelector(selectLastPage);
 
 	//ответы на текущий тест храним здесь
 	const userAnswers = useRef([]);
@@ -33,8 +32,8 @@ const QuestionContainer = ({ className }) => {
 
 	//загрузка вопроса и ответов
 	useLayoutEffect(() => {
-		dispatch(loadQuestionsAsync(QUESTIONS_AMOUNT_TO_LOAD.ONE_QUESTION, currentPage));
-	}, [currentPage, dispatch]);
+		dispatch(loadQuestionAsync(params.id, currentPage));
+	}, [dispatch, currentPage, params.id]);
 
 	//проверка на последнюю страницу и наличие ответов на ВСЕ вопросы теста
 	const isLastPage = currentPage === lastPage;
@@ -48,7 +47,7 @@ const QuestionContainer = ({ className }) => {
 
 		let testData;
 
-		await dispatch(loadQuestionsAsync()).then(({ data }) => {
+		await dispatch(loadQuestionAsync()).then(({ data }) => {
 			testData = data.questions;
 		});
 
@@ -62,8 +61,8 @@ const QuestionContainer = ({ className }) => {
 	return (
 		<div className={className}>
 			<Task
-				text={text}
-				answers={answers}
+				text={question.text}
+				answers={question.answers}
 				userAnswers={userAnswers}
 				setReadyToContinue={setReadyToContinue}
 			/>

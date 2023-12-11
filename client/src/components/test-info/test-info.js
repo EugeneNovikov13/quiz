@@ -15,7 +15,8 @@ export const TestInfo = styled(TestInfoContainer)`
 	display: flex;
 	flex-direction: column;
 	gap: 5px;
-	height: 190px;
+	min-height: 140px;
+	margin-bottom: 10px;
 
 	& h2,
 	p {

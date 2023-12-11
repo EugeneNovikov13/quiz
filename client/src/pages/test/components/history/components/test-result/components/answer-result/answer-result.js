@@ -30,7 +30,7 @@ const AnswerResultContainer = ({
 
 export const AnswerResult = styled(AnswerResultContainer)`
 	position: relative;
-	width: ${({ width }) => width}px;
+	width: ${({ answersQuantity }) => 100 / answersQuantity}%;
 	height: 100%;
 	background-color: ${({ isCorrect }) => (isCorrect ? 'lightgreen' : 'darkred')};
 	border-right: 1px dotted #fff;

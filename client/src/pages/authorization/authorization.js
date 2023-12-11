@@ -94,9 +94,8 @@ export const Authorization = styled(AuthorizationContainer)`
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	width: 100%;
 	min-width: 360px;
-	min-height: 440px;
+	height: 440px;
 	border: 1px solid #eee;
 	border-radius: 20px;
 	box-shadow: 0 2px 2px 2px rgba(204, 204, 204, 1);
