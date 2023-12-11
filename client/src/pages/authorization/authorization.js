@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -45,6 +45,10 @@ const AuthorizationContainer = ({ className }) => {
 		});
 	};
 
+	if (!wasLogout) {
+		return <Navigate to="/" />;
+	}
+
 	const formError = errors?.email?.message || errors?.password?.message;
 
 	return (
@@ -80,7 +84,7 @@ const AuthorizationContainer = ({ className }) => {
 				</Button>
 			</form>
 			<p className="has-account">
-				Нет аккаунта? <Link to="/login">Зарегистрироваться</Link>
+				Нет аккаунта? <Link to="/register">Зарегистрироваться</Link>
 			</p>
 		</div>
 	);
@@ -92,7 +96,7 @@ export const Authorization = styled(AuthorizationContainer)`
 	align-items: center;
 	width: 100%;
 	min-width: 360px;
-	min-height: 400px;
+	min-height: 440px;
 	border: 1px solid #eee;
 	border-radius: 20px;
 	box-shadow: 0 2px 2px 2px rgba(204, 204, 204, 1);

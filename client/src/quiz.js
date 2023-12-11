@@ -1,4 +1,6 @@
+import { useLayoutEffect } from 'react';
 import { Route, Routes } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import {
 	Account,
 	Authorization,
@@ -13,6 +15,7 @@ import {
 import { Error, Header, Modal } from './components';
 import { ERROR } from './constants';
 import styled from 'styled-components';
+import { setUser } from './redux/actions';
 
 const AppColumn = styled.div`
 	display: flex;
@@ -36,13 +39,27 @@ const Page = styled.div`
 `;
 
 export const Quiz = () => {
+	const dispatch = useDispatch();
+
+	useLayoutEffect(() => {
+		const currentUserDataJSON = sessionStorage.getItem('userData');
+
+		if (!currentUserDataJSON) {
+			return;
+		}
+
+		const currentUserData = JSON.parse(currentUserDataJSON);
+
+		dispatch(setUser(currentUserData));
+	}, [dispatch]);
+
 	return (
 		<AppColumn>
 			<Header />
 			<Page>
 				<Routes>
 					<Route path="/" element={<Main />}></Route>
-					<Route path="/login" alement={<Authorization />}></Route>
+					<Route path="/login" element={<Authorization />}></Route>
 					<Route path="/register" element={<Registration />}></Route>
 					<Route path="/test/:id" element={<Test />}></Route>
 					<Route path="/question/:id" element={<Question />}></Route>

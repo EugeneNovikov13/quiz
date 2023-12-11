@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -50,6 +50,11 @@ const RegistrationContainer = ({ className }) => {
 			},
 		);
 	};
+
+	if (!wasLogout) {
+		return <Navigate to="/" />;
+	}
+
 	const formError =
 		errors?.name?.message ||
 		errors?.surname?.message ||
