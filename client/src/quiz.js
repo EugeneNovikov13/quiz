@@ -70,6 +70,7 @@ export const Quiz = () => {
 					<Route path="/result" element={<Result />}></Route>
 					<Route path="/user-tests" element={<UserTests />}></Route>
 					<Route path="/edit" element={<Edit />}></Route>
+					<Route path="/edit/:id" element={<Edit />}></Route>
 					<Route path="/account" element={<Account />}></Route>
 					<Route
 						path="*"

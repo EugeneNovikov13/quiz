@@ -7,6 +7,7 @@ const initialAppState = {
 		text: '',
 		onConfirm: () => {},
 		onCancel: () => {},
+		isError: false,
 	},
 };
 
@@ -35,7 +36,16 @@ export const appReducer = (state = initialAppState, action) => {
 			};
 
 		case ACTION_TYPE.CLOSE_MODAL:
-			return initialAppState;
+			return {
+				...state,
+				modal: {
+					isOpen: false,
+					text: '',
+					onConfirm: () => {},
+					onCancel: () => {},
+					isError: false,
+				},
+			};
 
 		default:
 			return state;

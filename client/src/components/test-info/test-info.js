@@ -5,7 +5,7 @@ const TestInfoContainer = ({ className, title, author, createdAt, questionsCount
 		<div className={className}>
 			<h2 className="title">{title}</h2>
 			<p>Количество вопросов: {questionsCount}</p>
-			<p>Автор теста: {author}</p>
+			{author && <p>Автор теста: {author}</p>}
 			<p>Дата создания: {createdAt}</p>
 		</div>
 	);
@@ -21,6 +21,11 @@ export const TestInfo = styled(TestInfoContainer)`
 	& h2,
 	p {
 		margin: 0;
+	}
+
+	h2 {
+		max-height: 100px;
+		overflow: hidden;
 	}
 
 	& p {

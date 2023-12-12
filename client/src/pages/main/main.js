@@ -19,7 +19,7 @@ const MainContainer = ({ className }) => {
 
 	useEffect(() => {
 		request(
-			`/tests?limit=${QUESTIONS_AMOUNT_TO_LOAD.PAGINATION_LIMIT}&page=${page}`,
+			`/tests?limit=${QUESTIONS_AMOUNT_TO_LOAD.MAIN_PAGE_PAGINATION_LIMIT}&page=${page}`,
 		).then(({ data: { tests, lastPage } }) => {
 			setTests(tests);
 			setLastPage(lastPage);
@@ -41,7 +41,7 @@ const MainContainer = ({ className }) => {
 							<Link to={`/test/${id}`}>
 								<Button
 									activeColor="#000"
-									width="140px"
+									width="160px"
 									height="35px"
 									fontSize="16px"
 								>

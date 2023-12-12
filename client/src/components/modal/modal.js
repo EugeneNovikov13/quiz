@@ -1,5 +1,6 @@
 import { useSelector } from 'react-redux';
 import {
+	selectModalIsError,
 	selectModalIsOpen,
 	selectModalOnCancel,
 	selectModalOnConfirm,
@@ -13,6 +14,7 @@ const ModalContainer = ({ className }) => {
 	const text = useSelector(selectModalText);
 	const onConfirm = useSelector(selectModalOnConfirm);
 	const onCancel = useSelector(selectModalOnCancel);
+	const isError = useSelector(selectModalIsError);
 
 	if (!isOpen) {
 		return null;
@@ -23,14 +25,22 @@ const ModalContainer = ({ className }) => {
 			<div className="overlay"></div>
 			<div className="box">
 				<h3>{text}</h3>
-				<div className="buttons">
-					<Button width="120px" onClick={onConfirm}>
-						Да
-					</Button>
-					<Button width="120px" onClick={onCancel}>
-						Отмена
-					</Button>
-				</div>
+				{isError ? (
+					<div className="buttons">
+						<Button width="120px" onClick={onCancel}>
+							OK
+						</Button>
+					</div>
+				) : (
+					<div className="buttons">
+						<Button width="120px" onClick={onConfirm}>
+							Да
+						</Button>
+						<Button width="120px" onClick={onCancel}>
+							Отмена
+						</Button>
+					</div>
+				)}
 			</div>
 		</div>
 	);
