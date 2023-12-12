@@ -1,14 +1,15 @@
 import styled from 'styled-components';
 
-const AnswerOptionContainer = ({ className, id, text, checked, checkboxChange }) => {
+const AnswerOptionContainer = ({ className, id, text, checked, handleRadioChange }) => {
 	return (
 		<div className={className}>
 			<input
-				type="checkbox"
+				type="radio"
 				id={id}
 				name="selected-answer"
+				value={text}
 				checked={checked}
-				onChange={() => checkboxChange(id, text)}
+				onChange={handleRadioChange}
 			/>
 			<div className="custom-check-icon"></div>
 			<label htmlFor={id} className="answer-text">

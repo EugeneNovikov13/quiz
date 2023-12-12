@@ -1,43 +1,40 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { selectLastQuestionNumber } from '../../../../redux/selectors';
 import { AnswerOption } from './components';
 import styled from 'styled-components';
-import { updateObjectOfStates } from '../../../../utils';
 
-const TaskContainer = ({ className, text, answers, userAnswers, setReadyToContinue }) => {
+const TaskContainer = ({
+	className,
+	text,
+	answers,
+	userAnswers,
+	setReadyToContinue,
+	setReadyToComplete,
+}) => {
 	const params = useParams();
 	const currentPage = Number(params.pageId);
 	const lastPage = useSelector(selectLastQuestionNumber);
+	const [selectedValue, setSelectedValue] = useState('');
 
-	//состояние для хранения состояний чекбоксов  -------------------
-	const [checkboxes, setCheckboxes] = useState({});
+	const handleRadioChange = ({ target }) => {
+		setSelectedValue(target.value);
+		userAnswers.current[currentPage - 1] = target.value;
 
-	//useEffect для создания объекта состояний чекбоксов -------------------
-	useEffect(() => {
-		const checkboxesInitialState = answers.reduce(
-			(acc, answer) => ({ ...acc, [answer.id]: false }),
-			{},
-		);
-		setCheckboxes(checkboxesInitialState);
-	}, [answers]);
+		//проверка на последнюю страницу и наличие ответов на ВСЕ вопросы теста
+		const isLastPage = currentPage === Number(lastPage);
+		const isAllAnswersTaken =
+			isLastPage &&
+			userAnswers.current.filter(answer => answer).length === lastPage;
 
-	//useEffect для занесения ответа из состояния checkboxes в текущее значение userAnswers
-	//а также для изменения readyToContinue - готовности к продолжению
-	useEffect(() => {
-		const selectedAnswerId = Object.keys(checkboxes).find(id => checkboxes[id]);
-
-		if (selectedAnswerId) {
-			setReadyToContinue(true);
-			userAnswers.current[currentPage - 1] = checkboxes[selectedAnswerId];
+		if (isAllAnswersTaken) {
+			setReadyToComplete(true);
 			return;
 		}
-		setReadyToContinue(false);
-		userAnswers.current[currentPage - 1] = '';
 
-		// eslint-disable-next-line
-	}, [checkboxes, currentPage, setReadyToContinue]);
+		setReadyToContinue(true);
+	};
 
 	return (
 		<div className={className}>
@@ -49,15 +46,8 @@ const TaskContainer = ({ className, text, answers, userAnswers, setReadyToContin
 						key={id}
 						id={id}
 						text={text}
-						checked={!!checkboxes[id] || false}
-						checkboxChange={() =>
-							updateObjectOfStates(
-								id,
-								checkboxes,
-								setCheckboxes,
-								!!checkboxes[id] ? false : text,
-							)
-						}
+						checked={text === selectedValue}
+						handleRadioChange={handleRadioChange}
 					/>
 				))}
 			</div>

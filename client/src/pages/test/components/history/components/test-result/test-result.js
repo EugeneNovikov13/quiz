@@ -41,10 +41,10 @@ const TestResultContainer = ({ className, user, testDate, testTime, testResult }
 			<div className="test-process-line">
 				<div>0</div>
 				<div className="process-visualisation">
-					{testResult.map(({ id, answer, question, result }) => (
+					{testResult.map(({ id, userAnswer, question, result }) => (
 						<AnswerResult
 							key={id}
-							answer={answer}
+							answer={userAnswer}
 							question={question}
 							isCorrect={result}
 							answersQuantity={answersQuantity}

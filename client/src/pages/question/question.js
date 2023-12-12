@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { generateTestResult } from '../../utils';
@@ -9,10 +9,14 @@ import { Task } from './components';
 import styled from 'styled-components';
 
 const QuestionContainer = ({ className }) => {
+	//ответы на текущий тест храним здесь
+	const userAnswers = useRef([]);
+
 	const [errorMessage, setErrorMessage] = useState(null);
 
 	//есть выбранный ответ, готов переходить на следующий вопрос
 	const [readyToContinue, setReadyToContinue] = useState(false);
+	const [readyToComplete, setReadyToComplete] = useState(false);
 	const dispatch = useDispatch();
 
 	//получаем текущий номер страницы вопроса, чтобы при переключении страницы  менялась зависимость в useLayoutEffect
@@ -23,10 +27,11 @@ const QuestionContainer = ({ className }) => {
 	const question = useSelector(selectQuestion);
 	const lastPage = useSelector(selectLastPage);
 
-	//ответы на текущий тест храним здесь
-	const userAnswers = useRef([]);
-
 	const navigate = useNavigate();
+
+	useEffect(() => {
+		userAnswers.current[currentPage - 1] = null;
+	}, [currentPage]);
 
 	//загрузка вопроса и ответов
 	useLayoutEffect(() => {
@@ -35,11 +40,7 @@ const QuestionContainer = ({ className }) => {
 		});
 	}, [dispatch, currentPage, params.id]);
 
-	//проверка на последнюю страницу и наличие ответов на ВСЕ вопросы теста
-	const isLastPage = currentPage === lastPage;
-	const isAllAnswersTaken =
-		userAnswers.current.filter(answer => answer).length === lastPage;
-	const readyToComplete = isLastPage && isAllAnswersTaken;
+	const isLastPage = currentPage === Number(lastPage);
 
 	//обработка нажатия кнопки "Следующий" для записи результатов теста и переключения на страницу "Результат"
 	const onNextButtonClick = async selectedAnswers => {
@@ -47,17 +48,23 @@ const QuestionContainer = ({ className }) => {
 
 		let testData;
 
-		await dispatch(loadTestAsync(params.id)).then(({ data }) => {
-			testData = data.questions;
+		await dispatch(loadTestAsync(params.id)).then(res => {
+			if (res.error) setErrorMessage(res.error);
+			testData = res.data.questions;
 		});
 
 		const testResult = generateTestResult(testData, selectedAnswers);
 
-		dispatch(addHistoryAsync(params.id, testResult)).then(res => {
+		await dispatch(addHistoryAsync(params.id, testResult)).then(res => {
 			if (res.error) setErrorMessage(res.error);
 		});
 
 		navigate('/result');
+	};
+
+	const onBackButtonClick = () => {
+		setReadyToContinue(false);
+		setReadyToComplete(false);
 	};
 
 	return (
@@ -68,6 +75,7 @@ const QuestionContainer = ({ className }) => {
 					answers={question.answers}
 					userAnswers={userAnswers}
 					setReadyToContinue={setReadyToContinue}
+					setReadyToComplete={setReadyToComplete}
 				/>
 				<div className="navigate-buttons">
 					<Link
@@ -77,7 +85,12 @@ const QuestionContainer = ({ className }) => {
 								: `/test/${params.id}/question/${currentPage - 1}`
 						}`}
 					>
-						<Button activeColor={'#fddb5d'} isDisable={false} height="65px">
+						<Button
+							activeColor={'#fddb5d'}
+							isDisable={false}
+							height="65px"
+							onClick={onBackButtonClick}
+						>
 							{currentPage === 1
 								? 'Назад на страницу теста'
 								: 'Предыдущий вопрос'}
