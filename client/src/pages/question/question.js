@@ -136,7 +136,7 @@ export const Question = styled(QuestionContainer)`
 
 	@media (max-width: 720px) {
 		.navigate-buttons {
-			flex-direction: column;
+			flex-direction: column-reverse;
 		}
 	}
 `;
