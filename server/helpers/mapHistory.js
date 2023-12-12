@@ -1,10 +1,9 @@
 const mapResult = require('./mapResult');
-const mongoose = require('mongoose');
 
 module.exports = function (history) {
 	return {
 		id: history.id,
-		user: mongoose.isObjectIdOrHexString(history.user) ? undefined : {
+		user: {
 			name: history.user.name,
 			surname: history.user.surname,
 		},

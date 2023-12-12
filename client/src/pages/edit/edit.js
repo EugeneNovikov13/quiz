@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
 	addQuestionAsync,
-	loadQuestionsAsync,
+	loadQuestionAsync,
 	updateQuestionsAsync,
 } from '../../redux/actions';
 import { selectEditedQuestions, selectQuestions } from '../../redux/selectors';
@@ -23,7 +23,7 @@ const EditContainer = ({ className }) => {
 	const readyToSave = !checkErrors(questions) && !!editedQuestions.size;
 
 	useEffect(() => {
-		dispatch(loadQuestionsAsync()).then(() => {
+		dispatch(loadQuestionAsync()).then(() => {
 			setIsLoading(true);
 		});
 	}, [dispatch]);

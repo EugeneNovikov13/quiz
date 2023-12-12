@@ -34,6 +34,7 @@ async function getTests(author, limit = 8, page = 1) {
 	const [tests, quantity] = await Promise.all([
 		Test.find(author ? { author } : null)
 			.populate('author')
+			.sort({ createdAt: -1 })
 			.limit(limit)
 			.skip((page - 1) * limit),
 		Test.countDocuments(author ? { author } : null),
@@ -51,10 +52,22 @@ function getTest(id) {
 	return Test.findById(id).populate('author');
 }
 
+// get question of item
+
+async function getQuestion(id, page) {
+	const test = await Test.findById(id, { questions: 1 });
+
+	return {
+		question: test.questions[page - 1],
+		lastPage: test.questions.length,
+	};
+}
+
 module.exports = {
 	addTest,
 	editTest,
 	deleteTest,
 	getTests,
 	getTest,
+	getQuestion,
 };

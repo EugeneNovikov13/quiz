@@ -6,6 +6,6 @@ export * from './select-modal-on-cancel';
 export * from './select-modal-on-confirm';
 export * from './select-modal-text';
 export * from './select-new-question-id';
-export * from './select-page';
+export * from './select-last-page';
 export * from './select-questions';
 export * from './select-question';

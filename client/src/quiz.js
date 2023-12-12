@@ -30,11 +30,12 @@ const AppColumn = styled.div`
 `;
 
 const Page = styled.div`
+	display: flex;
+	justify-content: center;
 	max-width: 1000px;
 	min-width: 360px;
 	min-height: calc(100vh - 70px);
-	margin: 0 auto;
-	padding: 50px 20px;
+	padding: 50px 30px;
 	background-color: #fff;
 `;
 
@@ -62,7 +63,10 @@ export const Quiz = () => {
 					<Route path="/login" element={<Authorization />}></Route>
 					<Route path="/register" element={<Registration />}></Route>
 					<Route path="/test/:id" element={<Test />}></Route>
-					<Route path="/question/:id" element={<Question />}></Route>
+					<Route
+						path="/test/:id/question/:pageId"
+						element={<Question />}
+					></Route>
 					<Route path="/result" element={<Result />}></Route>
 					<Route path="/user-tests" element={<UserTests />}></Route>
 					<Route path="/edit" element={<Edit />}></Route>

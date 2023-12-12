@@ -1,4 +1,3 @@
-const mapAuthor = require('./mapAuthor');
 const mapQuestion = require('./mapQuestion');
 
 module.exports = function (test) {
@@ -6,7 +5,10 @@ module.exports = function (test) {
 		id: test.id,
 		title: test.title,
 		createdAt: test.createdAt.toLocaleDateString(),
-		author: mapAuthor(test.author),
+		author: {
+			name: test.author.name,
+			surname: test.author.surname,
+		},
 		questions: test.questions.map(mapQuestion),
 	}
 }

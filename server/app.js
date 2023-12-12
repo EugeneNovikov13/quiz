@@ -2,12 +2,13 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const { register, login } = require('./controllers/user');
-const { addTest, editTest, deleteTest, getTests, getTest } = require('./controllers/test');
+const { addTest, editTest, deleteTest, getTests, getTest, getQuestion } = require('./controllers/test');
 const { addHistory, deleteHistory, getHistories } = require('./controllers/history');
 const authenticated = require('./middlewares/authenticated');
 const mapUser = require('./helpers/mapUser');
 const mapTest = require('./helpers/mapTest');
 const mapHistory = require('./helpers/mapHistory');
+const mapQuestion = require('./helpers/mapQuestion');
 
 const port = 3001;
 const app = express();
@@ -70,6 +71,17 @@ app.get('/tests/:id', async (req, res) => {
 		res.send({ data: mapTest(test), error: null });
 	} catch (e) {
 		res.send({ data: null, error: 'Error! Maybe... This test isn\'t exist' });
+		console.log(e);
+	}
+});
+
+app.get('/tests/:id/questions/:page', async (req, res) => {
+	try {
+		const { question, lastPage } = await getQuestion(req.params.id, req.params.page);
+
+		res.send({ data: { question: mapQuestion(question), lastPage }, error: null });
+	} catch (e) {
+		res.send({ data: null, error: 'Error! Maybe... This question isn\'t exist' });
 		console.log(e);
 	}
 });

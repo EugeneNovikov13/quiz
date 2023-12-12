@@ -6,6 +6,7 @@ import { selectAppWasLogin } from '../../redux/selectors';
 import { Button, TestInfo } from '../../components';
 import { Pagination } from './components';
 import styled from 'styled-components';
+import { QUESTIONS_AMOUNT_TO_LOAD } from '../../constants';
 
 const MainContainer = ({ className }) => {
 	const [tests, setTests] = useState([]);
@@ -17,7 +18,9 @@ const MainContainer = ({ className }) => {
 	const wasLogin = useSelector(selectAppWasLogin);
 
 	useEffect(() => {
-		request(`/tests?limit=12&page=${page}`).then(({ data: { tests, lastPage } }) => {
+		request(
+			`/tests?limit=${QUESTIONS_AMOUNT_TO_LOAD.PAGINATION_LIMIT}&page=${page}`,
+		).then(({ data: { tests, lastPage } }) => {
 			setTests(tests);
 			setLastPage(lastPage);
 		});
@@ -72,8 +75,10 @@ export const Main = styled(MainContainer)`
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		width: 228px;
-		height: 240px;
+		justify-content: space-between;
+		width: 223px;
+		min-height: 240px;
+		max-height: 300px;
 		padding: 5px;
 		border: 2px solid #ccc;
 		border-radius: 10px;

@@ -6,5 +6,6 @@ export * from './icon/icon';
 export * from './input/input';
 export * from './modal/modal';
 export * from './nav-bar/nav-bar';
+export * from './private-content/private-content';
 export * from './test-info/test-info';
 export * from './tooltip/tooltip';

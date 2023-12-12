@@ -2,8 +2,12 @@
 
 const History = require('../models/History');
 
-function addHistory(history) {
-	return History.create(history);
+async function addHistory(history) {
+	const newHistory = await History.create(history);
+
+	await newHistory.populate('user', { name: 1, surname: 1 });
+
+	return newHistory;
 }
 
 //delete along with test

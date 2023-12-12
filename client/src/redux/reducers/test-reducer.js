@@ -3,11 +3,14 @@ import { ACTION_TYPE } from '../actions';
 const initialTestState = {
 	editedQuestions: new Set(),
 	newQuestionId: '',
-	id: '',
-	title: '',
-	createdAt: '',
-	author: { name: '', surname: '' },
-	questions: [],
+	history: [],
+	test: {
+		id: '',
+		title: '',
+		createdAt: '',
+		author: { name: '', surname: '' },
+		questions: [],
+	},
 };
 
 export const testReducer = (state = initialTestState, action) => {
@@ -15,8 +18,14 @@ export const testReducer = (state = initialTestState, action) => {
 		case ACTION_TYPE.SET_TEST_DATA:
 			return {
 				...state,
-				questions: action.payload,
+				test: action.payload,
 				editedQuestions: new Set(),
+			};
+
+		case ACTION_TYPE.SET_HISTORY:
+			return {
+				...state,
+				history: action.payload,
 			};
 
 		case ACTION_TYPE.ADD_QUESTION:

@@ -138,7 +138,6 @@ export const Registration = styled(RegistrationContainer)`
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	width: 100%;
 	min-width: 360px;
 	min-height: 740px;
 	border: 1px solid #eee;

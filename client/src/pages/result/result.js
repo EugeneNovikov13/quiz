@@ -1,30 +1,42 @@
 import { Link } from 'react-router-dom';
-import { countNumberCorrectAnswers, getItemFromLocalStorage } from '../../utils';
-import { Button, NavBar } from '../../components';
+import { useSelector } from 'react-redux';
+import { countNumberCorrectAnswers } from '../../utils';
+import { selectTestHistory } from '../../redux/selectors/select-test-history';
+import { selectTestData } from '../../redux/selectors/select-test-data';
+import { Button, Error, NavBar, PrivateContent } from '../../components';
+import { ERROR } from '../../constants';
 import styled from 'styled-components';
 
 const ResultContainer = ({ className }) => {
-	const history = getItemFromLocalStorage('history');
+	const history = useSelector(selectTestHistory)[0];
+	const testId = useSelector(selectTestData).id;
 
-	const lastTestResult = history[history.length - 1];
-
-	const rightAnswersCount = countNumberCorrectAnswers(lastTestResult.testResult, '/');
+	const rightAnswersCount =
+		!!history && countNumberCorrectAnswers(history.results, '/');
 
 	return (
-		<div className={className}>
-			<div className="header">
-				<h1>Правильных ответов:</h1>
-				<h1 className="right-answers-count">{rightAnswersCount}</h1>
+		<PrivateContent>
+			<div className={className}>
+				{history ? (
+					<div className="header">
+						<h1>Правильных ответов:</h1>
+						<h1 className="right-answers-count">{rightAnswersCount}</h1>
+					</div>
+				) : (
+					<Error error={ERROR.NO_RESULTS} />
+				)}
+				<NavBar>
+					<Link to="/">
+						<Button>На главную</Button>
+					</Link>
+					{testId && (
+						<Link to={`/test/${testId}/question/1`}>
+							<Button>Пройти ещё раз</Button>
+						</Link>
+					)}
+				</NavBar>
 			</div>
-			<NavBar>
-				<Link to="/">
-					<Button>На главную</Button>
-				</Link>
-				<Link to="/question/1">
-					<Button>Пройти ещё раз</Button>
-				</Link>
-			</NavBar>
-		</div>
+		</PrivateContent>
 	);
 };
 
