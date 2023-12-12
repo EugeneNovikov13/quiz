@@ -1,25 +1,23 @@
 import { useLayoutEffect, useRef, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { loadQuestionAsync } from '../../redux/actions';
+import { generateTestResult } from '../../utils';
+import { addHistoryAsync, loadQuestionAsync, loadTestAsync } from '../../redux/actions';
 import { selectLastPage, selectQuestion } from '../../redux/selectors';
-import { Button } from '../../components';
+import { Button, PrivateContent } from '../../components';
 import { Task } from './components';
 import styled from 'styled-components';
-import {
-	checkTestResult,
-	generateDataForHistory,
-	updateItemInLocalStorage,
-} from '../../utils';
 
 const QuestionContainer = ({ className }) => {
+	const [errorMessage, setErrorMessage] = useState(null);
+
 	//есть выбранный ответ, готов переходить на следующий вопрос
 	const [readyToContinue, setReadyToContinue] = useState(false);
 	const dispatch = useDispatch();
 
 	//получаем текущий номер страницы вопроса, чтобы при переключении страницы  менялась зависимость в useLayoutEffect
 	const params = useParams();
-	const currentPage = Number(params.page);
+	const currentPage = Number(params.pageId);
 
 	//вопросы получаем из редюсера, куда эти данные приходят после запроса в useLayoutEffect
 	const question = useSelector(selectQuestion);
@@ -32,7 +30,9 @@ const QuestionContainer = ({ className }) => {
 
 	//загрузка вопроса и ответов
 	useLayoutEffect(() => {
-		dispatch(loadQuestionAsync(params.id, currentPage));
+		dispatch(loadQuestionAsync(params.id, currentPage)).then(res => {
+			if (res.error) setErrorMessage(res.error);
+		});
 	}, [dispatch, currentPage, params.id]);
 
 	//проверка на последнюю страницу и наличие ответов на ВСЕ вопросы теста
@@ -47,46 +47,61 @@ const QuestionContainer = ({ className }) => {
 
 		let testData;
 
-		await dispatch(loadQuestionAsync()).then(({ data }) => {
+		await dispatch(loadTestAsync(params.id)).then(({ data }) => {
 			testData = data.questions;
 		});
 
-		const testResult = checkTestResult(testData, selectedAnswers);
-		const dataForHistory = generateDataForHistory(testResult);
-		updateItemInLocalStorage('history', dataForHistory);
+		const testResult = generateTestResult(testData, selectedAnswers);
+
+		dispatch(addHistoryAsync(params.id, testResult)).then(res => {
+			if (res.error) setErrorMessage(res.error);
+		});
 
 		navigate('/result');
 	};
 
 	return (
-		<div className={className}>
-			<Task
-				text={question.text}
-				answers={question.answers}
-				userAnswers={userAnswers}
-				setReadyToContinue={setReadyToContinue}
-			/>
-			<div className="navigate-buttons">
-				<Link to={`${currentPage === 1 ? '/' : `/question/${currentPage - 1}`}`}>
-					<Button activeColor={'#fddb5d'} isDisable={false}>
-						{currentPage === 1 ? 'Вернуться на главную' : 'Предыдущий вопрос'}
-					</Button>
-				</Link>
-				<Link
-					to={`${
-						currentPage === lastPage ? '' : `/question/${currentPage + 1}`
-					}`}
-				>
-					<Button
-						activeColor={isLastPage ? 'lightgreen' : '#fddb5d'}
-						isDisable={isLastPage ? !readyToComplete : !readyToContinue}
-						onClick={() => onNextButtonClick(userAnswers.current)}
+		<PrivateContent serverError={errorMessage}>
+			<div className={className}>
+				<Task
+					text={question.text}
+					answers={question.answers}
+					userAnswers={userAnswers}
+					setReadyToContinue={setReadyToContinue}
+				/>
+				<div className="navigate-buttons">
+					<Link
+						to={`${
+							currentPage === 1
+								? `/test/${params.id}`
+								: `/test/${params.id}/question/${currentPage - 1}`
+						}`}
 					>
-						{isLastPage ? 'Завершить тест' : 'Следующий вопрос'}
-					</Button>
-				</Link>
+						<Button activeColor={'#fddb5d'} isDisable={false} height="65px">
+							{currentPage === 1
+								? 'Назад на страницу теста'
+								: 'Предыдущий вопрос'}
+						</Button>
+					</Link>
+					<Link
+						to={`${
+							currentPage === lastPage
+								? ''
+								: `/test/${params.id}/question/${currentPage + 1}`
+						}`}
+					>
+						<Button
+							activeColor={isLastPage ? 'lightgreen' : '#fddb5d'}
+							isDisable={isLastPage ? !readyToComplete : !readyToContinue}
+							height="65px"
+							onClick={() => onNextButtonClick(userAnswers.current)}
+						>
+							{isLastPage ? 'Завершить тест' : 'Следующий вопрос'}
+						</Button>
+					</Link>
+				</div>
 			</div>
-		</div>
+		</PrivateContent>
 	);
 };
 
@@ -96,6 +111,7 @@ export const Question = styled(QuestionContainer)`
 	& .navigate-buttons {
 		display: flex;
 		justify-content: space-between;
+		gap: 10px;
 		align-items: center;
 		width: 100%;
 		padding: 20px 0;
@@ -105,7 +121,9 @@ export const Question = styled(QuestionContainer)`
 		color: #000;
 	}
 
-	& button:hover {
-		box-shadow: 0 4px 2px -1px rgba(188, 188, 188, 1);
+	@media (max-width: 720px) {
+		.navigate-buttons {
+			flex-direction: column;
+		}
 	}
 `;

@@ -1,5 +1,6 @@
 export * from './action-type';
 export * from './add-answer';
+export * from './add-history-async';
 export * from './add-question-async';
 export * from './add-question';
 export * from './change-correct-answer';

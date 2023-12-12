@@ -8,7 +8,7 @@ import { updateObjectOfStates } from '../../../../utils';
 
 const TaskContainer = ({ className, text, answers, userAnswers, setReadyToContinue }) => {
 	const params = useParams();
-	const currentPage = Number(params.id);
+	const currentPage = Number(params.pageId);
 	const lastPage = useSelector(selectLastQuestionNumber);
 
 	//состояние для хранения состояний чекбоксов  -------------------

@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { countNumberCorrectAnswers, getItemFromLocalStorage } from '../../utils';
-import { Button, NavBar } from '../../components';
+import { Button, NavBar, PrivateContent } from '../../components';
 import styled from 'styled-components';
 
 const ResultContainer = ({ className }) => {
@@ -11,20 +11,26 @@ const ResultContainer = ({ className }) => {
 	const rightAnswersCount = countNumberCorrectAnswers(lastTestResult.testResult, '/');
 
 	return (
-		<div className={className}>
-			<div className="header">
-				<h1>Правильных ответов:</h1>
-				<h1 className="right-answers-count">{rightAnswersCount}</h1>
+		<PrivateContent>
+			<div className={className}>
+				{history && (
+					<div className="header">
+						<h1>Правильных ответов:</h1>
+						<h1 className="right-answers-count">{rightAnswersCount}</h1>
+					</div>
+				)}
+				<NavBar>
+					<Link to="/">
+						<Button>На главную</Button>
+					</Link>
+					{history && (
+						<Link to="/question/1">
+							<Button>Пройти ещё раз</Button>
+						</Link>
+					)}
+				</NavBar>
 			</div>
-			<NavBar>
-				<Link to="/">
-					<Button>На главную</Button>
-				</Link>
-				<Link to="/question/1">
-					<Button>Пройти ещё раз</Button>
-				</Link>
-			</NavBar>
-		</div>
+		</PrivateContent>
 	);
 };
 

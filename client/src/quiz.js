@@ -62,9 +62,11 @@ export const Quiz = () => {
 					<Route path="/" element={<Main />}></Route>
 					<Route path="/login" element={<Authorization />}></Route>
 					<Route path="/register" element={<Registration />}></Route>
-					<Route path="/test/:id" element={<Test />}>
-						<Route path="question/:id" element={<Question />}></Route>
-					</Route>
+					<Route path="/test/:id" element={<Test />}></Route>
+					<Route
+						path="/test/:id/question/:pageId"
+						element={<Question />}
+					></Route>
 					<Route path="/result" element={<Result />}></Route>
 					<Route path="/user-tests" element={<UserTests />}></Route>
 					<Route path="/edit" element={<Edit />}></Route>

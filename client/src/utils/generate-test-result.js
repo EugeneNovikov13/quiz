@@ -1,4 +1,4 @@
-export const checkTestResult = (data, result) =>
+export const generateTestResult = (data, result) =>
 	result.map((answer, index) => ({
 		id: data[index].id,
 		question: data[index].text,
