@@ -31,16 +31,15 @@ const HeaderContainer = ({ className }) => {
 			{wasLogin ? (
 				<Icon width={'50px'} iconSrc={user} onMouseEnter={() => onMouseEnter()} />
 			) : (
-				<Link to="/login">
-					<Button
-						activeColor="#000"
-						width="120px"
-						height="40px"
-						fontSize="20px"
-					>
-						Войти
-					</Button>
-				</Link>
+				<Button
+					link={'/login'}
+					activeColor="#000"
+					width="120px"
+					height="40px"
+					fontSize="20px"
+				>
+					Войти
+				</Button>
 			)}
 			<Tooltip
 				isHovered={isHovered}

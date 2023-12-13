@@ -1,6 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import {
 	addQuestionAsync,
 	loadQuestionAsync,
@@ -62,18 +61,15 @@ const EditContainer = ({ className }) => {
 				</div>
 			)}
 			<NavBar readyToComplete={readyToSave}>
-				<Link to="/">
-					<Button>Назад</Button>
-				</Link>
+				<Button link="/">Назад</Button>
 				{readyToSave && isLoading && (
-					<Link to="/edit">
-						<Button
-							className="right-button"
-							onClick={() => onSave(questions, editedQuestions)}
-						>
-							Сохранить
-						</Button>
-					</Link>
+					<Button
+						className="right-button"
+						link="/edit"
+						onClick={() => onSave(questions, editedQuestions)}
+					>
+						Сохранить
+					</Button>
 				)}
 			</NavBar>
 		</div>

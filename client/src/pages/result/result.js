@@ -1,4 +1,3 @@
-import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { countNumberCorrectAnswers } from '../../utils';
 import { selectTestHistory } from '../../redux/selectors/select-test-history';
@@ -26,13 +25,11 @@ const ResultContainer = ({ className }) => {
 					<Error error={ERROR.NO_RESULTS} />
 				)}
 				<NavBar>
-					<Link to="/">
-						<Button>На главную</Button>
-					</Link>
+					<Button link="/">На главную</Button>
 					{testId && (
-						<Link to={`/test/${testId}/question/1`}>
-							<Button>Пройти ещё раз</Button>
-						</Link>
+						<Button link={`/test/${testId}/question/1`}>
+							Пройти ещё раз
+						</Button>
 					)}
 				</NavBar>
 			</div>

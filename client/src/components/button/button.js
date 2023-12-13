@@ -1,10 +1,31 @@
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
-const ButtonContainer = ({ className, children, type, isDisable, onClick }) => {
+const ButtonContainer = ({ className, children, link, type, isDisable, onClick }) => {
 	return (
-		<button className={className} type={type} disabled={isDisable} onClick={onClick}>
-			{children}
-		</button>
+		<>
+			{link ? (
+				<Link to={link}>
+					<button
+						className={className}
+						type={type}
+						disabled={isDisable}
+						onClick={onClick}
+					>
+						{children}
+					</button>
+				</Link>
+			) : (
+				<button
+					className={className}
+					type={type}
+					disabled={isDisable}
+					onClick={onClick}
+				>
+					{children}
+				</button>
+			)}
+		</>
 	);
 };
 

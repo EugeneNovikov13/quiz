@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { loadHistoryAsync, loadTestAsync } from '../../redux/actions';
 import { selectAppWasLogin } from '../../redux/selectors';
@@ -42,16 +42,15 @@ const TestContainer = ({ className }) => {
 					author={test.author.surname + ' ' + test.author.name}
 					questionsCount={test.questions.length}
 				/>
-				<Link to={`/test/${params.id}/question/1`}>
-					<Button
-						activeColor="#000"
-						width="200px"
-						height="40px"
-						fontSize="20px"
-					>
-						Запустить тест
-					</Button>
-				</Link>
+				<Button
+					link={`/test/${params.id}/question/1`}
+					activeColor="#000"
+					width="200px"
+					height="40px"
+					fontSize="20px"
+				>
+					Запустить тест
+				</Button>
 				<History history={history} />
 			</div>
 		</PrivateContent>

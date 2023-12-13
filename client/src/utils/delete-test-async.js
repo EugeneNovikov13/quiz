@@ -1,3 +1,3 @@
-import { request } from '../../utils';
+import { request } from './index';
 
 export const deleteTestAsync = id => request(`/tests/${id}`, 'DELETE');

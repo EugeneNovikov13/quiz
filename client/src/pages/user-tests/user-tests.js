@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
-import { createArrayFromNumber, request } from '../../utils';
-import { CLOSE_MODAL, deleteTestAsync, openModal } from '../../redux/actions';
+import { createArrayFromNumber, deleteTestAsync, loadTestsAsync } from '../../utils';
+import { CLOSE_MODAL, openModal } from '../../redux/actions';
 import { selectUserId } from '../../redux/selectors';
 import { Button, PrivateContent, TestInfo } from '../../components';
 import { Pagination } from '../main/components';
@@ -14,6 +13,7 @@ const UserTestsContainer = ({ className }) => {
 	const [page, setPage] = useState(1);
 	const [lastPage, setLastPage] = useState(1);
 	const [shouldRefresh, setShouldRefresh] = useState(false);
+	const [isLoading, setIsLoading] = useState(true);
 
 	const dispatch = useDispatch();
 
@@ -22,11 +22,16 @@ const UserTestsContainer = ({ className }) => {
 	const userId = useSelector(selectUserId);
 
 	useEffect(() => {
-		request(
-			`/tests?user=${userId}&limit=${QUESTIONS_AMOUNT_TO_LOAD.USER_TEST_PAGE_PAGINATION_LIMIT}&page=${page}`,
+		if (!userId) return;
+
+		loadTestsAsync(
+			userId,
+			QUESTIONS_AMOUNT_TO_LOAD.USER_TEST_PAGE_PAGINATION_LIMIT,
+			page,
 		).then(({ data: { tests, lastPage } }) => {
 			setTests(tests);
 			setLastPage(lastPage);
+			setIsLoading(false);
 		});
 	}, [page, userId, shouldRefresh]);
 
@@ -57,64 +62,53 @@ const UserTestsContainer = ({ className }) => {
 		);
 	};
 
+	const buttonStyleProps = { width: '160px', height: '35px', fontSize: '16px' };
+
 	return (
 		<PrivateContent>
-			<div className={className}>
-				<div className="header">
-					<h1>Мои тесты</h1>
-					<Link to="/edit">
-						<Button
-							activeColor="#000"
-							width="160px"
-							height="35px"
-							fontSize="16px"
-						>
+			{!isLoading && (
+				<div className={className}>
+					<div className="header">
+						<h1>Мои тесты</h1>
+						<Button link={'/edit'} activeColor="#000" {...buttonStyleProps}>
 							Создать тест
 						</Button>
-					</Link>
-				</div>
-				<div className="tests">
-					{tests.map(({ id, title, createdAt, questions }) => (
-						<div className="test" key={id}>
-							<TestInfo
-								title={title}
-								createdAt={createdAt}
-								questionsCount={questions.length}
-							/>
-							<Link to={`/test/${id}`}>
+					</div>
+					<div className="tests">
+						{tests.map(({ id, title, createdAt, questions }) => (
+							<div className="test" key={id}>
+								<TestInfo
+									title={title}
+									createdAt={createdAt}
+									questionsCount={questions.length}
+								/>
 								<Button
+									link={`/test/${id}`}
 									activeColor="#000"
-									width="160px"
-									height="35px"
-									fontSize="16px"
+									{...buttonStyleProps}
 								>
 									Открыть
 								</Button>
-							</Link>
-							<Link to={`/edit/${id}`}>
 								<Button
+									link={`/edit/${id}`}
 									activeColor="#5B90FDFF"
-									width="160px"
-									height="35px"
-									fontSize="16px"
+									{...buttonStyleProps}
 								>
 									Редактировать
 								</Button>
-							</Link>
-							<Button
-								activeColor="#bc2121"
-								width="160px"
-								height="35px"
-								fontSize="16px"
-								onClick={() => onTestDelete(id)}
-							>
-								Удалить
-							</Button>
-						</div>
-					))}
+								<Button
+									activeColor="#bc2121"
+									{...buttonStyleProps}
+									onClick={() => onTestDelete(id)}
+								>
+									Удалить
+								</Button>
+							</div>
+						))}
+					</div>
+					<Pagination pages={pages} page={page} setPage={setPage} />
 				</div>
-				<Pagination pages={pages} page={page} setPage={setPage} />
-			</div>
+			)}
 		</PrivateContent>
 	);
 };
