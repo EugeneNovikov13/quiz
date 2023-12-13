@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { createArrayFromNumber, request } from '../../utils';
+import { createArrayFromNumber, loadTestsAsync } from '../../utils';
 import { selectAppWasLogin } from '../../redux/selectors';
 import { Button, TestInfo } from '../../components';
 import { Pagination } from './components';
@@ -18,8 +17,10 @@ const MainContainer = ({ className }) => {
 	const wasLogin = useSelector(selectAppWasLogin);
 
 	useEffect(() => {
-		request(
-			`/tests?limit=${QUESTIONS_AMOUNT_TO_LOAD.PAGINATION_LIMIT}&page=${page}`,
+		loadTestsAsync(
+			null,
+			QUESTIONS_AMOUNT_TO_LOAD.MAIN_PAGE_PAGINATION_LIMIT,
+			page,
 		).then(({ data: { tests, lastPage } }) => {
 			setTests(tests);
 			setLastPage(lastPage);
@@ -38,16 +39,15 @@ const MainContainer = ({ className }) => {
 							questionsCount={questions.length}
 						/>
 						{wasLogin && (
-							<Link to={`/test/${id}`}>
-								<Button
-									activeColor="#000"
-									width="140px"
-									height="35px"
-									fontSize="16px"
-								>
-									Открыть
-								</Button>
-							</Link>
+							<Button
+								link={`/test/${id}`}
+								activeColor="#000"
+								width="160px"
+								height="35px"
+								fontSize="16px"
+							>
+								Открыть
+							</Button>
 						)}
 					</div>
 				))}
@@ -58,7 +58,7 @@ const MainContainer = ({ className }) => {
 };
 
 export const Main = styled(MainContainer)`
-	max-width: 960px;
+	max-width: 940px;
 	min-width: 360px;
 	display: flex;
 	flex-direction: column;

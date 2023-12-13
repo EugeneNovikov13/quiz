@@ -1,32 +1,49 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import {
 	addQuestionAsync,
-	loadQuestionAsync,
+	loadTestAsync,
 	updateQuestionsAsync,
+	updateTestTitle,
 } from '../../redux/actions';
-import { selectEditedQuestions, selectQuestions } from '../../redux/selectors';
+import { selectEditedQuestions } from '../../redux/selectors';
 import { checkErrors, filterDataByIdSet } from '../../utils';
-import { Button, NavBar } from '../../components';
-import { QuestionEditBlock } from './components';
+import { Button, NavBar, PrivateContent } from '../../components';
+import { EditInput, QuestionEditBlock } from './components';
 import styled from 'styled-components';
+import { useParams } from 'react-router-dom';
+import { selectTestData } from '../../redux/selectors/select-test-data';
 
 const EditContainer = ({ className }) => {
 	const [isNewQuestionCreated, setIsNewQuestionCreated] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
+	const [newTitle, setNewTitle] = useState('');
+	const [errorMessage, setErrorMessage] = useState(null);
 
 	const dispatch = useDispatch();
-	const questions = useSelector(selectQuestions);
+	const params = useParams();
+	const { title, questions } = useSelector(selectTestData);
 	const editedQuestions = useSelector(selectEditedQuestions);
 
 	const readyToSave = !checkErrors(questions) && !!editedQuestions.size;
 
 	useEffect(() => {
-		dispatch(loadQuestionAsync()).then(() => {
+		dispatch(loadTestAsync(params.id)).then(res => {
+			if (res.error) {
+				setErrorMessage(res.error);
+				return;
+			}
+			setNewTitle(res.data.title);
 			setIsLoading(true);
 		});
-	}, [dispatch]);
+	}, [dispatch, params.id]);
+
+	const onBlur = () => {
+		if (newTitle === title) {
+			return;
+		}
+		dispatch(updateTestTitle(newTitle));
+	};
 
 	const onAddQuestion = () => {
 		dispatch(addQuestionAsync());
@@ -40,43 +57,51 @@ const EditContainer = ({ className }) => {
 	};
 
 	return (
-		<div className={className}>
-			{isLoading && (
-				<div className="test-edit-block">
-					{questions.map(({ id, text, correctAnswer, answers }) => (
-						<QuestionEditBlock
-							key={id}
-							id={id}
-							questionText={text}
-							correctAnswer={correctAnswer}
-							answers={answers}
-							isNewQuestionCreated={isNewQuestionCreated}
-							setIsNewQuestionCreated={setIsNewQuestionCreated}
+		<PrivateContent serverError={errorMessage}>
+			<div className={className}>
+				{isLoading && (
+					<div className="test-edit-block">
+						<EditInput
+							value={newTitle}
+							onChange={({ target }) => setNewTitle(target.value)}
+							onBlur={() => onBlur()}
 						/>
-					))}
-					{!isNewQuestionCreated && (
-						<div className="add-question-button" onClick={onAddQuestion}>
+						{questions.map(({ id, text, answers }) => (
+							<QuestionEditBlock
+								key={id}
+								id={id}
+								questionText={text}
+								answers={answers}
+								isNewQuestionCreated={isNewQuestionCreated}
+								setIsNewQuestionCreated={setIsNewQuestionCreated}
+							/>
+						))}
+						<Button
+							activeColor="#000"
+							width="100%"
+							height="50px"
+							fontSize="18px"
+							isDisable={isNewQuestionCreated}
+							onClick={onAddQuestion}
+						>
 							Добавить вопрос
-						</div>
-					)}
-				</div>
-			)}
-			<NavBar readyToComplete={readyToSave}>
-				<Link to="/">
-					<Button>Назад</Button>
-				</Link>
-				{readyToSave && isLoading && (
-					<Link to="/edit">
+						</Button>
+					</div>
+				)}
+				<NavBar readyToComplete={readyToSave}>
+					<Button link="/user-tests">Назад</Button>
+					{readyToSave && isLoading && (
 						<Button
 							className="right-button"
+							link="/user-tests"
 							onClick={() => onSave(questions, editedQuestions)}
 						>
 							Сохранить
 						</Button>
-					</Link>
-				)}
-			</NavBar>
-		</div>
+					)}
+				</NavBar>
+			</div>
+		</PrivateContent>
 	);
 };
 
@@ -84,27 +109,14 @@ export const Edit = styled(EditContainer)`
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
-	min-height: calc(100vh - 140px);
+	width: 960px;
+	min-width: 360px;
+	min-height: calc(100vh - 170px);
 
 	& .test-edit-block {
 		display: flex;
 		flex-direction: column;
 		justify-content: space-between;
 		gap: 20px;
-		padding: 0 30px;
-	}
-
-	& .add-question-button {
-		height: 34px;
-		border: 1px solid #ccc;
-		border-radius: 10px;
-		padding: 5px 15px;
-		text-align: center;
-	}
-
-	& .add-question-button:hover {
-		background-color: #000;
-		color: #fff;
-		cursor: pointer;
 	}
 `;

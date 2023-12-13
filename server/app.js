@@ -50,7 +50,7 @@ app.post('/logout', (req, res) => {
 app.get('/tests', async (req, res) => {
 	try {
 		const { tests, lastPage } = await getTests(
-			req.query?.user,
+			req.query?.user === 'null' ? null : req.query?.user,
 			req.query?.limit,
 			req.query?.page,
 		);

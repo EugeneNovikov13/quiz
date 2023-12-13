@@ -12,6 +12,7 @@ import { AnswerEdit } from './components';
 import icons from '../../assets';
 import styled from 'styled-components';
 import { selectNewQuestionId } from '../../../../redux/selectors';
+import { EditInput } from '../edit-input/edit-input';
 
 const QuestionEditContainer = ({
 	className,
@@ -79,8 +80,7 @@ const QuestionEditContainer = ({
 			{isExpanded ? (
 				<>
 					<div className="ques-header">
-						<input
-							type="text"
+						<EditInput
 							value={newQuestionText}
 							onChange={({ target }) => onChange(target.value)}
 							onBlur={() => onBlur()}
@@ -120,7 +120,7 @@ const QuestionEditContainer = ({
 			) : (
 				<div className="ques-header" onClick={onArrowClick}>
 					<div className="ques-title">{questionText}</div>
-					<Icon iconSrc={icons.downArrow} width={'20px'} />
+					<Icon iconSrc={icons.downArrow} width={'25px'} />
 				</div>
 			)}
 		</div>
@@ -141,26 +141,15 @@ export const QuestionEditBlock = styled(QuestionEditContainer)`
 		gap: 10px;
 	}
 
-	& input {
-		width: 300px;
-		height: 30px;
-		border: 1px solid #ccc;
-		border-radius: 10px;
-		padding: 5px 10px;
-		font-size: 15px;
-		background-color: inherit;
-		transition: width 0.5s ease-in;
-	}
-
-	& input:focus {
-		width: 600px;
-		background-color: #fff;
-		outline: 1px solid #000;
-	}
-
 	& .ques-header {
 		display: flex;
 		justify-content: space-between;
+		align-items: center;
+		height: ${({ isExpanded }) => (isExpanded ? '40px' : '50px')};
+	}
+
+	& .ques-title {
+		font-size: 18px;
 	}
 
 	& .add-answer-button {

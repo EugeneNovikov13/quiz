@@ -1,6 +1,7 @@
 export * from './select-app-waslogin';
 export * from './select-edited-questions';
 export * from './select-last-question-number';
+export * from './select-modal-is-error';
 export * from './select-modal-is-open';
 export * from './select-modal-on-cancel';
 export * from './select-modal-on-confirm';
@@ -9,3 +10,5 @@ export * from './select-new-question-id';
 export * from './select-last-page';
 export * from './select-questions';
 export * from './select-question';
+export * from './select-user';
+export * from './select-user-id';

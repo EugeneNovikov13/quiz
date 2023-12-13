@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { generateTestResult } from '../../utils';
 import { addHistoryAsync, loadQuestionAsync, loadTestAsync } from '../../redux/actions';
@@ -28,6 +28,17 @@ const QuestionContainer = ({ className }) => {
 	const lastPage = useSelector(selectLastPage);
 
 	const navigate = useNavigate();
+	const isLastPage = currentPage === Number(lastPage);
+
+	const linkForBackButton = `${
+		currentPage === 1
+			? `/test/${params.id}`
+			: `/test/${params.id}/question/${currentPage - 1}`
+	}`;
+
+	const linkForNextButton = `${
+		currentPage === lastPage ? '' : `/test/${params.id}/question/${currentPage + 1}`
+	}`;
 
 	useEffect(() => {
 		userAnswers.current[currentPage - 1] = null;
@@ -39,8 +50,6 @@ const QuestionContainer = ({ className }) => {
 			if (res.error) setErrorMessage(res.error);
 		});
 	}, [dispatch, currentPage, params.id]);
-
-	const isLastPage = currentPage === Number(lastPage);
 
 	//обработка нажатия кнопки "Следующий" для записи результатов теста и переключения на страницу "Результат"
 	const onNextButtonClick = async selectedAnswers => {
@@ -78,40 +87,26 @@ const QuestionContainer = ({ className }) => {
 					setReadyToComplete={setReadyToComplete}
 				/>
 				<div className="navigate-buttons">
-					<Link
-						to={`${
-							currentPage === 1
-								? `/test/${params.id}`
-								: `/test/${params.id}/question/${currentPage - 1}`
-						}`}
+					<Button
+						link={linkForBackButton}
+						activeColor={'#fddb5d'}
+						isDisable={false}
+						height="65px"
+						onClick={onBackButtonClick}
 					>
-						<Button
-							activeColor={'#fddb5d'}
-							isDisable={false}
-							height="65px"
-							onClick={onBackButtonClick}
-						>
-							{currentPage === 1
-								? 'Назад на страницу теста'
-								: 'Предыдущий вопрос'}
-						</Button>
-					</Link>
-					<Link
-						to={`${
-							currentPage === lastPage
-								? ''
-								: `/test/${params.id}/question/${currentPage + 1}`
-						}`}
+						{currentPage === 1
+							? 'Назад на страницу теста'
+							: 'Предыдущий вопрос'}
+					</Button>
+					<Button
+						link={linkForNextButton}
+						activeColor={isLastPage ? 'lightgreen' : '#fddb5d'}
+						isDisable={isLastPage ? !readyToComplete : !readyToContinue}
+						height="65px"
+						onClick={() => onNextButtonClick(userAnswers.current)}
 					>
-						<Button
-							activeColor={isLastPage ? 'lightgreen' : '#fddb5d'}
-							isDisable={isLastPage ? !readyToComplete : !readyToContinue}
-							height="65px"
-							onClick={() => onNextButtonClick(userAnswers.current)}
-						>
-							{isLastPage ? 'Завершить тест' : 'Следующий вопрос'}
-						</Button>
-					</Link>
+						{isLastPage ? 'Завершить тест' : 'Следующий вопрос'}
+					</Button>
 				</div>
 			</div>
 		</PrivateContent>
