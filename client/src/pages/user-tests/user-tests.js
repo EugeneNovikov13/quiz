@@ -114,7 +114,7 @@ const UserTestsContainer = ({ className }) => {
 };
 
 export const UserTests = styled(UserTestsContainer)`
-	width: 960px;
+	width: 940px;
 	min-width: 360px;
 	display: flex;
 	flex-direction: column;

@@ -9,10 +9,9 @@ export const NavBar = styled(NavBarContainer)`
 	justify-content: space-between;
 	gap: 10px;
 	align-items: center;
-	width: 100%;
 	padding: 20px 0;
 
-	@media (max-width: 720px) {
+	@media (max-width: 760px) {
 		flex-direction: column;
 	}
 

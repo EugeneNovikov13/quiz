@@ -20,3 +20,4 @@ export * from './set-user';
 export * from './update-answer-text';
 export * from './update-question-text';
 export * from './update-questions-async';
+export * from './update-test-title';

@@ -58,7 +58,7 @@ const MainContainer = ({ className }) => {
 };
 
 export const Main = styled(MainContainer)`
-	max-width: 960px;
+	max-width: 940px;
 	min-width: 360px;
 	display: flex;
 	flex-direction: column;

@@ -22,6 +22,15 @@ export const testReducer = (state = initialTestState, action) => {
 				editedQuestions: new Set(),
 			};
 
+		case ACTION_TYPE.UPDATE_TEST_TITLE:
+			return {
+				...state,
+				test: {
+					...state.test,
+					title: action.payload.title,
+				},
+			};
+
 		case ACTION_TYPE.SET_HISTORY:
 			return {
 				...state,
