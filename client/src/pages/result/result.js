@@ -1,7 +1,6 @@
 import { useSelector } from 'react-redux';
 import { countNumberCorrectAnswers } from '../../utils';
-import { selectTestHistory } from '../../redux/selectors/select-test-history';
-import { selectTestData } from '../../redux/selectors/select-test-data';
+import { selectTestData, selectTestHistory } from '../../redux/selectors';
 import { Button, Error, NavBar, PrivateContent } from '../../components';
 import { ERROR } from '../../constants';
 import styled from 'styled-components';

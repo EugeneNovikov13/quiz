@@ -7,6 +7,7 @@ import { Button, PrivateContent, TestInfo } from '../../components';
 import { Pagination } from '../main/components';
 import { QUESTIONS_AMOUNT_TO_LOAD } from '../../constants';
 import styled from 'styled-components';
+import { selectTestData } from '../../redux/selectors/select-test-data';
 
 const UserTestsContainer = ({ className }) => {
 	const [tests, setTests] = useState([]);
@@ -20,6 +21,7 @@ const UserTestsContainer = ({ className }) => {
 	const pages = createArrayFromNumber(lastPage);
 
 	const userId = useSelector(selectUserId);
+	const test = useSelector(selectTestData);
 
 	useEffect(() => {
 		if (!userId) return;
@@ -33,7 +35,7 @@ const UserTestsContainer = ({ className }) => {
 			setLastPage(lastPage);
 			setIsLoading(false);
 		});
-	}, [page, userId, shouldRefresh]);
+	}, [page, userId, test, shouldRefresh]);
 
 	const errorDemonstration = error => {
 		dispatch(

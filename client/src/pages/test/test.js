@@ -2,9 +2,11 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { loadHistoryAsync, loadTestAsync } from '../../redux/actions';
-import { selectAppWasLogin } from '../../redux/selectors';
-import { selectTestData } from '../../redux/selectors/select-test-data';
-import { selectTestHistory } from '../../redux/selectors/select-test-history';
+import {
+	selectAppWasLogin,
+	selectTestData,
+	selectTestHistory,
+} from '../../redux/selectors';
 import { History } from './components';
 import { Button, PrivateContent, TestInfo } from '../../components';
 import styled from 'styled-components';

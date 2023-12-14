@@ -1,5 +1,9 @@
-export const checkErrors = questions => {
+export const checkErrors = (title, questions) => {
 	let isError = false;
+
+	if (title.length === 0) {
+		return true;
+	}
 
 	questions.forEach(ques => {
 		if (

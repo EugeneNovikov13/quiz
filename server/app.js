@@ -110,7 +110,11 @@ app.patch('/tests/:id', async (req, res) => {
 
 		res.send({ data: mapTest(updatedTest), error: null });
 	} catch (e) {
-		res.send({ data: null, error: 'Error. Failed to update test' });
+		let error = 'Error. Failed to update test';
+		if (e.code === 11000) {
+			error = 'Тест с таким названием уже существует';
+		}
+		res.send({ data: null, error });
 		console.log(e);
 	}
 });

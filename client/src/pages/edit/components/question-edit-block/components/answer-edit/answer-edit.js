@@ -74,14 +74,14 @@ const AnswerEditContainer = ({ className, answerId, answerText, questionId }) =>
 
 export const AnswerEdit = styled(AnswerEditContainer)`
 	display: flex;
-	gap: 5px;
+	gap: 15px;
 
 	& .answer-text {
 		width: 300px;
 		min-height: 42px;
 		border: 1px solid #ccc;
 		border-radius: 10px;
-		padding: 5px;
+		padding: 5px 10px;
 		transition: width 0.5s ease-in;
 	}
 
