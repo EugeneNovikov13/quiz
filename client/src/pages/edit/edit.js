@@ -4,6 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { checkErrors } from '../../utils';
 import {
 	addQuestion,
+	addTestAsync,
 	loadTestAsync,
 	updateTestAsync,
 	updateTestTitle,
@@ -25,9 +26,14 @@ const EditContainer = ({ className }) => {
 	const { title, questions } = test;
 	const editedQuestions = useSelector(selectEditedQuestions);
 
+	const isCreating = !params.id;
 	const readyToSave = !checkErrors(title, questions) && !!editedQuestions.size;
 
 	useEffect(() => {
+		if (isCreating) {
+			setIsLoading(false);
+			return;
+		}
 		dispatch(loadTestAsync(params.id)).then(res => {
 			if (res.error) {
 				setErrorMessage(res.error);
@@ -36,7 +42,7 @@ const EditContainer = ({ className }) => {
 			setNewTitle(res.data.title);
 			setIsLoading(false);
 		});
-	}, [dispatch, params.id]);
+	}, [isCreating, dispatch, params.id]);
 
 	const onBlur = () => {
 		if (newTitle === title) {
@@ -49,8 +55,11 @@ const EditContainer = ({ className }) => {
 		dispatch(addQuestion());
 	};
 
-	const onSave = testData => {
-		dispatch(updateTestAsync(testData)).then(res => {
+	const onSave = async testData => {
+		let action;
+		isCreating ? (action = addTestAsync) : (action = updateTestAsync);
+
+		dispatch(action(testData)).then(res => {
 			if (res.error) {
 				setErrorMessage(res.error);
 				return;

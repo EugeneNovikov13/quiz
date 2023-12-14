@@ -2,6 +2,7 @@ export * from './action-type';
 export * from './add-answer';
 export * from './add-history-async';
 export * from './add-question';
+export * from './add-test-async';
 export * from './change-correct-answer';
 export * from './close-modal';
 export * from './delete-answer';
