@@ -1,31 +1,31 @@
-import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate, useParams } from 'react-router-dom';
+import { checkErrors } from '../../utils';
 import {
-	addQuestionAsync,
+	addQuestion,
 	loadTestAsync,
-	updateQuestionsAsync,
+	updateTestAsync,
 	updateTestTitle,
 } from '../../redux/actions';
-import { selectEditedQuestions } from '../../redux/selectors';
-import { checkErrors, filterDataByIdSet } from '../../utils';
+import { selectEditedQuestions, selectTestData } from '../../redux/selectors';
 import { Button, NavBar, PrivateContent } from '../../components';
 import { EditInput, QuestionEditBlock } from './components';
 import styled from 'styled-components';
-import { useParams } from 'react-router-dom';
-import { selectTestData } from '../../redux/selectors/select-test-data';
 
 const EditContainer = ({ className }) => {
-	const [isNewQuestionCreated, setIsNewQuestionCreated] = useState(false);
-	const [isLoading, setIsLoading] = useState(false);
+	const [isLoading, setIsLoading] = useState(true);
 	const [newTitle, setNewTitle] = useState('');
 	const [errorMessage, setErrorMessage] = useState(null);
 
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
 	const params = useParams();
-	const { title, questions } = useSelector(selectTestData);
+	const test = useSelector(selectTestData);
+	const { title, questions } = test;
 	const editedQuestions = useSelector(selectEditedQuestions);
 
-	const readyToSave = !checkErrors(questions) && !!editedQuestions.size;
+	const readyToSave = !checkErrors(title, questions) && !!editedQuestions.size;
 
 	useEffect(() => {
 		dispatch(loadTestAsync(params.id)).then(res => {
@@ -34,7 +34,7 @@ const EditContainer = ({ className }) => {
 				return;
 			}
 			setNewTitle(res.data.title);
-			setIsLoading(true);
+			setIsLoading(false);
 		});
 	}, [dispatch, params.id]);
 
@@ -46,20 +46,23 @@ const EditContainer = ({ className }) => {
 	};
 
 	const onAddQuestion = () => {
-		dispatch(addQuestionAsync());
-		setIsNewQuestionCreated(true);
+		dispatch(addQuestion());
 	};
 
-	const onSave = async (allQuestions, requiredIds) => {
-		const questionsToSave = filterDataByIdSet(allQuestions, requiredIds);
-		if (questionsToSave.length) await dispatch(updateQuestionsAsync(questionsToSave));
-		setIsNewQuestionCreated(false);
+	const onSave = testData => {
+		dispatch(updateTestAsync(testData)).then(res => {
+			if (res.error) {
+				setErrorMessage(res.error);
+				return;
+			}
+			navigate('/user-tests');
+		});
 	};
 
 	return (
 		<PrivateContent serverError={errorMessage}>
 			<div className={className}>
-				{isLoading && (
+				{!isLoading && (
 					<div className="test-edit-block">
 						<EditInput
 							value={newTitle}
@@ -72,8 +75,6 @@ const EditContainer = ({ className }) => {
 								id={id}
 								questionText={text}
 								answers={answers}
-								isNewQuestionCreated={isNewQuestionCreated}
-								setIsNewQuestionCreated={setIsNewQuestionCreated}
 							/>
 						))}
 						<Button
@@ -81,7 +82,6 @@ const EditContainer = ({ className }) => {
 							width="100%"
 							height="50px"
 							fontSize="18px"
-							isDisable={isNewQuestionCreated}
 							onClick={onAddQuestion}
 						>
 							Добавить вопрос
@@ -89,12 +89,15 @@ const EditContainer = ({ className }) => {
 					</div>
 				)}
 				<NavBar readyToComplete={readyToSave}>
-					<Button link="/user-tests">Назад</Button>
-					{readyToSave && isLoading && (
+					<Button link="/user-tests" width="450px" maxWidth="360px">
+						Назад
+					</Button>
+					{readyToSave && !isLoading && (
 						<Button
 							className="right-button"
-							link="/user-tests"
-							onClick={() => onSave(questions, editedQuestions)}
+							width="450px"
+							maxWidth="360px"
+							onClick={() => onSave(test)}
 						>
 							Сохранить
 						</Button>

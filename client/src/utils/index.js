@@ -2,7 +2,6 @@ export * from './check-errors';
 export * from './count-number-correct-answers';
 export * from './create-array-from-number';
 export * from './delete-test-async';
-export * from './filter-data-by-id-set';
 export * from './find-question-by-id';
 export * from './generate-test-result';
 export * from './load-tests-async';

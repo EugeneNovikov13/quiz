@@ -48,4 +48,8 @@ export const Button = styled(ButtonContainer)`
 		box-shadow: ${({ isDisable }) =>
 			isDisable ? '' : '0 4px 2px -1px rgba(188, 188, 188, 1)'};
 	}
+
+	@media (max-width: 480px) {
+		max-width: ${({ maxWidth }) => (maxWidth ? maxWidth : '')};
+	}
 `;

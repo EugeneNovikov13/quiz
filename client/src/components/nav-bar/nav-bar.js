@@ -7,13 +7,10 @@ const NavBarContainer = ({ className, children }) => {
 export const NavBar = styled(NavBarContainer)`
 	display: flex;
 	justify-content: space-between;
+	flex-wrap: wrap;
 	gap: 10px;
 	align-items: center;
 	padding: 20px 0;
-
-	@media (max-width: 760px) {
-		flex-direction: column;
-	}
 
 	& button {
 		height: 65px;

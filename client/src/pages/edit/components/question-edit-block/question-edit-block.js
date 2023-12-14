@@ -1,30 +1,21 @@
 import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import {
 	addAnswer,
 	CLOSE_MODAL,
-	deleteQuestionAsync,
+	deleteQuestion,
 	openModal,
 	updateQuestionText,
 } from '../../../../redux/actions';
-import { Icon } from '../../../../components';
+import { Button, Icon } from '../../../../components';
 import { AnswerEdit } from './components';
 import icons from '../../assets';
 import styled from 'styled-components';
-import { selectNewQuestionId } from '../../../../redux/selectors';
 import { EditInput } from '../edit-input/edit-input';
 
-const QuestionEditContainer = ({
-	className,
-	id: questionId,
-	questionText,
-	answers,
-	isNewQuestionCreated,
-	setIsNewQuestionCreated,
-}) => {
-	const [isExpanded, setIsExpanded] = useState(isNewQuestionCreated);
+const QuestionEditContainer = ({ className, id: questionId, questionText, answers }) => {
+	const [isExpanded, setIsExpanded] = useState(false);
 	const [newQuestionText, setNewQuestionText] = useState(questionText || '');
-	const newQuestionId = useSelector(selectNewQuestionId);
 
 	const dispatch = useDispatch();
 
@@ -47,28 +38,13 @@ const QuestionEditContainer = ({
 		dispatch(addAnswer(id));
 	};
 
-	const errorDemonstration = error => {
-		dispatch(
-			openModal({
-				text: error,
-				onConfirm: () => dispatch(CLOSE_MODAL),
-				onCancel: () => dispatch(CLOSE_MODAL),
-			}),
-		);
-	};
-
-	const onQuestionDelete = (id, checkingId) => {
+	const onQuestionDelete = id => {
 		dispatch(
 			openModal({
 				text: 'Удалить вопрос?',
 				onConfirm: () => {
-					dispatch(deleteQuestionAsync(id)).then(res => {
-						if (res.error) errorDemonstration(res.error);
-					});
+					dispatch(deleteQuestion(id));
 					dispatch(CLOSE_MODAL);
-					if (checkingId === id) {
-						setIsNewQuestionCreated(false);
-					}
 				},
 				onCancel: () => dispatch(CLOSE_MODAL),
 			}),
@@ -82,6 +58,7 @@ const QuestionEditContainer = ({
 					<div className="ques-header">
 						<EditInput
 							value={newQuestionText}
+							placeholder="Введите вопрос и хотя бы 2 ответа"
 							onChange={({ target }) => onChange(target.value)}
 							onBlur={() => onBlur()}
 						/>
@@ -89,9 +66,7 @@ const QuestionEditContainer = ({
 							<Icon
 								iconSrc={icons.trashBin}
 								width={'15px'}
-								onClick={() =>
-									onQuestionDelete(questionId, newQuestionId)
-								}
+								onClick={() => onQuestionDelete(questionId)}
 							/>
 							<Icon
 								iconSrc={icons.upArrow}
@@ -100,12 +75,14 @@ const QuestionEditContainer = ({
 							/>
 						</div>
 					</div>
-					<div
-						className="add-answer-button"
+					<Button
+						width="400px"
+						maxWidth="300px"
+						height="40px"
 						onClick={() => onAddAnswer(questionId)}
 					>
 						+
-					</div>
+					</Button>
 					<div className="answers">
 						{answers.map(({ id: answerId, text: answerText }) => (
 							<AnswerEdit
@@ -145,31 +122,24 @@ export const QuestionEditBlock = styled(QuestionEditContainer)`
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-		height: ${({ isExpanded }) => (isExpanded ? '40px' : '50px')};
+		height: 50px;
 	}
 
 	& .ques-title {
 		font-size: 18px;
 	}
 
-	& .add-answer-button {
-		width: 300px;
-		height: 30px;
-		line-height: 26px;
-		border: 1px solid #ccc;
-		border-radius: 10px;
-		text-align: center;
-	}
-
-	& .add-answer-button:hover {
-		background-color: #000;
-		color: #fff;
-		cursor: pointer;
-	}
-
 	& .answers {
 		display: flex;
 		flex-direction: column;
 		gap: 10px;
+	}
+
+	@media (max-width: 550px) {
+		& .control-panel {
+			flex-direction: column-reverse;
+			justify-content: center;
+			align-items: center;
+		}
 	}
 `;

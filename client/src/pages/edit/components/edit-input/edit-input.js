@@ -20,7 +20,7 @@ export const EditInput = styled(EditInputContainer)`
 		outline: 1px solid #000;
 	}
 
-	@media (max-width: 500px) {
+	@media (max-width: 550px) {
 		width: 300px;
 
 		&:focus {
