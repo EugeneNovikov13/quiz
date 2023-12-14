@@ -12,6 +12,7 @@ export * from './load-question-async';
 export * from './load-test-async';
 export * from './logout';
 export * from './open-modal';
+export * from './reset-test-data';
 export * from './set-history-data';
 export * from './set-question-data';
 export * from './set-test-data';

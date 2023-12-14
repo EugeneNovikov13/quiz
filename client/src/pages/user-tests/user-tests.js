@@ -55,8 +55,8 @@ const UserTestsContainer = ({ className }) => {
 				onConfirm: () => {
 					deleteTestAsync(testId).then(res => {
 						if (res.error) errorDemonstration(res.error);
+						setShouldRefresh(!shouldRefresh);
 					});
-					setShouldRefresh(!shouldRefresh);
 					dispatch(CLOSE_MODAL);
 				},
 				onCancel: () => dispatch(CLOSE_MODAL),

@@ -6,6 +6,7 @@ import {
 	addQuestion,
 	addTestAsync,
 	loadTestAsync,
+	RESET_TEST_DATA,
 	updateTestAsync,
 	updateTestTitle,
 } from '../../redux/actions';
@@ -31,6 +32,7 @@ const EditContainer = ({ className }) => {
 
 	useEffect(() => {
 		if (isCreating) {
+			dispatch(RESET_TEST_DATA);
 			setIsLoading(false);
 			return;
 		}
