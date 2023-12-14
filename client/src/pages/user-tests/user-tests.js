@@ -7,7 +7,7 @@ import {
 	loadTestsAsync,
 } from '../../utils';
 import { CLOSE_MODAL, openModal } from '../../redux/actions';
-import { selectTestData, selectUserId } from '../../redux/selectors';
+import { selectTestData } from '../../redux/selectors';
 import { Button, PrivateContent, TestInfo } from '../../components';
 import { Pagination } from '../main/components';
 import { QUESTIONS_AMOUNT_TO_LOAD } from '../../constants';
@@ -25,15 +25,15 @@ const UserTestsContainer = ({ className }) => {
 
 	const pages = createArrayFromNumber(lastPage);
 
-	const userId = useSelector(selectUserId);
+	const user = JSON.parse(sessionStorage.getItem('userData'));
 	const test = useSelector(selectTestData);
 
 	useEffect(() => {
-		if (!userId) return;
+		if (!user) return;
 
 		//тесты пользователя запрашиваются, если пользователь авторизован
 		loadTestsAsync(
-			userId,
+			user.id,
 			QUESTIONS_AMOUNT_TO_LOAD.USER_TEST_PAGE_PAGINATION_LIMIT,
 			page,
 		).then(({ data: { tests, lastPage } }) => {
@@ -41,7 +41,7 @@ const UserTestsContainer = ({ className }) => {
 			setLastPage(lastPage);
 			setIsLoading(false);
 		});
-	}, [page, userId, test, shouldRefresh]);
+	}, [page, user, test, shouldRefresh]);
 
 	//Вызывает модальное окно, чтобы подтвердить удаление теста из БД
 	const onTestDelete = testId => {
