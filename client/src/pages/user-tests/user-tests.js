@@ -1,18 +1,23 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { createArrayFromNumber, deleteTestAsync, loadTestsAsync } from '../../utils';
+import {
+	createArrayFromNumber,
+	deleteTestAsync,
+	errorDemonstration,
+	loadTestsAsync,
+} from '../../utils';
 import { CLOSE_MODAL, openModal } from '../../redux/actions';
-import { selectUserId } from '../../redux/selectors';
+import { selectTestData, selectUserId } from '../../redux/selectors';
 import { Button, PrivateContent, TestInfo } from '../../components';
 import { Pagination } from '../main/components';
 import { QUESTIONS_AMOUNT_TO_LOAD } from '../../constants';
 import styled from 'styled-components';
-import { selectTestData } from '../../redux/selectors/select-test-data';
 
 const UserTestsContainer = ({ className }) => {
 	const [tests, setTests] = useState([]);
 	const [page, setPage] = useState(1);
 	const [lastPage, setLastPage] = useState(1);
+	//требование перезапроса тестов из БД после удаления теста
 	const [shouldRefresh, setShouldRefresh] = useState(false);
 	const [isLoading, setIsLoading] = useState(true);
 
@@ -26,6 +31,7 @@ const UserTestsContainer = ({ className }) => {
 	useEffect(() => {
 		if (!userId) return;
 
+		//тесты пользователя запрашиваются, если пользователь авторизован
 		loadTestsAsync(
 			userId,
 			QUESTIONS_AMOUNT_TO_LOAD.USER_TEST_PAGE_PAGINATION_LIMIT,
@@ -37,26 +43,16 @@ const UserTestsContainer = ({ className }) => {
 		});
 	}, [page, userId, test, shouldRefresh]);
 
-	const errorDemonstration = error => {
-		dispatch(
-			openModal({
-				text: error,
-				onConfirm: () => dispatch(CLOSE_MODAL),
-				onCancel: () => dispatch(CLOSE_MODAL),
-				isError: true,
-			}),
-		);
-	};
-
+	//Вызывает модальное окно, чтобы подтвердить удаление теста из БД
 	const onTestDelete = testId => {
 		dispatch(
 			openModal({
 				text: 'Удалить тест?',
 				onConfirm: () => {
 					deleteTestAsync(testId).then(res => {
-						if (res.error) errorDemonstration(res.error);
+						if (res.error) errorDemonstration(dispatch, res.error);
+						setShouldRefresh(!shouldRefresh);
 					});
-					setShouldRefresh(!shouldRefresh);
 					dispatch(CLOSE_MODAL);
 				},
 				onCancel: () => dispatch(CLOSE_MODAL),

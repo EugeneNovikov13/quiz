@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { generateTestResult } from '../../utils';
 import { addHistoryAsync, loadQuestionAsync, loadTestAsync } from '../../redux/actions';
-import { selectLastPage, selectQuestion } from '../../redux/selectors';
+import { selectLastQuestionNumber, selectQuestion } from '../../redux/selectors';
 import { Button, PrivateContent } from '../../components';
 import { Task } from './components';
 import styled from 'styled-components';
@@ -16,8 +16,8 @@ const QuestionContainer = ({ className }) => {
 
 	//есть выбранный ответ, готов переходить на следующий вопрос
 	const [readyToContinue, setReadyToContinue] = useState(false);
+	//все ответы на вопросы теста получены, готов подводить итоги
 	const [readyToComplete, setReadyToComplete] = useState(false);
-	const dispatch = useDispatch();
 
 	//получаем текущий номер страницы вопроса, чтобы при переключении страницы  менялась зависимость в useLayoutEffect
 	const params = useParams();
@@ -25,21 +25,13 @@ const QuestionContainer = ({ className }) => {
 
 	//вопросы получаем из редюсера, куда эти данные приходят после запроса в useLayoutEffect
 	const question = useSelector(selectQuestion);
-	const lastPage = useSelector(selectLastPage);
+	const lastPage = useSelector(selectLastQuestionNumber);
 
+	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const isLastPage = currentPage === Number(lastPage);
 
-	const linkForBackButton = `${
-		currentPage === 1
-			? `/test/${params.id}`
-			: `/test/${params.id}/question/${currentPage - 1}`
-	}`;
-
-	const linkForNextButton = `${
-		currentPage === lastPage ? '' : `/test/${params.id}/question/${currentPage + 1}`
-	}`;
-
+	//ставит в ответ ноль при переключении на страницу, чтобы не сохранялись прежние ответы
 	useEffect(() => {
 		userAnswers.current[currentPage - 1] = null;
 	}, [currentPage]);
@@ -51,19 +43,22 @@ const QuestionContainer = ({ className }) => {
 		});
 	}, [dispatch, currentPage, params.id]);
 
-	//обработка нажатия кнопки "Следующий" для записи результатов теста и переключения на страницу "Результат"
+	//Запись результатов теста и переключение на страницу "Результат"
 	const onNextButtonClick = async selectedAnswers => {
 		if (!readyToComplete) return;
 
 		let testData;
 
+		//получаем тест целиком
 		await dispatch(loadTestAsync(params.id)).then(res => {
 			if (res.error) setErrorMessage(res.error);
 			testData = res.data.questions;
 		});
 
+		//генерируем результат теста в подходящую форму
 		const testResult = generateTestResult(testData, selectedAnswers);
 
+		//отправляем результат в БД
 		await dispatch(addHistoryAsync(params.id, testResult)).then(res => {
 			if (res.error) setErrorMessage(res.error);
 		});
@@ -75,6 +70,17 @@ const QuestionContainer = ({ className }) => {
 		setReadyToContinue(false);
 		setReadyToComplete(false);
 	};
+
+	//ссылки для навигационных кнопко
+	const linkForBackButton = `${
+		currentPage === 1
+			? `/test/${params.id}`
+			: `/test/${params.id}/question/${currentPage - 1}`
+	}`;
+
+	const linkForNextButton = `${
+		currentPage === lastPage ? '' : `/test/${params.id}/question/${currentPage + 1}`
+	}`;
 
 	return (
 		<PrivateContent serverError={errorMessage}>

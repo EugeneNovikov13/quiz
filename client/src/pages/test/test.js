@@ -25,6 +25,7 @@ const TestContainer = ({ className }) => {
 			return;
 		}
 
+		//Запрашиваем данные теста и его истории из БД
 		Promise.all([
 			dispatch(loadTestAsync(params.id)),
 			dispatch(loadHistoryAsync(params.id)),

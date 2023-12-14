@@ -1,5 +1,5 @@
 import { request } from '../../utils';
-import { setTestData } from './set-test-data';
+import { RESET_TEST_DATA } from './reset-test-data';
 
 export const addTestAsync = test => dispatch =>
 	request('/tests', 'POST', {
@@ -7,7 +7,7 @@ export const addTestAsync = test => dispatch =>
 		questions: test.questions,
 	}).then(res => {
 		if (res.data) {
-			dispatch(setTestData(res.data));
+			dispatch(RESET_TEST_DATA);
 		}
 
 		return res;

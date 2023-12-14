@@ -12,11 +12,13 @@ import icons from '../../../../assets';
 import styled from 'styled-components';
 
 const AnswerEditContainer = ({ className, answerId, answerText, questionId }) => {
+	//Ссылка для хранения текста ответа
 	const answerTextRef = useRef(null);
 	const dispatch = useDispatch();
 	const questions = useSelector(selectQuestions);
 	const correctAnswer = findQuestionById(questionId, questions).correctAnswer;
 
+	//Сохраняет изменённый текст ответа в стор
 	const onBlur = () => {
 		const newAnswerText = answerTextRef.current.innerText;
 
@@ -26,6 +28,7 @@ const AnswerEditContainer = ({ className, answerId, answerText, questionId }) =>
 		dispatch(updateAnswerText(questionId, answerId, newAnswerText));
 	};
 
+	//Изменяет правильный ответ в сторе
 	const onChangeCorrectAnswer = (id, newCorrectText) => {
 		if (newCorrectText === correctAnswer) {
 			return;
@@ -33,12 +36,14 @@ const AnswerEditContainer = ({ className, answerId, answerText, questionId }) =>
 		dispatch(changeCorrectAnswer(id, newCorrectText));
 	};
 
+	//Удаляет ответ из стора
 	const onDeleteAnswer = (questionIdToDelete, answerIdToDelete) => {
 		dispatch(deleteAnswer(questionIdToDelete, answerIdToDelete));
 	};
 
 	return (
 		<div className={className}>
+			{/*блок с изменяемым контентом*/}
 			<div
 				ref={answerTextRef}
 				contentEditable={true}

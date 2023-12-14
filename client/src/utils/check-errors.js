@@ -1,7 +1,7 @@
 export const checkErrors = (title, questions) => {
 	let isError = false;
 
-	if (title.length === 0) {
+	if (title.length === 0 || questions.length === 0) {
 		return true;
 	}
 

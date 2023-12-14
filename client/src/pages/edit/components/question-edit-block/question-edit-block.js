@@ -9,16 +9,18 @@ import {
 } from '../../../../redux/actions';
 import { Button, Icon } from '../../../../components';
 import { AnswerEdit } from './components';
+import { EditInput } from '../edit-input/edit-input';
 import icons from '../../assets';
 import styled from 'styled-components';
-import { EditInput } from '../edit-input/edit-input';
 
 const QuestionEditContainer = ({ className, id: questionId, questionText, answers }) => {
+	//состояние развёрнут/свёрнут блок
 	const [isExpanded, setIsExpanded] = useState(false);
 	const [newQuestionText, setNewQuestionText] = useState(questionText || '');
 
 	const dispatch = useDispatch();
 
+	//Разворачивает блок вопроса
 	const onArrowClick = () => {
 		setIsExpanded(!isExpanded);
 	};
@@ -27,6 +29,7 @@ const QuestionEditContainer = ({ className, id: questionId, questionText, answer
 		setNewQuestionText(text);
 	};
 
+	//Сохраняет изменение текста вопроса в стор
 	const onBlur = () => {
 		if (newQuestionText === questionText) {
 			return;
@@ -34,10 +37,12 @@ const QuestionEditContainer = ({ className, id: questionId, questionText, answer
 		dispatch(updateQuestionText(questionId, newQuestionText));
 	};
 
+	//Создаёт в сторе новый ответ
 	const onAddAnswer = id => {
 		dispatch(addAnswer(id));
 	};
 
+	//Вызывает модальное окно для подтверждения удаления блока вопроса из стора
 	const onQuestionDelete = id => {
 		dispatch(
 			openModal({
