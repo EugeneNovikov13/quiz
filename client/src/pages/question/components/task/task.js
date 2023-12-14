@@ -18,7 +18,9 @@ const TaskContainer = ({
 	const lastPage = useSelector(selectLastQuestionNumber);
 	const [selectedValue, setSelectedValue] = useState('');
 
+	//управляет переключением выбранных значений из радио-инпутов (вариантов ответа на вопрос)
 	const handleRadioChange = ({ target }) => {
+		//заносим значение в состояние и общую ссылку всех ответов на вопросы
 		setSelectedValue(target.value);
 		userAnswers.current[currentPage - 1] = target.value;
 

@@ -9,6 +9,7 @@ const ResultContainer = ({ className }) => {
 	const history = useSelector(selectTestHistory)[0];
 	const testId = useSelector(selectTestData).id;
 
+	//считаем правльные ответы, если история существует в сторе, т.е. только что было прохождение теста
 	const rightAnswersCount =
 		!!history && countNumberCorrectAnswers(history.results, '/');
 

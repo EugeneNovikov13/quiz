@@ -20,6 +20,7 @@ async function deleteHistory(id) {
 
 function getHistories(id) {
 	return History.find({ test: id })
+		.sort({ createdAt: -1 })
 		.populate('user', { name: 1, surname: 1 });
 }
 

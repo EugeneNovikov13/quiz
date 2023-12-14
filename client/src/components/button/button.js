@@ -5,6 +5,7 @@ const ButtonContainer = ({ className, children, link, type, isDisable, onClick }
 	return (
 		<>
 			{link ? (
+				//кнопка обёрнута ссылкой, принимающей адрес через пропсы
 				<Link to={link}>
 					<button
 						className={className}

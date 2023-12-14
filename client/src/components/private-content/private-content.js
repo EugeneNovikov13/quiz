@@ -1,8 +1,9 @@
-import { Error } from '../error/error';
 import { useSelector } from 'react-redux';
-import { ERROR } from '../../constants';
 import { selectAppWasLogin } from '../../redux/selectors';
+import { Error } from '../error/error';
+import { ERROR } from '../../constants';
 
+//компонент защищает от нахождения пользователей на страницах, куда им закрыт доступ
 export const PrivateContent = ({ children, serverError = null }) => {
 	const wasLogin = useSelector(selectAppWasLogin);
 

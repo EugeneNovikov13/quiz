@@ -40,6 +40,7 @@ const AuthorizationContainer = ({ className }) => {
 				return;
 			}
 
+			//Помещаем данные пользователя в стор, а также в sessionStorage, чтобы сохранить авторизацию после F5
 			dispatch(setUser(user));
 			sessionStorage.setItem('userData', JSON.stringify(user));
 		});

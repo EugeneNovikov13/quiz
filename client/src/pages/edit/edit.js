@@ -31,11 +31,14 @@ const EditContainer = ({ className }) => {
 	const readyToSave = !checkErrors(title, questions) && !!editedQuestions.size;
 
 	useEffect(() => {
+		//Если в адресной строке нет id теста, очищаем стор.тест перед созданием нового теста
 		if (isCreating) {
 			dispatch(RESET_TEST_DATA);
 			setIsLoading(false);
 			return;
 		}
+
+		//Запрашиваем данные теста по id
 		dispatch(loadTestAsync(params.id)).then(res => {
 			if (res.error) {
 				setErrorMessage(res.error);
@@ -46,6 +49,7 @@ const EditContainer = ({ className }) => {
 		});
 	}, [isCreating, dispatch, params.id]);
 
+	//Сохраняет в стор новое название теста
 	const onBlur = () => {
 		if (newTitle === title) {
 			return;
@@ -53,10 +57,12 @@ const EditContainer = ({ className }) => {
 		dispatch(updateTestTitle(newTitle));
 	};
 
+	//Добавляет в стор в массив вопросов новый объект вопроса
 	const onAddQuestion = () => {
 		dispatch(addQuestion());
 	};
 
+	//Сохраняет новый/изменённый тест в БД, используя текущие данные теста в сторе
 	const onSave = async testData => {
 		let action;
 		isCreating ? (action = addTestAsync) : (action = updateTestAsync);
@@ -77,6 +83,7 @@ const EditContainer = ({ className }) => {
 					<div className="test-edit-block">
 						<EditInput
 							value={newTitle}
+							placeholder="Введите название теста"
 							onChange={({ target }) => setNewTitle(target.value)}
 							onBlur={() => onBlur()}
 						/>

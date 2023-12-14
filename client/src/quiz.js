@@ -1,6 +1,7 @@
 import { useLayoutEffect } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
+import { setUser } from './redux/actions';
 import {
 	Account,
 	Authorization,
@@ -15,7 +16,6 @@ import {
 import { Error, Header, Modal } from './components';
 import { ERROR } from './constants';
 import styled from 'styled-components';
-import { setUser } from './redux/actions';
 
 const AppColumn = styled.div`
 	display: flex;
