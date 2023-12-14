@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useMatch } from 'react-router-dom';
 import { selectAppWasLogin } from '../../redux/selectors';
 import { Icon } from '../icon/icon';
 import { Tooltip } from '../tooltip/tooltip';
@@ -14,6 +14,8 @@ const HeaderContainer = ({ className }) => {
 	const [isHovered, setIsHovered] = useState(false);
 	const wasLogin = useSelector(selectAppWasLogin);
 
+	const isLogin = !!useMatch('/login');
+
 	const onMouseEnter = () => {
 		setIsHovered(true);
 	};
@@ -21,6 +23,23 @@ const HeaderContainer = ({ className }) => {
 	const onMouseLeave = () => {
 		setIsHovered(false);
 	};
+
+	const buttonProps = {
+		activeColor: '#000',
+		width: '120px',
+		height: '40px',
+		fontSize: '20px',
+	};
+
+	const AuthButton = isLogin ? (
+		<Button link={'/register'} {...buttonProps} width="160px">
+			Регистрация
+		</Button>
+	) : (
+		<Button link={'/login'} {...buttonProps}>
+			Войти
+		</Button>
+	);
 
 	return (
 		<header className={className}>
@@ -31,15 +50,7 @@ const HeaderContainer = ({ className }) => {
 			{wasLogin ? (
 				<Icon width={'50px'} iconSrc={user} onMouseEnter={() => onMouseEnter()} />
 			) : (
-				<Button
-					link={'/login'}
-					activeColor="#000"
-					width="120px"
-					height="40px"
-					fontSize="20px"
-				>
-					Войти
-				</Button>
+				AuthButton
 			)}
 			<Tooltip
 				isHovered={isHovered}

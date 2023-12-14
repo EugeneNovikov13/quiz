@@ -10,6 +10,7 @@ export * from './delete-question';
 export * from './load-history-async';
 export * from './load-question-async';
 export * from './load-test-async';
+export * from './logout-async';
 export * from './logout';
 export * from './open-modal';
 export * from './reset-test-data';

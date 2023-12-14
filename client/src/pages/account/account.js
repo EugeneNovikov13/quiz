@@ -1,9 +1,7 @@
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { request } from '../../utils';
-import { setUser } from '../../redux/actions';
+import { updateUserAsync } from '../../utils';
 import { AuthFormError, Icon, Input, PrivateContent } from '../../components';
 import * as icons from './assets';
 import { accountFormSchema } from '../../settings';
@@ -11,13 +9,14 @@ import styled from 'styled-components';
 
 const AccountContainer = ({ className }) => {
 	const [serverError, setServerError] = useState(null);
+	const [isUpdating, setIsUpdating] = useState(false);
 
 	const user = JSON.parse(sessionStorage.getItem('userData'));
 
 	const {
 		register,
 		handleSubmit,
-		formState: { errors },
+		formState: { errors, isDirty },
 	} = useForm({
 		defaultValues: {
 			name: user.name,
@@ -28,74 +27,83 @@ const AccountContainer = ({ className }) => {
 		resolver: yupResolver(accountFormSchema),
 	});
 
-	const dispatch = useDispatch();
-
-	const onSubmit = ({ name, surname, email, image }) => {
-		request('/register', 'POST', { name, surname, email, image }).then(
-			({ error, user }) => {
-				if (error) {
-					setServerError(`Ошибка запроса: ${error}`);
-					return;
-				}
-
-				dispatch(setUser(user));
-				sessionStorage.setItem('userData', JSON.stringify(user));
-			},
-		);
+	//обновляем данные о пользователе через запрос на сервер, в случае успеха обновляем данные в sessionStorage
+	const onSubmit = formData => {
+		updateUserAsync(formData).then(res => {
+			if (res.error) {
+				setServerError(`Ошибка запроса: ${res.error}`);
+				return;
+			}
+			setIsUpdating(false);
+		});
 	};
-
-	const formError =
-		errors?.name?.message ||
-		errors?.surname?.message ||
-		errors?.email?.message ||
-		errors?.image?.message;
 
 	return (
 		<PrivateContent serverError={serverError}>
 			<div className={className}>
 				<form onSubmit={handleSubmit(onSubmit)}>
-					<button type="submit" disabled={!!formError}>
-						<Icon
-							iconSrc={
-								!!formError ? icons.checkMark : icons.checkMarkActive
-							}
-							width="40px"
-						></Icon>
-					</button>
+					{isUpdating ? (
+						<button type="submit">
+							<Icon
+								iconSrc={
+									isDirty ? icons.checkMarkActive : icons.checkMark
+								}
+								isDisable={!isDirty}
+								width="40px"
+							></Icon>
+						</button>
+					) : (
+						<div className="edit">
+							<Icon
+								iconSrc={icons.editPencil}
+								width="40px"
+								onClick={() => setIsUpdating(true)}
+							></Icon>
+						</div>
+					)}
 					<img className="avatar" src={user.image} alt="" />
-					<Input
-						type="text"
-						label="Имя"
-						error={errors?.name?.message}
-						{...register('name', {
-							onChange: () => setServerError(null),
-						})}
-					/>
-					<Input
-						type="text"
-						label="Фамилия"
-						error={errors?.surname?.message}
-						{...register('surname', {
-							onChange: () => setServerError(null),
-						})}
-					/>
-					<Input
-						type="email"
-						label="Электронная почта"
-						error={errors?.email?.message}
-						{...register('email', {
-							onChange: () => setServerError(null),
-						})}
-					/>
-					<Input
-						type="url"
-						label="URL аватарки (необязательно)"
-						error={errors?.image?.message}
-						{...register('image', {
-							onChange: () => setServerError(null),
-						})}
-					/>
-					<AuthFormError>{serverError}</AuthFormError>
+					{isUpdating ? (
+						<>
+							<Input
+								type="text"
+								label="Имя"
+								error={errors?.name?.message}
+								{...register('name', {
+									onChange: () => setServerError(null),
+								})}
+							/>
+							<Input
+								type="text"
+								label="Фамилия"
+								error={errors?.surname?.message}
+								{...register('surname', {
+									onChange: () => setServerError(null),
+								})}
+							/>
+							<Input
+								type="email"
+								label="Электронная почта"
+								error={errors?.email?.message}
+								{...register('email', {
+									onChange: () => setServerError(null),
+								})}
+							/>
+							<Input
+								type="url"
+								label="URL аватарки (необязательно)"
+								error={errors?.image?.message}
+								{...register('image', {
+									onChange: () => setServerError(null),
+								})}
+							/>
+							<AuthFormError>{serverError}</AuthFormError>
+						</>
+					) : (
+						<>
+							<p>{user.surname + ' ' + user.name}</p>
+							<p>{user.email}</p>
+						</>
+					)}
 				</form>
 			</div>
 		</PrivateContent>
@@ -107,7 +115,8 @@ export const Account = styled(AccountContainer)`
 	flex-direction: column;
 	align-items: center;
 	min-width: 360px;
-	height: 700px;
+	height: max-content;
+	max-height: 700px;
 	border: 1px solid #eee;
 	border-radius: 20px;
 	box-shadow: 0 2px 2px 2px rgba(204, 204, 204, 1);
@@ -129,6 +138,21 @@ export const Account = styled(AccountContainer)`
 		background-color: transparent;
 		border: none;
 		padding: 0;
+	}
+
+	& button:disabled {
+		cursor: default;
+	}
+
+	& p {
+		margin: 3px;
+		font-size: 18px;
+		font-weight: 500;
+	}
+
+	& .edit {
+		position: absolute;
+		right: 0;
 	}
 
 	& .avatar {

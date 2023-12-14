@@ -18,6 +18,6 @@ export const Icon = styled(IconContainer)`
 	vertical-align: top;
 
 	&:hover {
-		cursor: pointer;
+		cursor: ${({ isDisable }) => (isDisable ? 'default' : 'pointer')};
 	}
 `;

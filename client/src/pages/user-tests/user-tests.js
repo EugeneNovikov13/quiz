@@ -104,7 +104,9 @@ const UserTestsContainer = ({ className }) => {
 							</div>
 						))}
 					</div>
-					<Pagination pages={pages} page={page} setPage={setPage} />
+					{lastPage > 1 && (
+						<Pagination pages={pages} page={page} setPage={setPage} />
+					)}
 				</div>
 			)}
 		</PrivateContent>
@@ -133,8 +135,9 @@ export const UserTests = styled(UserTestsContainer)`
 	& .tests {
 		display: flex;
 		flex-wrap: wrap;
+		justify-content: center;
 		gap: 16px;
-		min-height: 752px;
+		min-height: 600px;
 	}
 
 	& .test {

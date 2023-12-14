@@ -67,10 +67,10 @@ app.use(authenticated);
 app.patch('/users', async (req, res) => {
 	try {
 		const updatedUser = await updateUser(req.user.id, {
-			name: req.body?.name,
-			surname: req.body?.surname,
-			email: req.body?.email,
-			image: req.body?.image,
+			name: req.body.name,
+			surname: req.body.surname,
+			email: req.body.email,
+			image: req.body.image,
 		});
 
 		res.send({ data: mapUser(updatedUser), error: null });

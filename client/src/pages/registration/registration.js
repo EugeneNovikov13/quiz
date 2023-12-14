@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useResetForm } from '../../hooks';
 import { request } from '../../utils';
-import { setUser } from '../../redux/actions';
+import { SET_USER } from '../../redux/actions';
 import { selectAppWasLogin } from '../../redux/selectors';
 import { AuthFormError, Button, Input } from '../../components';
 import { registrationFormSchema } from '../../settings';
@@ -45,7 +45,7 @@ const RegistrationContainer = ({ className }) => {
 					return;
 				}
 
-				dispatch(setUser(user));
+				dispatch(SET_USER);
 				sessionStorage.setItem('userData', JSON.stringify(user));
 			},
 		);
