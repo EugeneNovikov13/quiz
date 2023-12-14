@@ -1,7 +1,7 @@
 import { useLayoutEffect } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { setUser } from './redux/actions';
+import { SET_USER } from './redux/actions';
 import {
 	Account,
 	Authorization,
@@ -49,9 +49,7 @@ export const Quiz = () => {
 			return;
 		}
 
-		const currentUserData = JSON.parse(currentUserDataJSON);
-
-		dispatch(setUser(currentUserData));
+		dispatch(SET_USER);
 	}, [dispatch]);
 
 	return (

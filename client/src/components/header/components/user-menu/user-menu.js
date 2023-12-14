@@ -1,15 +1,20 @@
 import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { logout } from '../../../../redux/actions';
+import { logoutAsync } from '../../../../redux/actions';
+import { errorDemonstration } from '../../../../utils';
 
 const UserMenuContainer = ({ className, onMouseLeave }) => {
 	const dispatch = useDispatch();
 
+	//логаут изменяет в сторе состояние wasLogin, а также удаляет из sessionStorage данные пользователя
 	const onLogout = () => {
 		onMouseLeave();
-		dispatch(logout());
-		sessionStorage.removeItem('userData');
+		dispatch(logoutAsync()).then(res => {
+			if (res.error) {
+				errorDemonstration(dispatch, res.error);
+			}
+		});
 	};
 
 	return (

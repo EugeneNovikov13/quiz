@@ -10,5 +10,3 @@ export * from './select-questions';
 export * from './select-question';
 export * from './select-test-data';
 export * from './select-test-history';
-export * from './select-user';
-export * from './select-user-id';

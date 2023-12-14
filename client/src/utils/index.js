@@ -8,3 +8,4 @@ export * from './generate-test-result';
 export * from './load-tests-async';
 export * from './request';
 export * from './update-object-of-states';
+export * from './update-user-async';

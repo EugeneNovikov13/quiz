@@ -36,7 +36,14 @@ async function login(email, password) {
 	return { user, token };
 }
 
+// update
+
+function updateUser(id, user) {
+	return User.findByIdAndUpdate(id, user, { returnDocument: 'after' });
+}
+
 module.exports = {
 	register,
 	login,
+	updateUser,
 };

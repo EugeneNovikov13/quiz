@@ -6,7 +6,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useResetForm } from '../../hooks';
 import { request } from '../../utils';
 import { AuthFormError, Button, Input } from '../../components';
-import { setUser } from '../../redux/actions';
+import { SET_USER } from '../../redux/actions';
 import { selectAppWasLogin } from '../../redux/selectors';
 import { authorizationFormSchema } from '../../settings';
 import styled from 'styled-components';
@@ -41,7 +41,7 @@ const AuthorizationContainer = ({ className }) => {
 			}
 
 			//Помещаем данные пользователя в стор, а также в sessionStorage, чтобы сохранить авторизацию после F5
-			dispatch(setUser(user));
+			dispatch(SET_USER);
 			sessionStorage.setItem('userData', JSON.stringify(user));
 		});
 	};

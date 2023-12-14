@@ -1,7 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
-const { register, login } = require('./controllers/user');
+const { register, login, updateUser } = require('./controllers/user');
 const { addTest, editTest, deleteTest, getTests, getTest, getQuestion } = require('./controllers/test');
 const { addHistory, deleteHistory, getHistories } = require('./controllers/history');
 const authenticated = require('./middlewares/authenticated');
@@ -63,6 +63,26 @@ app.get('/tests', async (req, res) => {
 });
 
 app.use(authenticated);
+
+app.patch('/users', async (req, res) => {
+	try {
+		const updatedUser = await updateUser(req.user.id, {
+			name: req.body.name,
+			surname: req.body.surname,
+			email: req.body.email,
+			image: req.body.image,
+		});
+
+		res.send({ data: mapUser(updatedUser), error: null });
+	} catch (e) {
+		let error = 'Error. Failed to update user';
+		if (e.code === 11000) {
+			error = 'Пользователь с таким адресом электронной почты уже существует';
+		}
+		res.send({ data: null, error });
+		console.log(e);
+	}
+});
 
 app.get('/tests/:id', async (req, res) => {
 	try {
