@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 
-//как бы секретная подпись
-const sign = 'testSign';
+// секретная подпись, которая хранится в файле .env (файл переменных окружения)
+const sign = process.env.JWT_SECRET;
 
 module.exports = {
 	//генерируем токен

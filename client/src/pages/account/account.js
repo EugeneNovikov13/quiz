@@ -16,6 +16,7 @@ const AccountContainer = ({ className }) => {
 	const {
 		register,
 		handleSubmit,
+		reset,
 		formState: { errors, isDirty },
 	} = useForm({
 		defaultValues: {
@@ -26,6 +27,11 @@ const AccountContainer = ({ className }) => {
 		},
 		resolver: yupResolver(accountFormSchema),
 	});
+
+	const onCancel = () => {
+		setIsUpdating(false);
+		reset();
+	};
 
 	//обновляем данные о пользователе через запрос на сервер, в случае успеха обновляем данные в sessionStorage
 	const onSubmit = formData => {
@@ -43,15 +49,24 @@ const AccountContainer = ({ className }) => {
 			<div className={className}>
 				<form onSubmit={handleSubmit(onSubmit)}>
 					{isUpdating ? (
-						<button type="submit">
-							<Icon
-								iconSrc={
-									isDirty ? icons.checkMarkActive : icons.checkMark
-								}
-								isDisable={!isDirty}
-								width="40px"
-							></Icon>
-						</button>
+						<>
+							<div className="cancel">
+								<Icon
+									iconSrc={icons.cancel}
+									width="34px"
+									onClick={() => onCancel()}
+								></Icon>
+							</div>
+							<button type="submit">
+								<Icon
+									iconSrc={
+										isDirty ? icons.checkMarkActive : icons.checkMark
+									}
+									isDisable={!isDirty}
+									width="40px"
+								></Icon>
+							</button>
+						</>
 					) : (
 						<div className="edit">
 							<Icon
@@ -148,6 +163,12 @@ export const Account = styled(AccountContainer)`
 		margin: 3px;
 		font-size: 18px;
 		font-weight: 500;
+	}
+
+	& .cancel {
+		position: absolute;
+		left: 0;
+		padding: 3px;
 	}
 
 	& .edit {
