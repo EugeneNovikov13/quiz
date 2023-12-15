@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const express = require('express');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
@@ -141,6 +143,8 @@ app.patch('/tests/:id', async (req, res) => {
 app.delete('/tests/:id', async (req, res) => {
 	try {
 		await deleteTest(req.params.id);
+		//удаляем также истории прохождения теста
+		await deleteHistory(req.params.id);
 
 		res.send({ error: null });
 	} catch (e) {
@@ -187,7 +191,7 @@ app.delete('/histories/:id', async (req, res) => {
 });
 
 mongoose.connect(
-	'mongodb+srv://NovikovEugene:gfhjkm13@educationdb.nioilpj.mongodb.net/quiz2?retryWrites=true&w=majority',
+	process.env.DB_CONNECTION_STRING,
 ).then(() => {
 	app.listen(port, () => {
 		console.log(`Server has been started on port ${port}`);

@@ -24,8 +24,6 @@ async function editTest(id, test) {
 
 async function deleteTest(id) {
 	await Test.deleteOne({ _id: id });
-
-	//удалить также истории, связанные с тестом
 }
 
 // get list
