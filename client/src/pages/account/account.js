@@ -4,14 +4,16 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { updateUserAsync } from '../../utils';
 import { AuthFormError, Icon, Input, PrivateContent } from '../../components';
 import * as icons from './assets';
-import { accountFormSchema } from '../../settings';
+import { accountFormSchema, userDefaultValues } from '../../settings';
 import styled from 'styled-components';
 
 const AccountContainer = ({ className }) => {
 	const [serverError, setServerError] = useState(null);
 	const [isUpdating, setIsUpdating] = useState(false);
 
-	const user = JSON.parse(sessionStorage.getItem('userData'));
+	const userData = JSON.parse(sessionStorage.getItem('userData'));
+
+	const user = userData ? userData : userDefaultValues;
 
 	const {
 		register,
@@ -19,18 +21,13 @@ const AccountContainer = ({ className }) => {
 		reset,
 		formState: { errors, isDirty },
 	} = useForm({
-		defaultValues: {
-			name: user.name,
-			surname: user.surname,
-			email: user.email,
-			image: user.image,
-		},
+		defaultValues: user,
 		resolver: yupResolver(accountFormSchema),
 	});
 
 	const onCancel = () => {
+		reset(user);
 		setIsUpdating(false);
-		reset();
 	};
 
 	//обновляем данные о пользователе через запрос на сервер, в случае успеха обновляем данные в sessionStorage
