@@ -10,6 +10,7 @@ module.exports = {
 	},
 	//проверяем токен
 	verify(token) {
+		console.log('verify args: ',token, sign);
 		return jwt.verify(token, sign);
 	},
 };
