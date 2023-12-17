@@ -58,8 +58,8 @@ export const Quiz = () => {
 			<Page>
 				<Routes>
 					<Route path="/" element={<Main />}></Route>
-					<Route path="/login" element={<Authorization />}></Route>
-					<Route path="/register" element={<Registration />}></Route>
+					<Route path="/authorization" element={<Authorization />}></Route>
+					<Route path="/registration" element={<Registration />}></Route>
 					<Route path="/test/:id" element={<Test />}></Route>
 					<Route
 						path="/test/:id/question/:pageId"

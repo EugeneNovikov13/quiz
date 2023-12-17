@@ -128,7 +128,7 @@ const RegistrationContainer = ({ className }) => {
 				</Button>
 			</form>
 			<p className="has-account">
-				Есть аккаунт? <Link to="/login">Войти</Link>
+				Есть аккаунт? <Link to="/authorization">Войти</Link>
 			</p>
 		</div>
 	);

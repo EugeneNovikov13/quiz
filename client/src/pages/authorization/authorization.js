@@ -85,7 +85,7 @@ const AuthorizationContainer = ({ className }) => {
 				</Button>
 			</form>
 			<p className="has-account">
-				Нет аккаунта? <Link to="/register">Зарегистрироваться</Link>
+				Нет аккаунта? <Link to="/registration">Зарегистрироваться</Link>
 			</p>
 		</div>
 	);

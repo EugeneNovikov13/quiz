@@ -1,5 +1,6 @@
 require('dotenv').config();
 
+const { join } = require('path');
 const express = require('express');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
@@ -190,6 +191,10 @@ app.delete('/histories/:id', async (req, res) => {
 		res.send({ error: 'Error. Failed to delete histories' });
 		console.log(e);
 	}
+});
+
+app.get('/*', (req, res) => {
+	res.sendFile(join(__dirname, '../client/build/index.html'));
 });
 
 mongoose.connect(

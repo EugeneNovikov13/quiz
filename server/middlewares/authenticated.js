@@ -10,14 +10,11 @@ module.exports = async function(req, res, next) {
 		user = await User.findOne({ _id: tokenData.id });
 	} catch (e) {
 		console.log('Token not found');
-		res.send({ error: 'Token not found' });
 
 		return;
 	}
 
 	if (!user) {
-		res.send({ error: 'Authenticated user not found' });
-
 		return;
 	}
 

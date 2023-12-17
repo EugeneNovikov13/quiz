@@ -14,7 +14,7 @@ const HeaderContainer = ({ className }) => {
 	const [isHovered, setIsHovered] = useState(false);
 	const wasLogin = useSelector(selectAppWasLogin);
 
-	const isLogin = !!useMatch('/login');
+	const isLogin = !!useMatch('/authorization');
 
 	const onMouseEnter = () => {
 		setIsHovered(true);
@@ -32,11 +32,11 @@ const HeaderContainer = ({ className }) => {
 	};
 
 	const AuthButton = isLogin ? (
-		<Button link={'/register'} {...buttonProps} width="160px">
+		<Button link={'/registration'} {...buttonProps} width="160px">
 			Регистрация
 		</Button>
 	) : (
-		<Button link={'/login'} {...buttonProps}>
+		<Button link={'/authorization'} {...buttonProps}>
 			Войти
 		</Button>
 	);
