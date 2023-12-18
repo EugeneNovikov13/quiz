@@ -6,8 +6,8 @@ module.exports = function (test) {
 		title: test.title,
 		createdAt: test.createdAt.toLocaleDateString(),
 		author: {
-			name: test.author.name,
-			surname: test.author.surname,
+			name: test.author?.name || 'user',
+			surname: test.author?.surname || 'Unknown',
 		},
 		questions: test.questions.map(mapQuestion),
 	}
