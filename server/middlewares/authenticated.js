@@ -2,17 +2,17 @@ const { verify } = require('../helpers/token');
 const User = require('../models/User');
 
 module.exports = async function(req, res, next) {
-	let user;
+	const token = req.cookies.token;
 
-	try {
-		const tokenData = verify(req.cookies.token);
-
-		user = await User.findOne({ _id: tokenData.id });
-	} catch (e) {
+	if (!token) {
 		console.log('Token not found');
-
+		next();
 		return;
 	}
+
+	const tokenData = verify(req.cookies.token);
+
+	const user = await User.findOne({ _id: tokenData.id });
 
 	if (!user) {
 		return;

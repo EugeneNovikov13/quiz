@@ -41,7 +41,8 @@ const UserTestsContainer = ({ className }) => {
 			setLastPage(lastPage);
 			setIsLoading(false);
 		});
-	}, [page, user, test, shouldRefresh]);
+		// eslint-disable-next-line
+	}, [page, test, shouldRefresh]);
 
 	//Вызывает модальное окно, чтобы подтвердить удаление теста из БД
 	const onTestDelete = testId => {
