@@ -9,13 +9,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
+      - name: Get Latest Code
+        uses: actions/checkout@v3
 
       - name: Deploy to Hosting
-        uses: SamKirkland/FTP-Deploy-Action@4.0.0
+        uses: SamKirkland/web-deploy@v1
         with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          server-dir:  quiz
+          target-server: 82.97.241.26
+          remote-user: yi30181
+          private-ssh-key: ${{ secrets.SSH_KEY }}
+          destination-path: ~/quiz/
