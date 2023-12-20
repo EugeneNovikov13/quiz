@@ -88,6 +88,7 @@ export const Header = styled(HeaderContainer)`
 	}
 
 	& .nav-menu a:hover {
+		text-decoration: underline;
 		transform: scale(1.05);
 	}
 `;
