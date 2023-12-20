@@ -1,5 +1,3 @@
-require('dotenv').config();
-
 const { join } = require('path');
 const express = require('express');
 const mongoose = require('mongoose');
@@ -198,6 +196,7 @@ app.get('/*', (req, res) => {
 });
 
 mongoose.connect(
+	//получаем строку подключения к БД из поля environment (файл docker-compose)
 	process.env.DB_CONNECTION_STRING,
 ).then(() => {
 	app.listen(port, () => {

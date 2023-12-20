@@ -19,8 +19,6 @@ build
 .env.test.local
 .env.production.local
 
-.env
-
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
@@ -28,3 +26,5 @@ package-lock.json
 /.idea/.gitignore
 /.idea/modules.xml
 /.idea/quiz.iml
+
+docker-compose.yml
