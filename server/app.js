@@ -1,3 +1,5 @@
+if (process.env.NODE_ENV === 'development') require('dotenv').config();
+
 const { join } = require('path');
 const express = require('express');
 const mongoose = require('mongoose');
