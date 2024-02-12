@@ -39,7 +39,7 @@ async function login(email, password) {
 // update
 
 function updateUser(id, user) {
-	return User.findByIdAndUpdate(id, user, { returnDocument: 'after' });
+	return User.findByIdAndUpdate(id, user, { returnDocument: 'after', runValidators: true });
 }
 
 module.exports = {

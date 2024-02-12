@@ -13,7 +13,7 @@ async function addTest(test) {
 // edit
 
 async function editTest(id, test) {
-	const newTest = await Test.findByIdAndUpdate(id, test, { returnDocument: 'after' });
+	const newTest = await Test.findByIdAndUpdate(id, test, { returnDocument: 'after', runValidators: true });
 
 	await newTest.populate('author');
 

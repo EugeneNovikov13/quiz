@@ -29,6 +29,12 @@ const MainContainer = ({ className }) => {
 
 	return (
 		<div className={className}>
+			{!wasLogin && (
+				<span className="need-to-auth">
+					* чтобы посмотреть возможности приложения, авторизуйтесь: электронная
+					почта - it-test@bk.ru, пароль - gfhjkm1
+				</span>
+			)}
 			<div className="tests">
 				{tests.map(({ id, title, createdAt, author, questions }) => (
 					<div className="test" key={id}>
@@ -63,6 +69,10 @@ export const Main = styled(MainContainer)`
 	display: flex;
 	flex-direction: column;
 	gap: 20px;
+
+	& .need-to-auth {
+		color: #4d4d9f;
+	}
 
 	& .tests {
 		display: flex;
