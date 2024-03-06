@@ -2,7 +2,7 @@ import { FC, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { generateTestResult } from '../../utils';
-import { loadQuestionAsync } from '../../redux/actions';
+import { loadQuestionAsync } from '../../redux/actions/question';
 import { addHistoryAsync, loadTestAsync } from '../../redux/actions/test';
 import { selectLastQuestionNumber, selectQuestion } from '../../redux/selectors';
 import { AppThunkDispatch, useTypedSelector } from '../../redux/store';
@@ -31,9 +31,8 @@ const QuestionContainer: FC<QuestionProps> = ({ className }) => {
 	const currentPage = Number(params.pageId);
 
 	//вопросы получаем из редюсера, куда эти данные приходят после запроса в useLayoutEffect
-	//TODO delete types
-	const question: IQuestion = useTypedSelector(selectQuestion);
-	const lastPage: number = useTypedSelector(selectLastQuestionNumber);
+	const question = useTypedSelector(selectQuestion);
+	const lastPage = useTypedSelector(selectLastQuestionNumber);
 
 	const dispatch: AppThunkDispatch = useDispatch();
 	const navigate = useNavigate();
@@ -46,9 +45,15 @@ const QuestionContainer: FC<QuestionProps> = ({ className }) => {
 
 	//загрузка вопроса и ответов
 	useLayoutEffect(() => {
-		dispatch(loadQuestionAsync(params.id, currentPage)).then(res => {
-			if (res.error) setErrorMessage(res.error);
-		});
+		if (!params.id) return;
+
+		try {
+			dispatch(loadQuestionAsync(params.id, currentPage)).then(res => {
+				if (res.error) setErrorMessage(res.error);
+			});
+		} catch (e) {
+			console.log(e);
+		}
 	}, [dispatch, currentPage, params]);
 
 	//Запись результатов теста и переключение на страницу "Результат"
@@ -79,7 +84,9 @@ const QuestionContainer: FC<QuestionProps> = ({ className }) => {
 			});
 
 			navigate('/result');
-		} catch (e) {}
+		} catch (e) {
+			console.log(e);
+		}
 	};
 
 	const onBackButtonClick = () => {
