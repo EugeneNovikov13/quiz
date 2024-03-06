@@ -1,17 +1,16 @@
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import {
-	addAnswer,
-	CLOSE_MODAL,
-	deleteQuestion,
-	openModal,
-	updateQuestionText,
-} from '../../../../redux/actions';
+import { CLOSE_MODAL, openModal } from '../../../../redux/actions';
 import { Button, Icon } from '../../../../components';
 import { AnswerEdit } from './components';
 import { EditInput } from '../edit-input/edit-input';
 import icons from '../../assets';
 import styled from 'styled-components';
+import {
+	addAnswer,
+	deleteQuestion,
+	updateQuestionText,
+} from '../../../../redux/actions/test';
 
 const QuestionEditContainer = ({ className, id: questionId, questionText, answers }) => {
 	//состояние развёрнут/свёрнут блок

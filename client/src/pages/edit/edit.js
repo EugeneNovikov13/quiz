@@ -2,6 +2,10 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { checkErrors } from '../../utils';
+import { selectEditedQuestions, selectTestData } from '../../redux/selectors';
+import { Button, NavBar, PrivateContent } from '../../components';
+import { EditInput, QuestionEditBlock } from './components';
+import styled from 'styled-components';
 import {
 	addQuestion,
 	addTestAsync,
@@ -9,11 +13,7 @@ import {
 	RESET_TEST_DATA,
 	updateTestAsync,
 	updateTestTitle,
-} from '../../redux/actions';
-import { selectEditedQuestions, selectTestData } from '../../redux/selectors';
-import { Button, NavBar, PrivateContent } from '../../components';
-import { EditInput, QuestionEditBlock } from './components';
-import styled from 'styled-components';
+} from '../../redux/actions/test';
 
 const EditContainer = ({ className }) => {
 	const [isLoading, setIsLoading] = useState(true);

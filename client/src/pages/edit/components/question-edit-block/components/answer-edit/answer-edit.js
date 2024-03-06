@@ -1,15 +1,15 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { useRef } from 'react';
-import {
-	changeCorrectAnswer,
-	deleteAnswer,
-	updateAnswerText,
-} from '../../../../../../redux/actions';
 import { findQuestionById } from '../../../../../../utils';
 import { selectQuestions } from '../../../../../../redux/selectors';
 import { Icon } from '../../../../../../components';
 import icons from '../../../../assets';
 import styled from 'styled-components';
+import {
+	changeCorrectAnswer,
+	deleteAnswer,
+	updateAnswerText,
+} from '../../../../../../redux/actions/test';
 
 const AnswerEditContainer = ({ className, answerId, answerText, questionId }) => {
 	//Ссылка для хранения текста ответа
