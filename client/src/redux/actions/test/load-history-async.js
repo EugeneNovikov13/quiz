@@ -1,5 +1,5 @@
-import { request } from '../../utils';
-import { setHistoryData } from './set-history-data';
+import { request } from '../../../utils';
+import { setHistoryData } from './index';
 
 export const loadHistoryAsync = id => dispatch =>
 	request(`/histories/${id}`).then(res => {

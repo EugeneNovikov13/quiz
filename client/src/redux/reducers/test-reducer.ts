@@ -1,6 +1,6 @@
-import { ACTION_TYPE } from '../actions';
+import { ITestState, TestAction, TestActionTypes } from '../../types';
 
-const initialTestState = {
+const initialTestState: ITestState = {
 	editedQuestions: new Set(),
 	history: [],
 	test: {
@@ -12,19 +12,19 @@ const initialTestState = {
 	},
 };
 
-export const testReducer = (state = initialTestState, action) => {
+export const testReducer = (state = initialTestState, action: TestAction): ITestState => {
 	switch (action.type) {
-		case ACTION_TYPE.SET_TEST_DATA:
+		case TestActionTypes.SET_TEST_DATA:
 			return {
 				...state,
 				test: action.payload,
 				editedQuestions: new Set(),
 			};
 
-		case ACTION_TYPE.RESET_TEST_DATA:
+		case TestActionTypes.RESET_TEST_DATA:
 			return initialTestState;
 
-		case ACTION_TYPE.UPDATE_TEST_TITLE:
+		case TestActionTypes.UPDATE_TEST_TITLE:
 			return {
 				...state,
 				test: {
@@ -34,13 +34,13 @@ export const testReducer = (state = initialTestState, action) => {
 				editedQuestions: state.editedQuestions.add(action.payload.title),
 			};
 
-		case ACTION_TYPE.SET_HISTORY:
+		case TestActionTypes.SET_HISTORY:
 			return {
 				...state,
 				history: action.payload,
 			};
 
-		case ACTION_TYPE.ADD_QUESTION:
+		case TestActionTypes.ADD_QUESTION:
 			return {
 				...state,
 				test: {
@@ -50,7 +50,7 @@ export const testReducer = (state = initialTestState, action) => {
 				editedQuestions: state.editedQuestions.add(action.payload.id),
 			};
 
-		case ACTION_TYPE.UPDATE_QUESTION_TEXT:
+		case TestActionTypes.UPDATE_QUESTION_TEXT:
 			return {
 				...state,
 				test: {
@@ -64,7 +64,7 @@ export const testReducer = (state = initialTestState, action) => {
 				editedQuestions: state.editedQuestions.add(action.payload.id),
 			};
 
-		case ACTION_TYPE.DELETE_QUESTION:
+		case TestActionTypes.DELETE_QUESTION:
 			return {
 				...state,
 				test: {
@@ -83,7 +83,7 @@ export const testReducer = (state = initialTestState, action) => {
 						: state.editedQuestions.add(action.payload.id),
 			};
 
-		case ACTION_TYPE.ADD_ANSWER:
+		case TestActionTypes.ADD_ANSWER:
 			return {
 				...state,
 				test: {
@@ -106,7 +106,7 @@ export const testReducer = (state = initialTestState, action) => {
 				editedQuestions: state.editedQuestions.add(action.payload.questionId),
 			};
 
-		case ACTION_TYPE.CHANGE_CORRECT_ANSWER:
+		case TestActionTypes.CHANGE_CORRECT_ANSWER:
 			return {
 				...state,
 				test: {
@@ -120,7 +120,7 @@ export const testReducer = (state = initialTestState, action) => {
 				editedQuestions: state.editedQuestions.add(action.payload.id),
 			};
 
-		case ACTION_TYPE.UPDATE_ANSWER_TEXT:
+		case TestActionTypes.UPDATE_ANSWER_TEXT:
 			return {
 				...state,
 				test: {
@@ -142,7 +142,7 @@ export const testReducer = (state = initialTestState, action) => {
 				editedQuestions: state.editedQuestions.add(action.payload.questionId),
 			};
 
-		case ACTION_TYPE.DELETE_ANSWER:
+		case TestActionTypes.DELETE_ANSWER:
 			return {
 				...state,
 				test: {

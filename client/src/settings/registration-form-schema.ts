@@ -27,6 +27,6 @@ export const registrationFormSchema = yup.object().shape({
 	passCheck: yup
 		.string()
 		.required('Заполните пароль')
-		.oneOf([yup.ref('password'), null], 'Пароли не совпадают'),
+		.oneOf([yup.ref('password')], 'Пароли не совпадают'),
 	image: yup.string().url('Должен быть правильный URL'),
 });

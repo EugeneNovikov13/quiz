@@ -1,18 +1,22 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { FC, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { generateTestResult } from '../../utils';
-import { addHistoryAsync, loadQuestionAsync, loadTestAsync } from '../../redux/actions';
+import { loadQuestionAsync } from '../../redux/actions';
 import { selectLastQuestionNumber, selectQuestion } from '../../redux/selectors';
 import { Button, PrivateContent } from '../../components';
 import { Task } from './components';
 import styled from 'styled-components';
+import { useActions } from '../../hooks/use-actions';
+import { addHistoryAsync } from '../../redux/actions/test';
+import { useAppDispatch } from '../../redux/store';
 
-const QuestionContainer = ({ className }) => {
+const QuestionContainer: FC = ({ className }) => {
+	// const { addHistoryAsync, loadTestAsync } = useActions();
 	//ответы на текущий тест храним здесь
 	const userAnswers = useRef([]);
 
-	const [errorMessage, setErrorMessage] = useState(null);
+	const [errorMessage, setErrorMessage] = useState<string>('');
 
 	//есть выбранный ответ, готов переходить на следующий вопрос
 	const [readyToContinue, setReadyToContinue] = useState(false);
@@ -27,7 +31,7 @@ const QuestionContainer = ({ className }) => {
 	const question = useSelector(selectQuestion);
 	const lastPage = useSelector(selectLastQuestionNumber);
 
-	const dispatch = useDispatch();
+	const dispatch = useAppDispatch();
 	const navigate = useNavigate();
 	const isLastPage = currentPage === Number(lastPage);
 
@@ -49,21 +53,26 @@ const QuestionContainer = ({ className }) => {
 
 		let testData;
 
-		//получаем тест целиком
-		await dispatch(loadTestAsync(params.id)).then(res => {
-			if (res.error) setErrorMessage(res.error);
-			testData = res.data.questions;
-		});
+		try {
+			//получаем тест целиком
+			await loadTestAsync(params.id).then(res => {
+				if (res.error) setErrorMessage(res.error);
+				testData = res.data.questions;
+			});
 
-		//генерируем результат теста в подходящую форму
-		const testResult = generateTestResult(testData, selectedAnswers);
+			//генерируем результат теста в подходящую форму
+			const testResult = generateTestResult(testData, selectedAnswers);
 
-		//отправляем результат в БД
-		await dispatch(addHistoryAsync(params.id, testResult)).then(res => {
-			if (res.error) setErrorMessage(res.error);
-		});
+			//отправляем результат в БД
+			const result = await dispatch(addHistoryAsync('params.id', testResult));
+			// 	.then(res => {
+			// 	if (res.error) setErrorMessage(res.error);
+			// });
 
-		navigate('/result');
+			// result.
+
+			navigate('/result');
+		} catch (e) {}
 	};
 
 	const onBackButtonClick = () => {

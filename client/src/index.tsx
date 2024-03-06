@@ -6,7 +6,9 @@ import { store } from './redux/store';
 import { Quiz } from './quiz';
 import './index.css';
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+const rootElement = document.getElementById('root') as HTMLDivElement;
+const root = ReactDOM.createRoot(rootElement);
+
 root.render(
 	<BrowserRouter>
 		<Provider store={store}>

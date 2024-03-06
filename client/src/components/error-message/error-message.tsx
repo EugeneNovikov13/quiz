@@ -7,10 +7,10 @@ const Div = styled.div`
 	font-size: 18px;
 `;
 
-export const Error = ({ error }) =>
-	error && (
+export const ErrorMessage = ({ message }: { message: string }) =>
+	message && (
 		<Div>
 			<h2>Ошибка</h2>
-			<div>{error}</div>
+			<div>{message}</div>
 		</Div>
 	);

@@ -1,6 +1,6 @@
 export * from './auth-error/auth-error';
 export * from './button/button';
-export * from './error/error';
+export * from './error-message/error-message';
 export * from './header/header';
 export * from './icon/icon';
 export * from './input/input';

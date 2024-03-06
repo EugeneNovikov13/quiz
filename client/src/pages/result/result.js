@@ -1,7 +1,7 @@
 import { useSelector } from 'react-redux';
 import { countNumberCorrectAnswers } from '../../utils';
 import { selectTestData, selectTestHistory } from '../../redux/selectors';
-import { Button, Error, NavBar, PrivateContent } from '../../components';
+import { Button, ErrorMessage, NavBar, PrivateContent } from '../../components';
 import { ERROR } from '../../constants';
 import styled from 'styled-components';
 
@@ -22,7 +22,7 @@ const ResultContainer = ({ className }) => {
 						<h1 className="right-answers-count">{rightAnswersCount}</h1>
 					</div>
 				) : (
-					<Error error={ERROR.NO_RESULTS} />
+					<ErrorMessage error={ERROR.NO_RESULTS} />
 				)}
 				<NavBar>
 					<Button link="/">На главную</Button>

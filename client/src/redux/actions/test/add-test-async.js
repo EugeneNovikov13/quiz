@@ -1,5 +1,5 @@
-import { request } from '../../utils';
-import { RESET_TEST_DATA } from './reset-test-data';
+import { request } from '../../../utils';
+import { RESET_TEST_DATA } from './index';
 
 export const addTestAsync = test => dispatch =>
 	request('/tests', 'POST', {
