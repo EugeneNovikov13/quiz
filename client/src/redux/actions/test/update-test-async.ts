@@ -1,8 +1,9 @@
 import { request } from '../../../utils';
-import { TestActionTypes } from '../../../types';
+import { ITest, TestAction, TestActionTypes } from '../../../types';
+import { Dispatch } from 'redux';
 
-export const updateTestAsync = test => dispatch =>
-	request(`/tests/${test.id}`, 'PATCH', {
+export const updateTestAsync = (test: ITest) => (dispatch: Dispatch<TestAction>) =>
+	request<ITest>(`/tests/${test.id}`, 'PATCH', {
 		title: test.title,
 		questions: test.questions,
 	}).then(res => {

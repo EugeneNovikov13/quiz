@@ -1,5 +1,5 @@
-import { IAnswer, IQuestion, ITest } from './ITest';
-import { History } from './history';
+import { IAnswer, IQuestion, ITest } from './test-types';
+import { History } from './history-types';
 
 export interface ITestState {
 	editedQuestions: Set<string>;

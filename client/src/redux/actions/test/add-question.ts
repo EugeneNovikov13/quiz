@@ -1,7 +1,7 @@
-import { ACTION_TYPE } from '../action-type';
+import { TestAction, TestActionTypes } from '../../../types';
 
-export const addQuestion = () => ({
-	type: ACTION_TYPE.ADD_QUESTION,
+export const addQuestion = (): TestAction => ({
+	type: TestActionTypes.ADD_QUESTION,
 	payload: {
 		id: 'new' + Date.now().toString(),
 		text: '',

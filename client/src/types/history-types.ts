@@ -1,4 +1,4 @@
-import { User } from './user';
+import { User } from './user-types';
 
 export interface History {
 	id: string;
