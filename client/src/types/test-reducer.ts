@@ -1,10 +1,10 @@
-import { Answer, Question, Test } from './test';
+import { IAnswer, IQuestion, ITest } from './ITest';
 import { History } from './history';
 
 export interface ITestState {
 	editedQuestions: Set<string>;
 	history: History[];
-	test: Test;
+	test: ITest;
 }
 
 export enum TestActionTypes {
@@ -23,7 +23,7 @@ export enum TestActionTypes {
 
 interface ISetTestData {
 	type: TestActionTypes.SET_TEST_DATA;
-	payload: Test;
+	payload: ITest;
 }
 
 interface IResetTestData {
@@ -42,40 +42,44 @@ interface ISetHistory {
 
 interface IAddQuestion {
 	type: TestActionTypes.ADD_QUESTION;
-	payload: Question;
+	payload: IQuestion;
 }
 
 interface IUpdateQuestionText {
 	type: TestActionTypes.UPDATE_QUESTION_TEXT;
-	payload: Pick<Question, 'id' | 'text'>;
+	payload: Pick<IQuestion, 'id' | 'text'>;
 }
 
 interface IDeleteQuestion {
 	type: TestActionTypes.DELETE_QUESTION;
-	payload: Pick<Question, 'id'>;
+	payload: Pick<IQuestion, 'id'>;
 }
 
 interface IAddAnswer {
 	type: TestActionTypes.ADD_ANSWER;
 	payload: {
-		questionId: Question['id'];
+		questionId: IQuestion['id'];
 		tempAnswerId: string;
 	};
 }
 
 interface IChangeCorrectAnswer {
 	type: TestActionTypes.CHANGE_CORRECT_ANSWER;
-	payload: { id: Question['id']; text: Answer['text'] };
+	payload: { id: IQuestion['id']; text: IAnswer['text'] };
 }
 
 interface IUpdateAnswerText {
 	type: TestActionTypes.UPDATE_ANSWER_TEXT;
-	payload: { questionId: Question['id']; answerId: Answer['id']; text: Answer['text'] };
+	payload: {
+		questionId: IQuestion['id'];
+		answerId: IAnswer['id'];
+		text: IAnswer['text'];
+	};
 }
 
 interface IDeleteAnswer {
 	type: TestActionTypes.DELETE_ANSWER;
-	payload: { questionId: Question['id']; answerId: Answer['id'] };
+	payload: { questionId: IQuestion['id']; answerId: IAnswer['id'] };
 }
 
 export type TestAction =

@@ -1,6 +1,22 @@
+import { ChangeEventHandler, FC } from 'react';
+import { IAnswer } from '../../../../../../types';
 import styled from 'styled-components';
 
-const AnswerOptionContainer = ({ className, id, text, checked, handleRadioChange }) => {
+interface AnswerOptionProps {
+	className?: string;
+	id: IAnswer['id'];
+	text: string;
+	checked: boolean;
+	handleRadioChange: ChangeEventHandler<HTMLInputElement>;
+}
+
+const AnswerOptionContainer: FC<AnswerOptionProps> = ({
+	className,
+	id,
+	text,
+	checked,
+	handleRadioChange,
+}) => {
 	return (
 		<div className={className}>
 			<input

@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { FC } from 'react';
 
 const Div = styled.div`
 	display: flex;
@@ -7,7 +8,11 @@ const Div = styled.div`
 	font-size: 18px;
 `;
 
-export const ErrorMessage = ({ message }: { message: string }) =>
+interface ErrorMessageProps {
+	message?: string;
+}
+
+export const ErrorMessage: FC<ErrorMessageProps> = ({ message }) =>
 	message && (
 		<Div>
 			<h2>Ошибка</h2>

@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { loadHistoryAsync, loadTestAsync } from '../../redux/actions';
 import {
 	selectAppWasLogin,
 	selectTestData,
@@ -10,6 +9,7 @@ import {
 import { History } from './components';
 import { Button, PrivateContent, TestInfo } from '../../components';
 import styled from 'styled-components';
+import { loadHistoryAsync, loadTestAsync } from '../../redux/actions/test';
 
 const TestContainer = ({ className }) => {
 	const [errorMessage, setErrorMessage] = useState(null);

@@ -1,21 +1,21 @@
 import { User } from './user';
 
-export interface Test {
+export interface ITest {
 	id: string;
 	title: string;
 	createdAt: string;
 	author: Pick<User, 'name' | 'surname'>;
-	questions: Question[];
+	questions: IQuestion[];
 }
 
-export interface Question {
+export interface IQuestion {
 	id: string;
 	text: string;
 	correctAnswer: string;
-	answers: Answer[];
+	answers: IAnswer[];
 }
 
-export interface Answer {
+export interface IAnswer {
 	id: string;
 	text: string;
 }

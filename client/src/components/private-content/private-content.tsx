@@ -6,7 +6,7 @@ import { ReactNode } from 'react';
 
 interface PrivateContentProps {
 	children: ReactNode;
-	serverError: string;
+	serverError?: string;
 }
 
 //компонент защищает от нахождения пользователей на страницах, куда им закрыт доступ

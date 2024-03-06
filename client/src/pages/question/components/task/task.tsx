@@ -1,11 +1,21 @@
-import { useState } from 'react';
-import { useSelector } from 'react-redux';
+import React, { ChangeEventHandler, FC, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { selectLastQuestionNumber } from '../../../../redux/selectors';
+import { useTypedSelector } from '../../../../redux/store';
 import { AnswerOption } from './components';
+import { IAnswer } from '../../../../types';
 import styled from 'styled-components';
 
-const TaskContainer = ({
+interface TaskProps {
+	className?: string;
+	text: string;
+	answers: IAnswer[];
+	userAnswers: React.MutableRefObject<string[]>;
+	setReadyToContinue: React.Dispatch<React.SetStateAction<boolean>>;
+	setReadyToComplete: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const TaskContainer: FC<TaskProps> = ({
 	className,
 	text,
 	answers,
@@ -15,11 +25,11 @@ const TaskContainer = ({
 }) => {
 	const params = useParams();
 	const currentPage = Number(params.pageId);
-	const lastPage = useSelector(selectLastQuestionNumber);
-	const [selectedValue, setSelectedValue] = useState('');
+	const lastPage = useTypedSelector(selectLastQuestionNumber);
+	const [selectedValue, setSelectedValue] = useState<string>('');
 
 	//управляет переключением выбранных значений из радио-инпутов (вариантов ответа на вопрос)
-	const handleRadioChange = ({ target }) => {
+	const handleRadioChange: ChangeEventHandler<HTMLInputElement> = ({ target }) => {
 		//заносим значение в состояние и общую ссылку всех ответов на вопросы
 		setSelectedValue(target.value);
 		userAnswers.current[currentPage - 1] = target.value;

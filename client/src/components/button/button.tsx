@@ -1,7 +1,29 @@
+import { FC, MouseEventHandler, ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
-const ButtonContainer = ({ className, children, link, type, isDisable, onClick }) => {
+interface ButtonProps {
+	className?: string;
+	fontSize?: string;
+	width?: string;
+	height?: string;
+	activeColor?: string;
+	maxWidth?: string;
+	isDisable?: boolean;
+	children?: ReactNode;
+	link?: string;
+	type?: 'button' | 'submit' | 'reset' | undefined;
+	onClick?: MouseEventHandler<HTMLButtonElement>;
+}
+
+const ButtonContainer: FC<ButtonProps> = ({
+	className,
+	children,
+	link,
+	type = 'button',
+	isDisable = false,
+	onClick,
+}) => {
 	return (
 		<>
 			{link ? (

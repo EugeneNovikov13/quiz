@@ -1,5 +1,5 @@
 import { request } from '../../../utils';
-import { setTestData } from './index';
+import { TestActionTypes } from '../../../types';
 
 export const updateTestAsync = test => dispatch =>
 	request(`/tests/${test.id}`, 'PATCH', {
@@ -7,7 +7,10 @@ export const updateTestAsync = test => dispatch =>
 		questions: test.questions,
 	}).then(res => {
 		if (res.data) {
-			dispatch(setTestData(res.data));
+			dispatch({
+				type: TestActionTypes.SET_TEST_DATA,
+				payload: res.data,
+			});
 		}
 
 		return res;

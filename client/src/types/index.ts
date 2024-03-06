@@ -1,4 +1,4 @@
 export * from './history';
-export * from './test';
+export * from './ITest';
 export * from './test-reducer';
 export * from './user';

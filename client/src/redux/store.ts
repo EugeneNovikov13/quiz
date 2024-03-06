@@ -1,8 +1,9 @@
 import { composeWithDevTools } from '@redux-devtools/extension';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
-import thunk from 'redux-thunk';
+import thunk, { ThunkDispatch, ThunkMiddleware } from 'redux-thunk';
 import { appReducer, questionReducer, testReducer } from './reducers';
-import { useDispatch } from 'react-redux';
+import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
+import { TestAction } from '../types';
 
 const reducer = combineReducers({
 	app: appReducer,
@@ -10,12 +11,20 @@ const reducer = combineReducers({
 	test: testReducer,
 });
 
+export type RootState = ReturnType<typeof reducer>;
+export type AppDispatch = typeof store.dispatch;
+export const useAppDispatch: () => AppDispatch = useDispatch;
+export const useTypedSelector: TypedUseSelectorHook<RootState> = useSelector;
+
+type AllAppAction = TestAction;
+export type AppThunkDispatch = ThunkDispatch<RootState, any, AllAppAction>;
+
 export const store = createStore(
 	reducer,
 	{},
-	composeWithDevTools(applyMiddleware(thunk)),
+	composeWithDevTools(
+		applyMiddleware<AppThunkDispatch, any>(
+			thunk as ThunkMiddleware<RootState, AllAppAction, any>,
+		),
+	),
 );
-
-export type RootState = ReturnType<typeof store.getState>;
-export type AppDispatch = typeof store.dispatch;
-export const useAppDispatch: () => AppDispatch = useDispatch;

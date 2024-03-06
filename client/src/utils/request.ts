@@ -1,5 +1,5 @@
 type HttpMethod = 'GET' | 'POST' | 'PATCH' | 'PUT' | 'DELETE';
-export type ResponseType<T> = {
+type ResponseType<T> = {
 	data?: T | null;
 	error?: string | null;
 };
