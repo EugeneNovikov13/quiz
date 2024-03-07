@@ -1,7 +1,7 @@
 import React, { ChangeEventHandler, FC, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { selectLastQuestionNumber } from '../../../../redux/selectors';
-import { useTypedSelector } from '../../../../redux/store';
 import { AnswerOption } from './components';
 import { IAnswer } from '../../../../types';
 import styled from 'styled-components';
@@ -25,7 +25,7 @@ const TaskContainer: FC<TaskProps> = ({
 }) => {
 	const params = useParams();
 	const currentPage = Number(params.pageId);
-	const lastPage = useTypedSelector(selectLastQuestionNumber);
+	const lastPage = useSelector(selectLastQuestionNumber);
 	const [selectedValue, setSelectedValue] = useState<string>('');
 
 	//управляет переключением выбранных значений из радио-инпутов (вариантов ответа на вопрос)

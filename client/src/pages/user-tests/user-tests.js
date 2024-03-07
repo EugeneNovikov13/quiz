@@ -6,7 +6,7 @@ import {
 	errorDemonstration,
 	loadTestsAsync,
 } from '../../utils';
-import { CLOSE_MODAL, openModal } from '../../redux/actions';
+import { CLOSE_MODAL, openModal } from '../../redux/actions/app';
 import { selectTestData } from '../../redux/selectors';
 import { Button, PrivateContent, TestInfo } from '../../components';
 import { Pagination } from '../main/components';
@@ -54,9 +54,9 @@ const UserTestsContainer = ({ className }) => {
 						if (res.error) errorDemonstration(dispatch, res.error);
 						setShouldRefresh(!shouldRefresh);
 					});
-					dispatch(CLOSE_MODAL);
+					dispatch(CLOSE_MODAL());
 				},
-				onCancel: () => dispatch(CLOSE_MODAL),
+				onCancel: () => dispatch(CLOSE_MODAL()),
 			}),
 		);
 	};

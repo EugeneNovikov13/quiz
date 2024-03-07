@@ -21,13 +21,24 @@ const TestResultContainer = ({ className, user, testDate, testTime, testResult }
 	const rightAnswersCount = countNumberCorrectAnswers(testResult, ' из ');
 
 	const onMouseEnter = (...args) => {
-		updateObjectOfStates(...args);
+		const updatedState = updateObjectOfStates(...args);
+		setIsHovered(updatedState);
 	};
 
 	const debouncedOnMouseEnter = useDebounce(refs, onMouseEnter, 200);
 
+	// 	const onMouseEnter = (...args: [string, { [id: string]: boolean }, boolean]) => {
+	// 		const updatedState = updateObjectOfStates(...args);
+	// 		setIsHovered(updatedState);
+	// 	};
+	//
+	// 	const debouncedOnMouseEnter = useDebounce<
+	// 		[string, { [id: string]: boolean }, boolean]
+	// >(refs, onMouseEnter, 200);
+
 	const onMouseLeave = (ref, ...args) => {
-		updateObjectOfStates(...args);
+		const updatedState = updateObjectOfStates(...args);
+		setIsHovered(updatedState);
 		clearTimeout(ref.current);
 	};
 
@@ -50,11 +61,9 @@ const TestResultContainer = ({ className, user, testDate, testTime, testResult }
 							answersQuantity={answersQuantity}
 							isHovered={isHovered[id]}
 							onMouseEnter={() =>
-								debouncedOnMouseEnter(id, isHovered, setIsHovered, true)
+								debouncedOnMouseEnter(id, isHovered, true)
 							}
-							onMouseLeave={() =>
-								onMouseLeave(refs, id, isHovered, setIsHovered, false)
-							}
+							onMouseLeave={() => onMouseLeave(refs, id, isHovered, false)}
 						/>
 					))}
 				</div>

@@ -1,7 +1,7 @@
 import { useLayoutEffect } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { SET_USER } from './redux/actions';
+import { SET_USER } from './redux/actions/app';
 import {
 	Account,
 	Authorization,
@@ -72,7 +72,7 @@ export const Quiz = () => {
 					<Route path="/account" element={<Account />}></Route>
 					<Route
 						path="*"
-						element={<ErrorMessage error={ERROR.PAGE_NOT_EXIST} />}
+						element={<ErrorMessage message={ERROR.PAGE_NOT_EXIST} />}
 					></Route>
 				</Routes>
 			</Page>

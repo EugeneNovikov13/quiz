@@ -1,9 +1,9 @@
-import { IQuestion, Result } from '../types';
+import { IQuestion, IResult } from '../types';
 
 export const generateTestResult = (
 	data: IQuestion[],
 	result: string[],
-): Omit<Result, 'id'>[] =>
+): Omit<IResult, 'id'>[] =>
 	result.map((answer, index) => ({
 		question: data[index].text,
 		userAnswer: answer,

@@ -4,6 +4,8 @@ import thunk, { ThunkDispatch, ThunkMiddleware } from 'redux-thunk';
 import { appReducer, questionReducer, testReducer } from './reducers';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import { TestAction } from '../types';
+import { AppAction } from '../types/app-reducer-types';
+import { QuestionAction } from '../types/question-reducer-types';
 
 const reducer = combineReducers({
 	app: appReducer,
@@ -12,11 +14,8 @@ const reducer = combineReducers({
 });
 
 export type RootState = ReturnType<typeof reducer>;
-export type AppDispatch = typeof store.dispatch;
-export const useAppDispatch: () => AppDispatch = useDispatch;
-export const useTypedSelector: TypedUseSelectorHook<RootState> = useSelector;
 
-type AllAppAction = TestAction;
+type AllAppAction = TestAction | AppAction | QuestionAction;
 export type AppThunkDispatch = ThunkDispatch<RootState, any, AllAppAction>;
 
 export const store = createStore(
