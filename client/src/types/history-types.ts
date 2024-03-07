@@ -1,17 +1,17 @@
-import { User } from './user-types';
+import { IUser } from './user-types';
 
-export interface History {
+export interface IHistory {
 	id: string;
 	user: {
-		name: User['name'];
-		surname: User['surname'];
+		name: IUser['name'];
+		surname: IUser['surname'];
 	};
-	results: Result[];
+	results: IResult[];
 	testDate: string;
 	testTime: string;
 }
 
-export interface Result {
+export interface IResult {
 	id: string;
 	question: string;
 	userAnswer: string;

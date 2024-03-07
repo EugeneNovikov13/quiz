@@ -1,7 +1,7 @@
 import { useLayoutEffect } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { SET_USER } from './redux/actions';
+import { SET_USER } from './redux/actions/app';
 import {
 	Account,
 	Authorization,

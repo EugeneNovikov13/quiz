@@ -1,11 +1,11 @@
 import { Dispatch } from 'redux';
-import { History, Result, ITest, TestAction, TestActionTypes } from '../../../types';
+import { IHistory, IResult, ITest, TestAction, TestActionTypes } from '../../../types';
 import { request } from '../../../utils';
 
 export const addHistoryAsync =
-	(testId: ITest['id'], results: Omit<Result, 'id'>[]) =>
+	(testId: ITest['id'], results: Omit<IResult, 'id'>[]) =>
 	async (dispatch: Dispatch<TestAction>) => {
-		const response = await request<History>('/histories', 'POST', {
+		const response = await request<IHistory>('/histories', 'POST', {
 			test: testId,
 			results,
 		});

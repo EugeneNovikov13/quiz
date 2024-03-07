@@ -1,7 +1,7 @@
 import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { logoutAsync } from '../../../../redux/actions';
+import { logoutAsync } from '../../../../redux/actions/app';
 import { errorDemonstration } from '../../../../utils';
 
 const UserMenuContainer = ({ className, onMouseLeave }) => {

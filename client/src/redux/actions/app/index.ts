@@ -1,4 +1,3 @@
-export * from './action-type';
 export * from './close-modal';
 export * from './logout-async';
 export * from './logout';

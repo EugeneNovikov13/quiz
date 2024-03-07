@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { CLOSE_MODAL, openModal } from '../../../../redux/actions';
+import { CLOSE_MODAL, openModal } from '../../../../redux/actions/app';
 import { Button, Icon } from '../../../../components';
 import { AnswerEdit } from './components';
 import { EditInput } from '../edit-input/edit-input';
@@ -48,9 +48,9 @@ const QuestionEditContainer = ({ className, id: questionId, questionText, answer
 				text: 'Удалить вопрос?',
 				onConfirm: () => {
 					dispatch(deleteQuestion(id));
-					dispatch(CLOSE_MODAL);
+					dispatch(CLOSE_MODAL());
 				},
-				onCancel: () => dispatch(CLOSE_MODAL),
+				onCancel: () => dispatch(CLOSE_MODAL()),
 			}),
 		);
 	};

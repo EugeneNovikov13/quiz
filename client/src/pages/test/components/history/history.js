@@ -6,6 +6,7 @@ const HistoryContainer = ({ className, history }) => {
 		<div className={className}>
 			<h4>{history.length ? 'История прохождений' : 'Нет истории'}</h4>
 			<div className="test-history">
+				{/*TODO maybe HOC*/}
 				{history.map(({ id, testDate, testTime, results, user }) => (
 					<TestResult
 						key={id}

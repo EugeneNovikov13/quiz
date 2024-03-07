@@ -6,7 +6,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useResetForm } from '../../hooks';
 import { request } from '../../utils';
 import { AuthFormError, Button, Input } from '../../components';
-import { SET_USER } from '../../redux/actions';
+import { SET_USER } from '../../redux/actions/app';
 import { selectAppWasLogin } from '../../redux/selectors';
 import { authorizationFormSchema } from '../../settings';
 import styled from 'styled-components';

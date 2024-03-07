@@ -1,9 +1,9 @@
 import { IAnswer, IQuestion, ITest } from './test-types';
-import { History } from './history-types';
+import { IHistory } from './history-types';
 
 export interface ITestState {
 	editedQuestions: Set<string>;
-	history: History[];
+	history: IHistory[];
 	test: ITest;
 }
 
@@ -37,7 +37,7 @@ interface IUpdateTestTitle {
 
 interface ISetHistory {
 	type: TestActionTypes.SET_HISTORY;
-	payload: History[];
+	payload: IHistory[];
 }
 
 interface IAddQuestion {

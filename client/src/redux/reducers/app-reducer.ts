@@ -1,6 +1,6 @@
-import { ACTION_TYPE } from '../actions';
+import { AppAction, AppActionTypes, IAppState } from '../../types/app-reducer-types';
 
-const initialAppState = {
+const initialAppState: IAppState = {
 	wasLogin: false,
 	modal: {
 		isOpen: false,
@@ -11,21 +11,21 @@ const initialAppState = {
 	},
 };
 
-export const appReducer = (state = initialAppState, action) => {
+export const appReducer = (state = initialAppState, action: AppAction): IAppState => {
 	switch (action.type) {
-		case ACTION_TYPE.LOGOUT:
+		case AppActionTypes.LOGOUT:
 			return {
 				...state,
 				wasLogin: false,
 			};
 
-		case ACTION_TYPE.SET_USER:
+		case AppActionTypes.SET_USER:
 			return {
 				...state,
 				wasLogin: true,
 			};
 
-		case ACTION_TYPE.OPEN_MODAL:
+		case AppActionTypes.OPEN_MODAL:
 			return {
 				...state,
 				modal: {
@@ -35,16 +35,10 @@ export const appReducer = (state = initialAppState, action) => {
 				},
 			};
 
-		case ACTION_TYPE.CLOSE_MODAL:
+		case AppActionTypes.CLOSE_MODAL:
 			return {
 				...state,
-				modal: {
-					isOpen: false,
-					text: '',
-					onConfirm: () => {},
-					onCancel: () => {},
-					isError: false,
-				},
+				modal: initialAppState.modal,
 			};
 
 		default:

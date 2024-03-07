@@ -1,4 +1,6 @@
-export const checkErrors = (title, questions) => {
+import { IQuestion } from '../types';
+
+export const checkErrors = (title: string, questions: IQuestion[]): boolean => {
 	let isError = false;
 
 	if (title.length === 0 || questions.length === 0) {

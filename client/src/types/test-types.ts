@@ -1,10 +1,10 @@
-import { User } from './user-types';
+import { IUser } from './user-types';
 
 export interface ITest {
 	id: string;
 	title: string;
 	createdAt: string;
-	author: Pick<User, 'name' | 'surname'>;
+	author: Pick<IUser, 'name' | 'surname'>;
 	questions: IQuestion[];
 }
 
@@ -18,4 +18,9 @@ export interface IQuestion {
 export interface IAnswer {
 	id: string;
 	text: string;
+}
+
+export interface ITestList {
+	lastPage: number;
+	tests: ITest[];
 }
