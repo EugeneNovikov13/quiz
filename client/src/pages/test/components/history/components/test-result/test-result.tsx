@@ -1,13 +1,34 @@
-import { useEffect, useRef, useState } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
 import { useDebounce } from '../../../../../../hooks';
-import { countNumberCorrectAnswers, updateObjectOfStates } from '../../../../../../utils';
+import {
+	countNumberCorrectAnswers,
+	ResultItemsHoveredType,
+	updateObjectOfStates,
+} from '../../../../../../utils';
 import { AnswerResult } from './components';
 import { STRIPE_LENGTH } from '../../../../../../constants';
 import styled from 'styled-components';
+import { IResult } from '../../../../../../types';
 
-const TestResultContainer = ({ className, user, testDate, testTime, testResult }) => {
-	const [isHovered, setIsHovered] = useState({});
-	let refs = useRef(null);
+interface TestResultProps {
+	className?: string;
+	user: string;
+	testDate: string;
+	testTime: string;
+	testResult: IResult[];
+}
+
+type MouseEventHandlerArgs = [string, { [id: string]: boolean }, boolean];
+
+const TestResultContainer: FC<TestResultProps> = ({
+	className,
+	user,
+	testDate,
+	testTime,
+	testResult,
+}) => {
+	const [isHovered, setIsHovered] = useState<ResultItemsHoveredType>({});
+	let refs = useRef<NodeJS.Timeout>();
 
 	useEffect(() => {
 		const isHoveredInitialState = testResult.reduce(
@@ -18,28 +39,23 @@ const TestResultContainer = ({ className, user, testDate, testTime, testResult }
 	}, [testResult]);
 
 	const answersQuantity = testResult.length;
-	const rightAnswersCount = countNumberCorrectAnswers(testResult, ' из ');
+	const rightAnswersCountString = countNumberCorrectAnswers(testResult, ' из ');
 
-	const onMouseEnter = (...args) => {
+	const onMouseEnter = (...args: MouseEventHandlerArgs) => {
 		const updatedState = updateObjectOfStates(...args);
 		setIsHovered(updatedState);
 	};
 
-	const debouncedOnMouseEnter = useDebounce(refs, onMouseEnter, 200);
+	const debouncedOnMouseEnter = useDebounce<MouseEventHandlerArgs>(
+		refs,
+		onMouseEnter,
+		200,
+	);
 
-	// 	const onMouseEnter = (...args: [string, { [id: string]: boolean }, boolean]) => {
-	// 		const updatedState = updateObjectOfStates(...args);
-	// 		setIsHovered(updatedState);
-	// 	};
-	//
-	// 	const debouncedOnMouseEnter = useDebounce<
-	// 		[string, { [id: string]: boolean }, boolean]
-	// >(refs, onMouseEnter, 200);
-
-	const onMouseLeave = (ref, ...args) => {
+	const onMouseLeave = (...args: MouseEventHandlerArgs) => {
 		const updatedState = updateObjectOfStates(...args);
 		setIsHovered(updatedState);
-		clearTimeout(ref.current);
+		clearTimeout(refs.current);
 	};
 
 	return (
@@ -63,13 +79,13 @@ const TestResultContainer = ({ className, user, testDate, testTime, testResult }
 							onMouseEnter={() =>
 								debouncedOnMouseEnter(id, isHovered, true)
 							}
-							onMouseLeave={() => onMouseLeave(refs, id, isHovered, false)}
+							onMouseLeave={() => onMouseLeave(id, isHovered, false)}
 						/>
 					))}
 				</div>
 				<div>{testResult.length}</div>
 			</div>
-			<div className="final-result">{`Верно: ${rightAnswersCount}`}</div>
+			<div className="final-result">{`Верно: ${rightAnswersCountString}`}</div>
 		</div>
 	);
 };

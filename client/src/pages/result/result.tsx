@@ -4,12 +4,17 @@ import { selectTestData, selectTestHistory } from '../../redux/selectors';
 import { Button, ErrorMessage, NavBar, PrivateContent } from '../../components';
 import { ERROR } from '../../constants';
 import styled from 'styled-components';
+import { FC } from 'react';
 
-const ResultContainer = ({ className }) => {
+interface ResultProps {
+	className?: string;
+}
+
+const ResultContainer: FC<ResultProps> = ({ className }) => {
 	const history = useSelector(selectTestHistory)[0];
 	const testId = useSelector(selectTestData).id;
 
-	//Считаем правильные ответы, если история существует в сторе, т.е. только что было прохождение теста
+	//Формируем строку результата теста, если история существует в сторе, т.е. только что было прохождение теста
 	const rightAnswersCount =
 		!!history && countNumberCorrectAnswers(history.results, '/');
 
@@ -22,7 +27,7 @@ const ResultContainer = ({ className }) => {
 						<h1 className="right-answers-count">{rightAnswersCount}</h1>
 					</div>
 				) : (
-					<ErrorMessage error={ERROR.NO_RESULTS} />
+					<ErrorMessage message={ERROR.NO_RESULTS} />
 				)}
 				<NavBar>
 					<Button link="/">На главную</Button>

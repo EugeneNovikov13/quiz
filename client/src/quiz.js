@@ -49,7 +49,7 @@ export const Quiz = () => {
 			return;
 		}
 
-		dispatch(SET_USER);
+		dispatch(SET_USER());
 	}, [dispatch]);
 
 	return (

@@ -2,7 +2,6 @@ import { composeWithDevTools } from '@redux-devtools/extension';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk, { ThunkDispatch, ThunkMiddleware } from 'redux-thunk';
 import { appReducer, questionReducer, testReducer } from './reducers';
-import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import { TestAction } from '../types';
 import { AppAction } from '../types/app-reducer-types';
 import { QuestionAction } from '../types/question-reducer-types';

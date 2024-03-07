@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
 	createArrayFromNumber,
@@ -12,20 +12,27 @@ import { Button, PrivateContent, TestInfo } from '../../components';
 import { Pagination } from '../main/components';
 import { QUESTIONS_AMOUNT_TO_LOAD } from '../../constants';
 import styled from 'styled-components';
+import { ITest, IUser } from '../../types';
+import { AppThunkDispatch } from '../../redux/store';
 
-const UserTestsContainer = ({ className }) => {
-	const [tests, setTests] = useState([]);
-	const [page, setPage] = useState(1);
-	const [lastPage, setLastPage] = useState(1);
+interface UserTestsProps {
+	className?: string;
+}
+
+const UserTestsContainer: FC<UserTestsProps> = ({ className }) => {
+	const [tests, setTests] = useState<ITest[]>([]);
+	const [page, setPage] = useState<number>(1);
+	const [lastPage, setLastPage] = useState<number>(1);
 	//требование перезапроса тестов из БД после удаления теста
-	const [shouldRefresh, setShouldRefresh] = useState(false);
-	const [isLoading, setIsLoading] = useState(true);
+	const [shouldRefresh, setShouldRefresh] = useState<boolean>(false);
+	const [isLoading, setIsLoading] = useState<boolean>(true);
 
-	const dispatch = useDispatch();
+	const dispatch: AppThunkDispatch = useDispatch();
 
 	const pages = createArrayFromNumber(lastPage);
 
-	const user = JSON.parse(sessionStorage.getItem('userData'));
+	const userData = sessionStorage.getItem('userData');
+	const user: IUser = userData && JSON.parse(userData);
 	const test = useSelector(selectTestData);
 
 	useEffect(() => {
@@ -36,16 +43,23 @@ const UserTestsContainer = ({ className }) => {
 			user.id,
 			QUESTIONS_AMOUNT_TO_LOAD.USER_TEST_PAGE_PAGINATION_LIMIT,
 			page,
-		).then(({ data: { tests, lastPage } }) => {
-			setTests(tests);
-			setLastPage(lastPage);
-			setIsLoading(false);
-		});
+		)
+			.then(({ data }) => {
+				if (data) {
+					const { tests, lastPage } = data;
+					setTests(tests);
+					setLastPage(lastPage);
+					setIsLoading(false);
+				}
+			})
+			.catch(e => {
+				console.log(e.message);
+			});
 		// eslint-disable-next-line
 	}, [page, test, shouldRefresh]);
 
 	//Вызывает модальное окно, чтобы подтвердить удаление теста из БД
-	const onTestDelete = testId => {
+	const onTestDelete = (testId: ITest['id']) => {
 		dispatch(
 			openModal({
 				text: 'Удалить тест?',
