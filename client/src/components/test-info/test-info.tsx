@@ -1,6 +1,21 @@
 import styled from 'styled-components';
+import { FC } from 'react';
 
-const TestInfoContainer = ({ className, title, author, createdAt, questionsCount }) => {
+interface TestInfoProps {
+	className?: string;
+	title: string;
+	author?: string;
+	createdAt: string;
+	questionsCount: number;
+}
+
+const TestInfoContainer: FC<TestInfoProps> = ({
+	className,
+	title,
+	author,
+	createdAt,
+	questionsCount,
+}) => {
 	return (
 		<div className={className}>
 			<h2 className="title">{title}</h2>

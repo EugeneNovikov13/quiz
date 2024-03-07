@@ -16,6 +16,7 @@ import {
 import { ErrorMessage, Header, Modal } from './components';
 import { ERROR } from './constants';
 import styled from 'styled-components';
+import { AppThunkDispatch } from './redux/store';
 
 const AppColumn = styled.div`
 	display: flex;
@@ -72,7 +73,7 @@ export const Quiz = () => {
 					<Route path="/account" element={<Account />}></Route>
 					<Route
 						path="*"
-						element={<ErrorMessage error={ERROR.PAGE_NOT_EXIST} />}
+						element={<ErrorMessage message={ERROR.PAGE_NOT_EXIST} />}
 					></Route>
 				</Routes>
 			</Page>

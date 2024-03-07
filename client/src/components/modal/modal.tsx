@@ -8,8 +8,13 @@ import {
 } from '../../redux/selectors';
 import { Button } from '../button/button';
 import styled from 'styled-components';
+import { FC } from 'react';
 
-const ModalContainer = ({ className }) => {
+interface ModalProps {
+	className?: string;
+}
+
+const ModalContainer: FC<ModalProps> = ({ className }) => {
 	const isOpen = useSelector(selectModalIsOpen);
 	const text = useSelector(selectModalText);
 	const onConfirm = useSelector(selectModalOnConfirm);

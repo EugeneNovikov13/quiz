@@ -1,6 +1,16 @@
 import styled from 'styled-components';
+import { FC, ReactNode } from 'react';
+import { TooltipPositionType } from '../../constants';
 
-const TooltipContainer = ({ className, children }) => {
+interface TooltipProps {
+	className?: string;
+	children: ReactNode;
+	tooltipPosition: TooltipPositionType;
+	isHovered?: boolean;
+	isInvisible?: boolean;
+}
+
+const TooltipContainer: FC<TooltipProps> = ({ className, children }) => {
 	return <div className={className}>{children}</div>;
 };
 

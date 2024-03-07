@@ -1,6 +1,13 @@
 import styled from 'styled-components';
+import { FC, ReactNode } from 'react';
 
-const NavBarContainer = ({ className, children }) => {
+interface NavBarProps {
+	className?: string;
+	children: ReactNode;
+	readyToComplete?: boolean;
+}
+
+const NavBarContainer: FC<NavBarProps> = ({ className, children }) => {
 	return <div className={className}>{children}</div>;
 };
 

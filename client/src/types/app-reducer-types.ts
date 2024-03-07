@@ -2,7 +2,7 @@ import { IModal } from './modal-types';
 
 export interface IAppState {
 	wasLogin: boolean;
-	modal: IModal;
+	modal: Required<IModal>;
 }
 
 export enum AppActionTypes {

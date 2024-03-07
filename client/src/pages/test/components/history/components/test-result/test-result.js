@@ -27,6 +27,15 @@ const TestResultContainer = ({ className, user, testDate, testTime, testResult }
 
 	const debouncedOnMouseEnter = useDebounce(refs, onMouseEnter, 200);
 
+	// 	const onMouseEnter = (...args: [string, { [id: string]: boolean }, boolean]) => {
+	// 		const updatedState = updateObjectOfStates(...args);
+	// 		setIsHovered(updatedState);
+	// 	};
+	//
+	// 	const debouncedOnMouseEnter = useDebounce<
+	// 		[string, { [id: string]: boolean }, boolean]
+	// >(refs, onMouseEnter, 200);
+
 	const onMouseLeave = (ref, ...args) => {
 		const updatedState = updateObjectOfStates(...args);
 		setIsHovered(updatedState);

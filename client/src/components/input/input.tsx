@@ -1,15 +1,27 @@
-import { forwardRef } from 'react';
+import React, { FC, forwardRef, InputHTMLAttributes } from 'react';
 import styled from 'styled-components';
 
-const InputContainer = forwardRef(({ className, label, error, ...props }, ref) => {
-	return (
-		<div className={className}>
-			<span className="label">{label}</span>
-			<input className="input" {...props} ref={ref} />
-			<span className="error">{error}</span>
-		</div>
-	);
-});
+interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
+	className?: string;
+	label: string;
+	error?: string;
+	props: unknown[];
+}
+
+const InputContainer: FC<InputProps> = forwardRef(
+	(
+		{ className, label, error, ...props },
+		ref: React.ForwardedRef<HTMLInputElement>,
+	) => {
+		return (
+			<div className={className}>
+				<span className="label">{label}</span>
+				<input className="input" {...props} ref={ref} />
+				<span className="error">{error}</span>
+			</div>
+		);
+	},
+);
 
 export const Input = styled(InputContainer)`
 	display: flex;

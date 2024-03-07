@@ -1,11 +1,18 @@
 import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
-import styled from 'styled-components';
 import { logoutAsync } from '../../../../redux/actions/app';
 import { errorDemonstration } from '../../../../utils';
+import { FC } from 'react';
+import { AppThunkDispatch } from '../../../../redux/store';
+import styled from 'styled-components';
 
-const UserMenuContainer = ({ className, onMouseLeave }) => {
-	const dispatch = useDispatch();
+interface UserMenuProps {
+	className?: string;
+	onMouseLeave: () => void;
+}
+
+const UserMenuContainer: FC<UserMenuProps> = ({ className, onMouseLeave }) => {
+	const dispatch: AppThunkDispatch = useDispatch();
 
 	//логаут изменяет в сторе состояние wasLogin, а также удаляет из sessionStorage данные пользователя
 	const onLogout = () => {
@@ -21,10 +28,10 @@ const UserMenuContainer = ({ className, onMouseLeave }) => {
 		<div className={className} onMouseLeave={onMouseLeave}>
 			<div className="menu">
 				<Link to="/account">
-					<span onClick={() => onMouseLeave()}>Профиль</span>
+					<span onClick={onMouseLeave}>Профиль</span>
 				</Link>
 				<Link to="/">
-					<span onClick={() => onLogout()}>Выход</span>
+					<span onClick={() => void onLogout()}>Выход</span>
 				</Link>
 			</div>
 		</div>

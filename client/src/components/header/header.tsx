@@ -1,17 +1,21 @@
-import { useState } from 'react';
+import { FC, useState } from 'react';
 import { Link, useMatch } from 'react-router-dom';
 import { selectAppWasLogin } from '../../redux/selectors';
 import { Icon } from '../icon/icon';
 import { Tooltip } from '../tooltip/tooltip';
 import { TOOLTIP_POSITION } from '../../constants';
-import user from './assets/user.svg';
-import styled from 'styled-components';
+import user from './assets/user.png';
 import { UserMenu } from './components';
 import { useSelector } from 'react-redux';
 import { Button } from '../button/button';
+import styled from 'styled-components';
 
-const HeaderContainer = ({ className }) => {
-	const [isHovered, setIsHovered] = useState(false);
+interface HeaderProps {
+	className?: string;
+}
+
+const HeaderContainer: FC<HeaderProps> = ({ className }) => {
+	const [isHovered, setIsHovered] = useState<boolean>(false);
 	const wasLogin = useSelector(selectAppWasLogin);
 
 	const isLogin = !!useMatch('/authorization');

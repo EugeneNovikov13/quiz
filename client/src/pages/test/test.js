@@ -12,7 +12,7 @@ import styled from 'styled-components';
 import { loadHistoryAsync, loadTestAsync } from '../../redux/actions/test';
 
 const TestContainer = ({ className }) => {
-	const [errorMessage, setErrorMessage] = useState(null);
+	const [errorMessage, setErrorMessage] = useState('');
 	const params = useParams();
 	const dispatch = useDispatch();
 	const wasLogin = useSelector(selectAppWasLogin);
