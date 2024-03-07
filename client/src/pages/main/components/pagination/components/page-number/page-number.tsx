@@ -1,6 +1,14 @@
 import styled from 'styled-components';
+import { FC } from 'react';
 
-const PageNumberContainer = ({ className, number, onClick }) => {
+interface PageNumberProps {
+	className?: string;
+	number: number;
+	onClick: () => void;
+	isActive: boolean;
+}
+
+const PageNumberContainer: FC<PageNumberProps> = ({ className, number, onClick }) => {
 	return (
 		<div className={className} onClick={onClick}>
 			<div>{number}</div>

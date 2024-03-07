@@ -1,11 +1,11 @@
 import { FC, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { generateTestResult } from '../../utils';
 import { loadQuestionAsync } from '../../redux/actions/question';
 import { addHistoryAsync, loadTestAsync } from '../../redux/actions/test';
 import { selectLastQuestionNumber, selectQuestion } from '../../redux/selectors';
-import { AppThunkDispatch, useTypedSelector } from '../../redux/store';
+import { AppThunkDispatch } from '../../redux/store';
 import { IQuestion } from '../../types';
 import { Button, PrivateContent } from '../../components';
 import { Task } from './components';
@@ -31,8 +31,8 @@ const QuestionContainer: FC<QuestionProps> = ({ className }) => {
 	const currentPage = Number(params.pageId);
 
 	//вопросы получаем из редюсера, куда эти данные приходят после запроса в useLayoutEffect
-	const question = useTypedSelector(selectQuestion);
-	const lastPage = useTypedSelector(selectLastQuestionNumber);
+	const question = useSelector(selectQuestion);
+	const lastPage = useSelector(selectLastQuestionNumber);
 
 	const dispatch: AppThunkDispatch = useDispatch();
 	const navigate = useNavigate();

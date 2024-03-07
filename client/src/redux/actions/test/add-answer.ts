@@ -1,6 +1,6 @@
-import { TestAction, TestActionTypes } from '../../../types';
+import { IQuestion, TestAction, TestActionTypes } from '../../../types';
 
-export const addAnswer = (id: string): TestAction => ({
+export const addAnswer = (id: IQuestion['id']): TestAction => ({
 	type: TestActionTypes.ADD_ANSWER,
 	payload: {
 		questionId: id,

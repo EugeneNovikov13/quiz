@@ -1,26 +1,42 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { useRef } from 'react';
+import { FC, useRef } from 'react';
 import { findQuestionById } from '../../../../../../utils';
 import { selectQuestions } from '../../../../../../redux/selectors';
 import { Icon } from '../../../../../../components';
 import icons from '../../../../assets';
-import styled from 'styled-components';
 import {
 	changeCorrectAnswer,
 	deleteAnswer,
 	updateAnswerText,
 } from '../../../../../../redux/actions/test';
+import styled from 'styled-components';
+import { IAnswer, IQuestion } from '../../../../../../types';
+import { AppThunkDispatch } from '../../../../../../redux/store';
 
-const AnswerEditContainer = ({ className, answerId, answerText, questionId }) => {
+interface AnswerEditProps {
+	className?: string;
+	answerId: IAnswer['id'];
+	answerText: string;
+	questionId: IQuestion['id'];
+}
+
+const AnswerEditContainer: FC<AnswerEditProps> = ({
+	className,
+	answerId,
+	answerText,
+	questionId,
+}) => {
 	//Ссылка для хранения текста ответа
-	const answerTextRef = useRef(null);
-	const dispatch = useDispatch();
+	const answerTextRef = useRef<HTMLDivElement | null>(null);
+	const dispatch: AppThunkDispatch = useDispatch();
 	const questions = useSelector(selectQuestions);
-	const correctAnswer = findQuestionById(questionId, questions).correctAnswer;
+	const correctAnswer = findQuestionById(questionId, questions)?.correctAnswer;
 
 	//Сохраняет изменённый текст ответа в стор
 	const onBlur = () => {
-		const newAnswerText = answerTextRef.current.innerText;
+		if (!answerTextRef.current) return;
+
+		const newAnswerText = answerTextRef.current?.innerText;
 
 		if (newAnswerText === answerText) {
 			return;
@@ -29,7 +45,7 @@ const AnswerEditContainer = ({ className, answerId, answerText, questionId }) =>
 	};
 
 	//Изменяет правильный ответ в сторе
-	const onChangeCorrectAnswer = (id, newCorrectText) => {
+	const onChangeCorrectAnswer = (id: IQuestion['id'], newCorrectText: string) => {
 		if (newCorrectText === correctAnswer) {
 			return;
 		}
@@ -37,7 +53,10 @@ const AnswerEditContainer = ({ className, answerId, answerText, questionId }) =>
 	};
 
 	//Удаляет ответ из стора
-	const onDeleteAnswer = (questionIdToDelete, answerIdToDelete) => {
+	const onDeleteAnswer = (
+		questionIdToDelete: IQuestion['id'],
+		answerIdToDelete: IAnswer['id'],
+	) => {
 		dispatch(deleteAnswer(questionIdToDelete, answerIdToDelete));
 	};
 

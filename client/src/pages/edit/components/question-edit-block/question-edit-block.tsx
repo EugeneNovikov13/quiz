@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { FC, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { CLOSE_MODAL, openModal } from '../../../../redux/actions/app';
 import { Button, Icon } from '../../../../components';
@@ -11,20 +11,34 @@ import {
 	deleteQuestion,
 	updateQuestionText,
 } from '../../../../redux/actions/test';
+import { IAnswer, IQuestion } from '../../../../types';
+import { AppThunkDispatch } from '../../../../redux/store';
 
-const QuestionEditContainer = ({ className, id: questionId, questionText, answers }) => {
+interface QuestionEditProps {
+	className?: string;
+	id: IQuestion['id'];
+	questionText: string;
+	answers: IAnswer[];
+}
+
+const QuestionEditContainer: FC<QuestionEditProps> = ({
+	className,
+	id: questionId,
+	questionText,
+	answers,
+}) => {
 	//состояние развёрнут/свёрнут блок
-	const [isExpanded, setIsExpanded] = useState(false);
-	const [newQuestionText, setNewQuestionText] = useState(questionText || '');
+	const [isExpanded, setIsExpanded] = useState<boolean>(false);
+	const [newQuestionText, setNewQuestionText] = useState<string>(questionText || '');
 
-	const dispatch = useDispatch();
+	const dispatch: AppThunkDispatch = useDispatch();
 
 	//Разворачивает блок вопроса
 	const onArrowClick = () => {
 		setIsExpanded(!isExpanded);
 	};
 
-	const onChange = text => {
+	const onChange = (text: string) => {
 		setNewQuestionText(text);
 	};
 
@@ -37,20 +51,20 @@ const QuestionEditContainer = ({ className, id: questionId, questionText, answer
 	};
 
 	//Создаёт в сторе новый ответ
-	const onAddAnswer = id => {
+	const onAddAnswer = (id: IQuestion['id']) => {
 		dispatch(addAnswer(id));
 	};
 
 	//Вызывает модальное окно для подтверждения удаления блока вопроса из стора
-	const onQuestionDelete = id => {
+	const onQuestionDelete = (id: IQuestion['id']) => {
 		dispatch(
 			openModal({
 				text: 'Удалить вопрос?',
 				onConfirm: () => {
 					dispatch(deleteQuestion(id));
-					dispatch(CLOSE_MODAL());
+					dispatch(CLOSE_MODAL);
 				},
-				onCancel: () => dispatch(CLOSE_MODAL()),
+				onCancel: () => dispatch(CLOSE_MODAL),
 			}),
 		);
 	};

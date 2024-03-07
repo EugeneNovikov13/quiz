@@ -1,6 +1,11 @@
 import styled from 'styled-components';
+import { FC, InputHTMLAttributes } from 'react';
 
-const EditInputContainer = ({ className, ...props }) => {
+interface EditInputProps extends InputHTMLAttributes<HTMLInputElement> {
+	className?: string;
+}
+
+const EditInputContainer: FC<EditInputProps> = ({ className, ...props }) => {
 	return <input className={className} type="text" {...props} />;
 };
 

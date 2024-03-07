@@ -1,16 +1,21 @@
-import { useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { createArrayFromNumber, loadTestsAsync } from '../../utils';
 import { selectAppWasLogin } from '../../redux/selectors';
 import { Button, TestInfo } from '../../components';
 import { Pagination } from './components';
-import styled from 'styled-components';
 import { QUESTIONS_AMOUNT_TO_LOAD } from '../../constants';
+import styled from 'styled-components';
+import { ITest } from '../../types';
 
-const MainContainer = ({ className }) => {
-	const [tests, setTests] = useState([]);
-	const [page, setPage] = useState(1);
-	const [lastPage, setLastPage] = useState(1);
+interface MainProps {
+	className?: string;
+}
+
+const MainContainer: FC<MainProps> = ({ className }) => {
+	const [tests, setTests] = useState<ITest[]>([]);
+	const [page, setPage] = useState<number>(1);
+	const [lastPage, setLastPage] = useState<number>(1);
 
 	const pages = createArrayFromNumber(lastPage);
 
@@ -18,12 +23,15 @@ const MainContainer = ({ className }) => {
 
 	useEffect(() => {
 		loadTestsAsync(
-			null,
+			'',
 			QUESTIONS_AMOUNT_TO_LOAD.MAIN_PAGE_PAGINATION_LIMIT,
 			page,
-		).then(({ data: { tests, lastPage } }) => {
-			setTests(tests);
-			setLastPage(lastPage);
+		).then(({ data }) => {
+			if (data) {
+				const { tests, lastPage } = data;
+				setTests(tests);
+				setLastPage(lastPage);
+			}
 		});
 	}, [page]);
 

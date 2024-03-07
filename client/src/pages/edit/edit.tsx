@@ -1,11 +1,10 @@
-import { useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { checkErrors } from '../../utils';
 import { selectEditedQuestions, selectTestData } from '../../redux/selectors';
 import { Button, NavBar, PrivateContent } from '../../components';
 import { EditInput, QuestionEditBlock } from './components';
-import styled from 'styled-components';
 import {
 	addQuestion,
 	addTestAsync,
@@ -14,13 +13,20 @@ import {
 	updateTestAsync,
 	updateTestTitle,
 } from '../../redux/actions/test';
+import styled from 'styled-components';
+import { AppThunkDispatch } from '../../redux/store';
+import { ITest } from '../../types';
 
-const EditContainer = ({ className }) => {
-	const [isLoading, setIsLoading] = useState(true);
-	const [newTitle, setNewTitle] = useState('');
-	const [errorMessage, setErrorMessage] = useState(null);
+interface EditProps {
+	className?: string;
+}
 
-	const dispatch = useDispatch();
+const EditContainer: FC<EditProps> = ({ className }) => {
+	const [isLoading, setIsLoading] = useState<boolean>(true);
+	const [newTitle, setNewTitle] = useState<string>('');
+	const [errorMessage, setErrorMessage] = useState<string>('');
+
+	const dispatch: AppThunkDispatch = useDispatch();
 	const navigate = useNavigate();
 	const params = useParams();
 	const test = useSelector(selectTestData);
@@ -32,21 +38,29 @@ const EditContainer = ({ className }) => {
 
 	useEffect(() => {
 		//Если в адресной строке нет id теста, очищаем стор.тест перед созданием нового теста
-		if (isCreating) {
+		if (!params.id) {
 			dispatch(RESET_TEST_DATA);
 			setIsLoading(false);
 			return;
 		}
 
 		//Запрашиваем данные теста по id
-		dispatch(loadTestAsync(params.id)).then(res => {
-			if (res.error) {
-				setErrorMessage(res.error);
-				return;
-			}
-			setNewTitle(res.data.title);
-			setIsLoading(false);
-		});
+		dispatch(loadTestAsync(params.id))
+			.then(res => {
+				if (res.error) {
+					setErrorMessage(res.error);
+					return;
+				}
+				if (res.data) {
+					setNewTitle(res.data.title);
+				}
+			})
+			.catch(e => {
+				setErrorMessage(e.message);
+			})
+			.finally(() => {
+				setIsLoading(false);
+			});
 	}, [isCreating, dispatch, params.id]);
 
 	//Сохраняет в стор новое название теста
@@ -63,17 +77,21 @@ const EditContainer = ({ className }) => {
 	};
 
 	//Сохраняет новый/изменённый тест в БД, используя текущие данные теста в сторе
-	const onSave = async testData => {
+	const onSave = async (testData: ITest) => {
 		let action;
 		isCreating ? (action = addTestAsync) : (action = updateTestAsync);
 
-		dispatch(action(testData)).then(res => {
-			if (res.error) {
-				setErrorMessage(res.error);
-				return;
-			}
-			navigate('/user-tests');
-		});
+		dispatch(action(testData))
+			.then(res => {
+				if (res.error) {
+					setErrorMessage(res.error);
+					return;
+				}
+				navigate('/user-tests');
+			})
+			.catch(e => {
+				setErrorMessage(e.message);
+			});
 	};
 
 	return (

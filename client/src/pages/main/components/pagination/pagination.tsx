@@ -1,8 +1,21 @@
 import { PageNumber } from './components';
 import styled from 'styled-components';
+import React, { FC } from 'react';
 
-const PaginationContainer = ({ className, pages, page, setPage }) => {
-	const onClick = clickedPage => {
+interface PaginationProps {
+	className?: string;
+	pages: number[];
+	page: number;
+	setPage: React.Dispatch<React.SetStateAction<number>>;
+}
+
+const PaginationContainer: FC<PaginationProps> = ({
+	className,
+	pages,
+	page,
+	setPage,
+}) => {
+	const onClick = (clickedPage: number): void => {
 		if (clickedPage === page) return;
 
 		setPage(clickedPage);

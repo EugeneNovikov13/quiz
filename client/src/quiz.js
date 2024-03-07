@@ -16,7 +16,6 @@ import {
 import { ErrorMessage, Header, Modal } from './components';
 import { ERROR } from './constants';
 import styled from 'styled-components';
-import { AppThunkDispatch } from './redux/store';
 
 const AppColumn = styled.div`
 	display: flex;
