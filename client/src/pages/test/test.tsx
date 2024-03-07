@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -8,20 +8,25 @@ import {
 } from '../../redux/selectors';
 import { History } from './components';
 import { Button, PrivateContent, TestInfo } from '../../components';
-import styled from 'styled-components';
 import { loadHistoryAsync, loadTestAsync } from '../../redux/actions/test';
+import styled from 'styled-components';
+import { AppThunkDispatch } from '../../redux/store';
 
-const TestContainer = ({ className }) => {
-	const [errorMessage, setErrorMessage] = useState('');
+interface TestProps {
+	className?: string;
+}
+
+const TestContainer: FC<TestProps> = ({ className }) => {
+	const [errorMessage, setErrorMessage] = useState<string>('');
 	const params = useParams();
-	const dispatch = useDispatch();
+	const dispatch: AppThunkDispatch = useDispatch();
 	const wasLogin = useSelector(selectAppWasLogin);
 
 	const test = useSelector(selectTestData);
 	const history = useSelector(selectTestHistory);
 
 	useEffect(() => {
-		if (!wasLogin) {
+		if (!wasLogin || !params.id) {
 			return;
 		}
 
@@ -29,11 +34,19 @@ const TestContainer = ({ className }) => {
 		Promise.all([
 			dispatch(loadTestAsync(params.id)),
 			dispatch(loadHistoryAsync(params.id)),
-		]).then(([testData, historyData]) => {
-			if (testData.error || historyData.error) {
-				setErrorMessage(testData.error || historyData.error);
-			}
-		});
+		])
+			.then(([testData, historyData]) => {
+				if (testData.error) {
+					setErrorMessage(testData.error);
+					return;
+				}
+				if (historyData.error) {
+					setErrorMessage(historyData.error);
+				}
+			})
+			.catch(e => {
+				setErrorMessage(e.message);
+			});
 	}, [dispatch, params.id, wasLogin]);
 
 	return (

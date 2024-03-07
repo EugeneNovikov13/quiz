@@ -1,12 +1,12 @@
 import { IResult } from '../types';
 
-type StateType = {
+export type ResultItemsHoveredType = {
 	[id: string]: boolean;
 };
 
 export const updateObjectOfStates = (
 	changedId: IResult['id'],
-	state: StateType,
+	state: ResultItemsHoveredType,
 	newStateValue: boolean,
 ) => {
 	return Object.keys(state).reduce((acc, id) => {

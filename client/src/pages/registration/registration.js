@@ -45,7 +45,7 @@ const RegistrationContainer = ({ className }) => {
 					return;
 				}
 
-				dispatch(SET_USER);
+				dispatch(SET_USER());
 				sessionStorage.setItem('userData', JSON.stringify(user));
 			},
 		);

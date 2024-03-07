@@ -1,6 +1,6 @@
 import { IUser } from '../types';
 
-export const userDefaultValues: IUser = {
+export const userDefaultValues: Omit<IUser, 'id'> = {
 	name: '',
 	surname: '',
 	email: '',

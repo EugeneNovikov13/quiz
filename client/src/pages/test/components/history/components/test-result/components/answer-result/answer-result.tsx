@@ -1,12 +1,25 @@
 import { Tooltip } from '../../../../../../../../components';
 import { TOOLTIP_POSITION } from '../../../../../../../../constants';
 import styled from 'styled-components';
+import { FC } from 'react';
 
-const AnswerResultContainer = ({
+interface AnswerResultProps {
+	className?: string;
+	answer: string;
+	question: string;
+	isCorrect: boolean;
+	answersQuantity: number;
+	isHovered: boolean;
+	onMouseEnter: () => void;
+	onMouseLeave: () => void;
+}
+
+const AnswerResultContainer: FC<AnswerResultProps> = ({
 	className,
 	answer,
 	question,
 	isCorrect,
+	answersQuantity,
 	isHovered,
 	onMouseEnter,
 	onMouseLeave,
@@ -41,6 +54,7 @@ export const AnswerResult = styled(AnswerResultContainer)`
 
 	&:last-child {
 		border-radius: 0 10px 10px 0;
+		border-right: none;
 	}
 
 	& .question-result {

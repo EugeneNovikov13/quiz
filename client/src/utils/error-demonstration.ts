@@ -1,8 +1,8 @@
 import { CLOSE_MODAL, openModal } from '../redux/actions/app';
-import { Dispatch } from 'redux';
+import { AppThunkDispatch } from '../redux/store';
 
 //демонстрация ошибки в модальном окне
-export const errorDemonstration = (dispatch: Dispatch, error: string): void => {
+export const errorDemonstration = (dispatch: AppThunkDispatch, error: string): void => {
 	dispatch(
 		openModal({
 			text: error,

@@ -62,9 +62,9 @@ const QuestionEditContainer: FC<QuestionEditProps> = ({
 				text: 'Удалить вопрос?',
 				onConfirm: () => {
 					dispatch(deleteQuestion(id));
-					dispatch(CLOSE_MODAL);
+					dispatch(CLOSE_MODAL());
 				},
-				onCancel: () => dispatch(CLOSE_MODAL),
+				onCancel: () => dispatch(CLOSE_MODAL()),
 			}),
 		);
 	};
