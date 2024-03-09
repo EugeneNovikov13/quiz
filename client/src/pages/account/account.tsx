@@ -1,26 +1,33 @@
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { FC, useState } from 'react';
+import { SubmitHandler, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { updateUserAsync } from '../../utils';
 import { AuthFormError, Icon, Input, PrivateContent } from '../../components';
 import * as icons from './assets';
 import { accountFormSchema, userDefaultValues } from '../../settings';
 import styled from 'styled-components';
+import { IAccountForm } from '../../types/form-types';
+import { IUser } from '../../types';
 
-const AccountContainer = ({ className }) => {
-	const [serverError, setServerError] = useState(null);
-	const [isUpdating, setIsUpdating] = useState(false);
+interface AccountProps {
+	className?: string;
+}
 
-	const userData = JSON.parse(sessionStorage.getItem('userData'));
+const AccountContainer: FC<AccountProps> = ({ className }) => {
+	const [serverError, setServerError] = useState<string>('');
+	const [isUpdating, setIsUpdating] = useState<boolean>(false);
 
-	const user = userData ? userData : userDefaultValues;
+	const userData = sessionStorage.getItem('userData');
+	const user: Omit<IUser, 'id'> & Partial<{ id: string }> = userData
+		? JSON.parse(userData)
+		: userDefaultValues;
 
 	const {
 		register,
 		handleSubmit,
 		reset,
 		formState: { errors, isDirty },
-	} = useForm({
+	} = useForm<IAccountForm>({
 		defaultValues: user,
 		resolver: yupResolver(accountFormSchema),
 	});
@@ -31,7 +38,7 @@ const AccountContainer = ({ className }) => {
 	};
 
 	//обновляем данные о пользователе через запрос на сервер, в случае успеха обновляем данные в sessionStorage
-	const onSubmit = formData => {
+	const onSubmit: SubmitHandler<IAccountForm> = formData => {
 		updateUserAsync(formData).then(res => {
 			if (res.error) {
 				setServerError(`Ошибка запроса: ${res.error}`);
@@ -73,7 +80,7 @@ const AccountContainer = ({ className }) => {
 							></Icon>
 						</div>
 					)}
-					<img className="avatar" src={user.image} alt="" />
+					<img className="avatar" src={user.image} alt={'N/A'} />
 					{isUpdating ? (
 						<>
 							<Input
@@ -81,7 +88,7 @@ const AccountContainer = ({ className }) => {
 								label="Имя"
 								error={errors?.name?.message}
 								{...register('name', {
-									onChange: () => setServerError(null),
+									onChange: () => setServerError(''),
 								})}
 							/>
 							<Input
@@ -89,7 +96,7 @@ const AccountContainer = ({ className }) => {
 								label="Фамилия"
 								error={errors?.surname?.message}
 								{...register('surname', {
-									onChange: () => setServerError(null),
+									onChange: () => setServerError(''),
 								})}
 							/>
 							<Input
@@ -97,7 +104,7 @@ const AccountContainer = ({ className }) => {
 								label="Электронная почта"
 								error={errors?.email?.message}
 								{...register('email', {
-									onChange: () => setServerError(null),
+									onChange: () => setServerError(''),
 								})}
 							/>
 							<Input
@@ -105,7 +112,7 @@ const AccountContainer = ({ className }) => {
 								label="URL аватарки (необязательно)"
 								error={errors?.image?.message}
 								{...register('image', {
-									onChange: () => setServerError(null),
+									onChange: () => setServerError(''),
 								})}
 							/>
 							<AuthFormError>{serverError}</AuthFormError>

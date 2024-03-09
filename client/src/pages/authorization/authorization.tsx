@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { FC, useState } from 'react';
 import { Link, Navigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { useForm } from 'react-hook-form';
+import { SubmitHandler, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useResetForm } from '../../hooks';
 import { request } from '../../utils';
@@ -10,39 +10,47 @@ import { SET_USER } from '../../redux/actions/app';
 import { selectAppWasLogin } from '../../redux/selectors';
 import { authorizationFormSchema } from '../../settings';
 import styled from 'styled-components';
+import { IAuthorizationForm } from '../../types/form-types';
+import { IUser } from '../../types';
 
-const AuthorizationContainer = ({ className }) => {
-	const [serverError, setServerError] = useState(null);
+interface AuthorizationProps {
+	className?: string;
+}
+
+const AuthorizationContainer: FC<AuthorizationProps> = ({ className }) => {
+	const [serverError, setServerError] = useState<string>('');
 
 	const {
 		register,
 		reset,
 		handleSubmit,
 		formState: { errors },
-	} = useForm({
+	} = useForm<IAuthorizationForm>({
 		defaultValues: {
 			email: '',
 			password: '',
 		},
 		resolver: yupResolver(authorizationFormSchema),
+		mode: 'onBlur',
 	});
 
 	const dispatch = useDispatch();
 
 	const wasLogin = useSelector(selectAppWasLogin);
 
-	useResetForm(reset, wasLogin);
+	useResetForm<IAuthorizationForm>(reset, wasLogin);
 
-	const onSubmit = ({ email, password }) => {
-		request('/login', 'POST', { email, password }).then(({ error, user }) => {
+	const onSubmit: SubmitHandler<IAuthorizationForm> = ({ email, password }) => {
+		request<IUser>('/login', 'POST', { email, password }).then(({ error, data }) => {
 			if (error) {
 				setServerError(`Ошибка запроса: ${error}`);
 				return;
 			}
-
-			//Помещаем данные пользователя в стор, а также в sessionStorage, чтобы сохранить авторизацию после F5
-			dispatch(SET_USER());
-			sessionStorage.setItem('userData', JSON.stringify(user));
+			if (data) {
+				//Помещаем данные пользователя в стор, а также в sessionStorage, чтобы сохранить авторизацию после F5
+				dispatch(SET_USER());
+				sessionStorage.setItem('userData', JSON.stringify(data));
+			}
 		});
 	};
 
@@ -61,7 +69,7 @@ const AuthorizationContainer = ({ className }) => {
 					label="Электронная почта"
 					error={errors?.email?.message}
 					{...register('email', {
-						onChange: () => setServerError(null),
+						onChange: () => setServerError(''),
 					})}
 				/>
 				<Input
@@ -69,7 +77,7 @@ const AuthorizationContainer = ({ className }) => {
 					label="Пароль"
 					error={errors?.password?.message}
 					{...register('password', {
-						onChange: () => setServerError(null),
+						onChange: () => setServerError(''),
 					})}
 				/>
 				<AuthFormError>{serverError}</AuthFormError>

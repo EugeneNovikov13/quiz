@@ -1,8 +1,8 @@
-import { FC, MouseEventHandler, ReactNode } from 'react';
+import { ButtonHTMLAttributes, FC, ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
-interface ButtonProps {
+interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 	className?: string;
 	fontSize?: string;
 	width?: string;
@@ -12,8 +12,6 @@ interface ButtonProps {
 	isDisable?: boolean;
 	children?: ReactNode;
 	link?: string;
-	type?: 'button' | 'submit' | 'reset' | undefined;
-	onClick?: MouseEventHandler<HTMLButtonElement>;
 }
 
 const ButtonContainer: FC<ButtonProps> = ({
