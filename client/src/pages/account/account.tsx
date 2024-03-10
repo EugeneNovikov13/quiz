@@ -3,7 +3,7 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { updateUserAsync } from '../../utils';
 import { AuthFormError, Icon, Input, PrivateContent } from '../../components';
-import * as icons from './assets';
+import { icons } from './assets';
 import { accountFormSchema, userDefaultValues } from '../../settings';
 import styled from 'styled-components';
 import { IAccountForm } from '../../types/form-types';

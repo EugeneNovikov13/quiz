@@ -1,7 +1,7 @@
 import * as yup from 'yup';
-import { IAccountForm } from '../types/form-types';
+import { FormSchema, IAccountForm } from '../types/form-types';
 
-export const accountFormSchema: yup.ObjectSchema<IAccountForm> = yup.object().shape({
+export const accountFormSchema = yup.object().shape<FormSchema<IAccountForm>>({
 	name: yup
 		.string()
 		.required('Заполните имя')

@@ -1,3 +1,9 @@
+import { Schema } from 'yup';
+
+export type FormSchema<T> = {
+	[K in keyof Required<T>]: Schema<T[K]>;
+};
+
 export interface IRegistrationForm {
 	name: string;
 	surname: string;

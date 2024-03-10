@@ -1,9 +1,9 @@
 import * as yup from 'yup';
-import { IAuthorizationForm } from '../types/form-types';
+import { FormSchema, IAuthorizationForm } from '../types/form-types';
 
-export const authorizationFormSchema: yup.ObjectSchema<IAuthorizationForm> = yup
+export const authorizationFormSchema = yup
 	.object()
-	.shape({
+	.shape<FormSchema<IAuthorizationForm>>({
 		email: yup.string().required('Заполните адрес электронной почты'),
 		password: yup.string().required('Заполните пароль'),
 	});
