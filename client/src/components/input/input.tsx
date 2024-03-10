@@ -5,7 +5,6 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 	className?: string;
 	label: string;
 	error?: string;
-	props: unknown[];
 }
 
 const InputContainer: FC<InputProps> = forwardRef(

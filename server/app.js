@@ -26,7 +26,7 @@ app.post('/register', async (req, res) => {
 		const { user, token } = await register(req.body);
 
 		res.cookie('token', token, { httpOnly: true })
-			.send({ error: null, user: mapUser(user) });
+			.send({ error: null, data: mapUser(user) });
 	} catch (e) {
 		if (e.code === 11000) {
 			res.send({ error: 'Пользователь с такой почтой уже зарегистрирован' });
@@ -41,7 +41,7 @@ app.post('/login', async (req, res) => {
 		const { user, token } = await login(req.body.email, req.body.password);
 
 		res.cookie('token', token, { httpOnly: true })
-			.send({ error: null, user: mapUser(user) });
+			.send({ error: null, data: mapUser(user) });
 	} catch (e) {
 		res.send({ error: e.message || 'Unknown error-message' });
 	}

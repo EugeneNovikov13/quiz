@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { FC, useState } from 'react';
 import { Link, Navigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { useForm } from 'react-hook-form';
+import { SubmitHandler, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useResetForm } from '../../hooks';
 import { request } from '../../utils';
@@ -10,16 +10,22 @@ import { selectAppWasLogin } from '../../redux/selectors';
 import { AuthFormError, Button, Input } from '../../components';
 import { registrationFormSchema } from '../../settings';
 import styled from 'styled-components';
+import { IRegistrationForm } from '../../types/form-types';
+import { IUser } from '../../types';
 
-const RegistrationContainer = ({ className }) => {
-	const [serverError, setServerError] = useState(null);
+interface RegistrationProps {
+	className?: string;
+}
+
+const RegistrationContainer: FC<RegistrationProps> = ({ className }) => {
+	const [serverError, setServerError] = useState<string>('');
 
 	const {
 		register,
 		reset,
 		handleSubmit,
 		formState: { errors },
-	} = useForm({
+	} = useForm<IRegistrationForm>({
 		defaultValues: {
 			name: '',
 			surname: '',
@@ -29,26 +35,32 @@ const RegistrationContainer = ({ className }) => {
 			image: '',
 		},
 		resolver: yupResolver(registrationFormSchema),
+		mode: 'onBlur',
 	});
 
 	const dispatch = useDispatch();
 
 	const wasLogin = useSelector(selectAppWasLogin);
 
-	useResetForm(reset, wasLogin);
+	useResetForm<IRegistrationForm>(reset, wasLogin);
 
-	const onSubmit = ({ name, surname, email, password, image }) => {
-		request('/register', 'POST', { name, surname, email, password, image }).then(
-			({ error, user }) => {
-				if (error) {
-					setServerError(`Ошибка запроса: ${error}`);
-					return;
-				}
-
+	const onSubmit: SubmitHandler<IRegistrationForm> = data => {
+		request<IUser>('/register', 'POST', {
+			name: data.name,
+			surname: data.surname,
+			email: data.email,
+			password: data.password,
+			image: data.image,
+		}).then(res => {
+			if (res.error) {
+				setServerError(`Ошибка запроса: ${res.error}`);
+				return;
+			}
+			if (res.data) {
 				dispatch(SET_USER());
-				sessionStorage.setItem('userData', JSON.stringify(user));
-			},
-		);
+				sessionStorage.setItem('userData', JSON.stringify(res.data));
+			}
+		});
 	};
 
 	if (wasLogin) {
@@ -72,7 +84,7 @@ const RegistrationContainer = ({ className }) => {
 					label="Имя"
 					error={errors?.name?.message}
 					{...register('name', {
-						onChange: () => setServerError(null),
+						onChange: () => setServerError(''),
 					})}
 				/>
 				<Input
@@ -80,7 +92,7 @@ const RegistrationContainer = ({ className }) => {
 					label="Фамилия"
 					error={errors?.surname?.message}
 					{...register('surname', {
-						onChange: () => setServerError(null),
+						onChange: () => setServerError(''),
 					})}
 				/>
 				<Input
@@ -88,7 +100,7 @@ const RegistrationContainer = ({ className }) => {
 					label="Электронная почта"
 					error={errors?.email?.message}
 					{...register('email', {
-						onChange: () => setServerError(null),
+						onChange: () => setServerError(''),
 					})}
 				/>
 				<Input
@@ -96,7 +108,7 @@ const RegistrationContainer = ({ className }) => {
 					label="Пароль"
 					error={errors?.password?.message}
 					{...register('password', {
-						onChange: () => setServerError(null),
+						onChange: () => setServerError(''),
 					})}
 				/>
 				<Input
@@ -104,7 +116,7 @@ const RegistrationContainer = ({ className }) => {
 					label="Повторить пароль"
 					error={errors?.passCheck?.message}
 					{...register('passCheck', {
-						onChange: () => setServerError(null),
+						onChange: () => setServerError(''),
 					})}
 				/>
 				<Input
@@ -112,7 +124,7 @@ const RegistrationContainer = ({ className }) => {
 					label="URL аватарки (необязательно)"
 					error={errors?.image?.message}
 					{...register('image', {
-						onChange: () => setServerError(null),
+						onChange: () => setServerError(''),
 					})}
 				/>
 				<AuthFormError>{serverError}</AuthFormError>
