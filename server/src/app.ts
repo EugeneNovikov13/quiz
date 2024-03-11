@@ -1,17 +1,20 @@
+
 if (process.env.NODE_ENV === 'development') require('dotenv').config();
 
-const { join } = require('path');
-const express = require('express');
-const mongoose = require('mongoose');
-const cookieParser = require('cookie-parser');
-const { register, login, updateUser } = require('./controllers/user');
-const { addTest, editTest, deleteTest, getTests, getTest, getQuestion } = require('./controllers/test');
-const { addHistory, deleteHistory, getHistories } = require('./controllers/history');
-const authenticated = require('./middlewares/authenticated');
-const mapUser = require('./helpers/mapUser');
-const mapTest = require('./helpers/mapTest');
-const mapHistory = require('./helpers/mapHistory');
-const mapQuestion = require('./helpers/mapQuestion');
+import { join } from 'path';
+import express, { Request, Response } from 'express';
+import mongoose from 'mongoose';
+import mongodb from 'mongodb';
+import cookieParser from 'cookie-parser';
+import { register, login, updateUser } from './controllers/user';
+import { addTest, editTest, deleteTest, getTests, getTest, getQuestion } from './controllers/test';
+import { addHistory, deleteHistory, getHistories } from './controllers/history';
+import authenticated from './middlewares/authenticated';
+import mapUser from './helpers/mapUser';
+import mapTest from './helpers/mapTest';
+import mapHistory from './helpers/mapHistory';
+import mapQuestion from './helpers/mapQuestion';
+import { ITestList, ITestRequestQuery, ITestResponseBody, IUserPatchBody, IUser } from './types';
 
 const port = 3001;
 const app = express();
@@ -21,18 +24,20 @@ app.use(express.static('../client/build'));
 app.use(cookieParser());
 app.use(express.json());
 
-app.post('/register', async (req, res) => {
+app.post('/register', async (req: Request, res: Response) => {
 	try {
 		const { user, token } = await register(req.body);
 
 		res.cookie('token', token, { httpOnly: true })
 			.send({ error: null, data: mapUser(user) });
 	} catch (e) {
-		if (e.code === 11000) {
+		if (e instanceof mongodb.MongoError && e.code === 11000) {
 			res.send({ error: 'Пользователь с такой почтой уже зарегистрирован' });
 			return;
 		}
-		res.send({ error: e.message || 'Unknown error-message' });
+		if (e instanceof Error) {
+			res.send({ error: e.message || 'Unknown error-message' });
+		}
 	}
 })
 
@@ -43,7 +48,9 @@ app.post('/login', async (req, res) => {
 		res.cookie('token', token, { httpOnly: true })
 			.send({ error: null, data: mapUser(user) });
 	} catch (e) {
-		res.send({ error: e.message || 'Unknown error-message' });
+		if (e instanceof Error) {
+			res.send({ error: e.message || 'Unknown error-message' });
+		}
 	}
 });
 
@@ -52,12 +59,12 @@ app.post('/logout', (req, res) => {
 		.send({})
 });
 
-app.get('/tests', async (req, res) => {
+app.get('/tests', async (req: Request<{}, {}, {}, ITestRequestQuery>, res: Response<ITestResponseBody<ITestList>>) => {
 	try {
 		const { tests, lastPage } = await getTests(
-			req.query?.user === 'null' ? null : req.query?.user,
-			req.query?.limit,
-			req.query?.page,
+			req.query?.user,
+			+req.query?.limit,
+			+req.query?.page,
 		);
 
 		res.send({ data: {lastPage, tests: tests.map(mapTest) }, error: null });
@@ -69,7 +76,7 @@ app.get('/tests', async (req, res) => {
 
 app.use(authenticated);
 
-app.patch('/users', async (req, res) => {
+app.patch('/users', async (req: Request<{}, {}, IUserPatchBody>, res) => {
 	try {
 		const updatedUser = await updateUser(req.user.id, {
 			name: req.body.name,
@@ -81,7 +88,7 @@ app.patch('/users', async (req, res) => {
 		res.send({ data: mapUser(updatedUser), error: null });
 	} catch (e) {
 		let error = 'Error. Failed to update user';
-		if (e.code === 11000) {
+		if (e instanceof mongodb.MongoError && e.code === 11000) {
 			error = 'Пользователь с таким адресом электронной почты уже существует';
 		}
 		res.send({ data: null, error });
@@ -136,7 +143,7 @@ app.patch('/tests/:id', async (req, res) => {
 		res.send({ data: mapTest(updatedTest), error: null });
 	} catch (e) {
 		let error = 'Error. Failed to update test';
-		if (e.code === 11000) {
+		if (e instanceof mongodb.MongoError && e.code === 11000) {
 			error = 'Тест с таким названием уже существует';
 		}
 		res.send({ data: null, error });
@@ -201,7 +208,7 @@ mongoose.connect(
 	//получаем строку подключения к БД из поля environment (файл docker-compose)
 	process.env.DB_CONNECTION_STRING,
 ).then(() => {
-	app.listen(port, () => {
+	app.listen(process.env.PORT, () => {
 		console.log(`Server has been started on port ${port}`);
 	});
 });

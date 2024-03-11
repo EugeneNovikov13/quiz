@@ -1,7 +1,8 @@
-const mongoose = require('mongoose');
-const validator = require('validator');
+import mongoose, { Schema } from 'mongoose';
+import validator from 'validator';
+import { IUserDocument } from '../types';
 
-const UserSchema = mongoose.Schema({
+const UserSchema = new Schema({
 	name: {
 		type: String,
 		required: true,
@@ -29,6 +30,6 @@ const UserSchema = mongoose.Schema({
 	},
 });
 
-const User = mongoose.model('User', UserSchema);
+const User = mongoose.model<IUserDocument>('User', UserSchema);
 
 module.exports = User;
