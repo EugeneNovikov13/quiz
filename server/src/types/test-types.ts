@@ -1,4 +1,5 @@
 import { IUser } from './user-types';
+import { Document } from 'mongoose';
 
 export interface ITest {
 	id: string;
@@ -15,7 +16,7 @@ export interface IQuestion {
 	answers: IAnswer[];
 }
 
-export interface IAnswer {
+interface IAnswer {
 	id: string;
 	text: string;
 }
@@ -23,4 +24,11 @@ export interface IAnswer {
 export interface ITestList {
 	lastPage: number;
 	tests: ITest[];
+}
+
+export interface IQuestionDocument extends Document {
+	id: string;
+	text: string;
+	correctAnswer: string;
+	answers: IAnswer[];
 }

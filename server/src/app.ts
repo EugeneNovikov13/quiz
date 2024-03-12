@@ -1,20 +1,33 @@
-
 if (process.env.NODE_ENV === 'development') require('dotenv').config();
 
 import { join } from 'path';
 import express, { Request, Response } from 'express';
 import mongoose from 'mongoose';
-import mongodb from 'mongodb';
+import { MongoError } from 'mongodb';
 import cookieParser from 'cookie-parser';
-import { register, login, updateUser } from './controllers/user';
-import { addTest, editTest, deleteTest, getTests, getTest, getQuestion } from './controllers/test';
+import { login, register, updateUser } from './controllers/user';
+import { addTest, deleteTest, editTest, getQuestion, getTest, getTests } from './controllers/test';
 import { addHistory, deleteHistory, getHistories } from './controllers/history';
 import authenticated from './middlewares/authenticated';
 import mapUser from './helpers/mapUser';
 import mapTest from './helpers/mapTest';
 import mapHistory from './helpers/mapHistory';
 import mapQuestion from './helpers/mapQuestion';
-import { ITestList, ITestRequestQuery, ITestResponseBody, IUserPatchBody, IUser } from './types';
+import {
+	IAddHistoryRequestBody,
+	IAddTestRequestBody,
+	IAuthUser,
+	IHistory,
+	IQuestion,
+	IResponseBody,
+	UriId,
+	ITest,
+	ITestList,
+	ITestRequestQuery,
+	IUpdateUserRequestBody,
+	IUser,
+	IUserDocument,
+} from './types';
 
 const port = 3001;
 const app = express();
@@ -24,24 +37,30 @@ app.use(express.static('../client/build'));
 app.use(cookieParser());
 app.use(express.json());
 
-app.post('/register', async (req: Request, res: Response) => {
+app.post('/register', async (
+	req: Request<{}, {}, IUser>,
+	res: Response<IResponseBody<IAuthUser>>,
+) => {
 	try {
 		const { user, token } = await register(req.body);
 
 		res.cookie('token', token, { httpOnly: true })
 			.send({ error: null, data: mapUser(user) });
 	} catch (e) {
-		if (e instanceof mongodb.MongoError && e.code === 11000) {
-			res.send({ error: 'Пользователь с такой почтой уже зарегистрирован' });
+		if (e instanceof MongoError && e.code === 11000) {
+			res.send({ data: null, error: 'Пользователь с такой почтой уже зарегистрирован' });
 			return;
 		}
 		if (e instanceof Error) {
-			res.send({ error: e.message || 'Unknown error-message' });
+			res.send({ data: null, error: e.message || 'Не удалось зарегистрировать пользователя' });
 		}
 	}
 })
 
-app.post('/login', async (req, res) => {
+app.post('/login', async (
+	req: Request<{}, {}, Pick<IUser, 'email' | 'password'>>,
+	res: Response<IResponseBody<IAuthUser>>,
+) => {
 	try {
 		const { user, token } = await login(req.body.email, req.body.password);
 
@@ -49,17 +68,20 @@ app.post('/login', async (req, res) => {
 			.send({ error: null, data: mapUser(user) });
 	} catch (e) {
 		if (e instanceof Error) {
-			res.send({ error: e.message || 'Unknown error-message' });
+			res.send({ data: null, error: e.message || 'Unknown error-message' });
 		}
 	}
 });
 
-app.post('/logout', (req, res) => {
+app.post('/logout', (_, res: Response) => {
 	res.cookie('token', '', { httpOnly: true })
 		.send({})
 });
 
-app.get('/tests', async (req: Request<{}, {}, {}, ITestRequestQuery>, res: Response<ITestResponseBody<ITestList>>) => {
+app.get('/tests', async (
+	req: Request<{}, {}, {}, ITestRequestQuery>,
+	res: Response<IResponseBody<ITestList>>,
+) => {
 	try {
 		const { tests, lastPage } = await getTests(
 			req.query?.user,
@@ -76,19 +98,23 @@ app.get('/tests', async (req: Request<{}, {}, {}, ITestRequestQuery>, res: Respo
 
 app.use(authenticated);
 
-app.patch('/users', async (req: Request<{}, {}, IUserPatchBody>, res) => {
+app.patch('/users', async (
+	req: Request<{}, {}, IUpdateUserRequestBody>,
+	res: Response<IResponseBody<IAuthUser>>,
+) => {
 	try {
-		const updatedUser = await updateUser(req.user.id, {
+		const updatedUser: IUserDocument | null = await updateUser(req.body.user.id, {
 			name: req.body.name,
 			surname: req.body.surname,
 			email: req.body.email,
 			image: req.body.image,
 		});
-
-		res.send({ data: mapUser(updatedUser), error: null });
+		if (updatedUser) {
+			res.send({ data: mapUser(updatedUser), error: null });
+		}
 	} catch (e) {
 		let error = 'Error. Failed to update user';
-		if (e instanceof mongodb.MongoError && e.code === 11000) {
+		if (e instanceof MongoError && e.code === 11000) {
 			error = 'Пользователь с таким адресом электронной почты уже существует';
 		}
 		res.send({ data: null, error });
@@ -96,7 +122,10 @@ app.patch('/users', async (req: Request<{}, {}, IUserPatchBody>, res) => {
 	}
 });
 
-app.get('/tests/:id', async (req, res) => {
+app.get('/tests/:id', async (
+	req: Request<UriId>,
+	res: Response<IResponseBody<ITest>>,
+) => {
 	try {
 		const test = await getTest(req.params.id);
 
@@ -107,7 +136,10 @@ app.get('/tests/:id', async (req, res) => {
 	}
 });
 
-app.get('/tests/:id/questions/:page', async (req, res) => {
+app.get('/tests/:id/questions/:page', async (
+	req: Request<UriId & { page: string }>,
+	res: Response<IResponseBody<{ question: IQuestion, lastPage: number }>>,
+) => {
 	try {
 		const { question, lastPage } = await getQuestion(req.params.id, req.params.page);
 
@@ -118,12 +150,15 @@ app.get('/tests/:id/questions/:page', async (req, res) => {
 	}
 });
 
-app.post('/tests', async (req, res) => {
+app.post('/tests', async (
+	req: Request<{}, {}, IAddTestRequestBody>,
+	res: Response<IResponseBody<ITest>>,
+) => {
 	try {
 		const newTest = await addTest({
 			title: req.body.title,
 			questions: req.body.questions,
-			author: req.user.id,
+			author: req.body.user.id,
 		});
 
 		res.send({ data: mapTest(newTest), error: null });
@@ -133,7 +168,10 @@ app.post('/tests', async (req, res) => {
 	}
 });
 
-app.patch('/tests/:id', async (req, res) => {
+app.patch('/tests/:id', async (
+	req: Request<UriId, {}, Pick<ITest, 'title' | 'questions'>>,
+	res: Response<IResponseBody<ITest>>,
+) => {
 	try {
 		const updatedTest = await editTest(req.params.id, {
 			title: req.body.title,
@@ -143,14 +181,17 @@ app.patch('/tests/:id', async (req, res) => {
 		res.send({ data: mapTest(updatedTest), error: null });
 	} catch (e) {
 		let error = 'Error. Failed to update test';
-		if (e instanceof mongodb.MongoError && e.code === 11000) {
+		if (e instanceof MongoError && e.code === 11000) {
 			error = 'Тест с таким названием уже существует';
 		}
 		res.send({ data: null, error });
 		console.log(e);
 	}
 });
-app.delete('/tests/:id', async (req, res) => {
+app.delete('/tests/:id', async (
+	req: Request<UriId>,
+	res: Response<IResponseBody<null>>,
+) => {
 	try {
 		await deleteTest(req.params.id);
 		//удаляем также истории прохождения теста
@@ -163,7 +204,10 @@ app.delete('/tests/:id', async (req, res) => {
 	}
 });
 
-app.get('/histories/:id', async (req, res) => {
+app.get('/histories/:id', async (
+	req: Request<UriId>,
+	res: Response<IResponseBody<IHistory>>,
+) => {
 	try {
 		const histories = await getHistories(req.params.id);
 
@@ -174,10 +218,13 @@ app.get('/histories/:id', async (req, res) => {
 	}
 });
 
-app.post('/histories', async (req, res) => {
+app.post('/histories', async (
+	req: Request<{}, {}, IAddHistoryRequestBody>,
+	res: Response<IResponseBody<IHistory>>,
+) => {
 	try {
 		const newHistory = await addHistory({
-			user: req.user.id,
+			user: req.body.user.id,
 			test: req.body.test,
 			results: req.body.results,
 		});
@@ -189,7 +236,10 @@ app.post('/histories', async (req, res) => {
 	}
 });
 
-app.delete('/histories/:id', async (req, res) => {
+app.delete('/histories/:id', async (
+	req: Request<UriId>,
+	res: Response<IResponseBody<null>>,
+) => {
 	try {
 		await deleteHistory(req.params.id);
 
@@ -200,7 +250,7 @@ app.delete('/histories/:id', async (req, res) => {
 	}
 });
 
-app.get('/*', (req, res) => {
+app.get('/*', (_, res: Response) => {
 	res.sendFile(join(__dirname, '../client/build/index.html'));
 });
 

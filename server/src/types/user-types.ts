@@ -8,8 +8,15 @@ export interface IUser {
 	image?: string,
 }
 
-export interface IUserId {
+export interface IAuthUser extends Omit<IUser, 'password'> {
 	id: string
+	image: string
 }
 
-export interface IUserDocument extends Document, IUser {}
+export interface IUserDocument extends Document {
+	name: string,
+	surname: string,
+	email: string,
+	password: string,
+	image?: string,
+}

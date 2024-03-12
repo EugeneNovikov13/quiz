@@ -1,6 +1,7 @@
-const mapAnswer = require('./mapAnswer');
+import mapAnswer from './mapAnswer';
+import { IQuestionDocument } from '../types';
 
-module.exports = function (question) {
+export default function (question: IQuestionDocument) {
 	return {
 		id: question.id,
 		text: question.text,

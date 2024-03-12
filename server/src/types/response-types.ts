@@ -1,4 +1,4 @@
-export interface ITestResponseBody<T> {
-	data: T | null,
-	error: string | null
+export interface IResponseBody<T> {
+	data?: T | null,
+	error?: string | null
 }
