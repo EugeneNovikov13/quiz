@@ -13,4 +13,5 @@ RUN npm i
 
 EXPOSE 3001
 
-CMD ["node", "app.js"]
+#TODO ????
+CMD ["node", "build/app.js"]

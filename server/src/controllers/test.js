@@ -29,6 +29,7 @@ async function deleteTest(id) {
 // get list
 
 async function getTests(author, limit = 8, page = 1) {
+	console.log('author, limit, page: ',author, limit, page);
 	const [tests, quantity] = await Promise.all([
 		Test.find(author ? { author } : {})
 			.populate('author')

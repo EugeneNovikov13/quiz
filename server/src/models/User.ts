@@ -1,7 +1,9 @@
-const mongoose = require('mongoose');
-const validator = require('validator');
+import { IUser } from '../types';
 
-const UserSchema = mongoose.Schema({
+import { Schema, model } from 'mongoose';
+import validator from 'validator';
+
+const UserSchema = new Schema<IUser>({
 	name: {
 		type: String,
 		required: true,
@@ -15,7 +17,9 @@ const UserSchema = mongoose.Schema({
 		required: true,
 		unique: true,
 		validate: {
-			validator: validator.isEmail,
+			validator: (str: string) => {
+				return validator.isEmail(str)
+			},
 			message: 'Email should be a valid',
 		},
 	},
@@ -29,6 +33,6 @@ const UserSchema = mongoose.Schema({
 	},
 });
 
-const User = mongoose.model('User', UserSchema);
+const User = model<IUser>('User', UserSchema);
 
-module.exports = User;
+export default User;
