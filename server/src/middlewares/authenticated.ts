@@ -1,7 +1,8 @@
 import jwtFunctions from '../helpers/token';
 import User from '../models/User';
 import { Request, Response, NextFunction } from 'express';
-import { IUserDocument } from '../types';
+import { IUser } from '../types';
+import { HydratedDocument } from 'mongoose';
 
 export default async function(req: Request, res: Response, next: NextFunction) {
 	try {
@@ -20,7 +21,7 @@ export default async function(req: Request, res: Response, next: NextFunction) {
 			return;
 		}
 
-		const user: IUserDocument | null = await User.findOne({ _id: tokenData.id });
+		const user: HydratedDocument<IUser> | null = await User.findOne({ _id: tokenData.id });
 
 		if (!user) {
 			return;

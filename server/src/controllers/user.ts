@@ -1,8 +1,8 @@
 import jwtFunctions from '../helpers/token';
 import bcrypt from 'bcrypt';
 import User from '../models/User';
-import { IUser, IUserDocument } from '../types';
-import { Document } from 'mongoose';
+import { IUser } from '../types';
+import { HydratedDocument } from 'mongoose';
 
 // register
 
@@ -14,7 +14,7 @@ export async function register(userData: IUser) {
 
 	const userDataWithHashedPassword = {...userData, password: passwordHash}
 
-	const user = await User.create(userDataWithHashedPassword);
+	const user: HydratedDocument<IUser> = await User.create(userDataWithHashedPassword);
 	const token = jwtFunctions.generate({ id: user.id });
 
 	return { user, token };
@@ -42,6 +42,6 @@ export async function login(email: string, password: string) {
 
 // update
 
-export function updateUser(id: string, user: Document) {
+export function updateUser(id: string, user: Omit<IUser, 'password'>) {
 	return User.findByIdAndUpdate(id, user, { returnDocument: 'after', runValidators: true });
 }

@@ -16,17 +16,15 @@ import mapQuestion from './helpers/mapQuestion';
 import {
 	IAddHistoryRequestBody,
 	IAddTestRequestBody,
-	IAuthUser,
+	IMappedUser,
 	IHistory,
-	IQuestion,
 	IResponseBody,
-	UriId,
 	ITest,
 	ITestList,
 	ITestRequestQuery,
 	IUpdateUserRequestBody,
 	IUser,
-	IUserDocument,
+	IMappedTest, IMappedQuestion, RequestWithBody, RequestWithQuery, RequestWithParams, RequestWithParamsAndBody,
 } from './types';
 
 const port = 3001;
@@ -38,8 +36,8 @@ app.use(cookieParser());
 app.use(express.json());
 
 app.post('/register', async (
-	req: Request<{}, {}, IUser>,
-	res: Response<IResponseBody<IAuthUser>>,
+	req: RequestWithBody<IUser>,
+	res: Response<IResponseBody<IMappedUser>>,
 ) => {
 	try {
 		const { user, token } = await register(req.body);
@@ -58,8 +56,8 @@ app.post('/register', async (
 })
 
 app.post('/login', async (
-	req: Request<{}, {}, Pick<IUser, 'email' | 'password'>>,
-	res: Response<IResponseBody<IAuthUser>>,
+	req: RequestWithBody<Pick<IUser, 'email' | 'password'>>,
+	res: Response<IResponseBody<IMappedUser>>,
 ) => {
 	try {
 		const { user, token } = await login(req.body.email, req.body.password);
@@ -79,10 +77,11 @@ app.post('/logout', (_, res: Response) => {
 });
 
 app.get('/tests', async (
-	req: Request<{}, {}, {}, ITestRequestQuery>,
+	req: RequestWithQuery<ITestRequestQuery>,
 	res: Response<IResponseBody<ITestList>>,
 ) => {
 	try {
+		console.log('req.query',req.query);
 		const { tests, lastPage } = await getTests(
 			req.query?.user,
 			+req.query?.limit,
@@ -99,11 +98,11 @@ app.get('/tests', async (
 app.use(authenticated);
 
 app.patch('/users', async (
-	req: Request<{}, {}, IUpdateUserRequestBody>,
-	res: Response<IResponseBody<IAuthUser>>,
+	req: RequestWithBody<IUpdateUserRequestBody>,
+	res: Response<IResponseBody<IMappedUser>>,
 ) => {
 	try {
-		const updatedUser: IUserDocument | null = await updateUser(req.body.user.id, {
+		const updatedUser = await updateUser(req.body.user.id, {
 			name: req.body.name,
 			surname: req.body.surname,
 			email: req.body.email,
@@ -123,8 +122,8 @@ app.patch('/users', async (
 });
 
 app.get('/tests/:id', async (
-	req: Request<UriId>,
-	res: Response<IResponseBody<ITest>>,
+	req: RequestWithParams<{ id: string }>,
+	res: Response<IResponseBody<IMappedTest>>,
 ) => {
 	try {
 		const test = await getTest(req.params.id);
@@ -137,8 +136,8 @@ app.get('/tests/:id', async (
 });
 
 app.get('/tests/:id/questions/:page', async (
-	req: Request<UriId & { page: string }>,
-	res: Response<IResponseBody<{ question: IQuestion, lastPage: number }>>,
+	req: RequestWithParams< { id: string, page: string }>,
+	res: Response<IResponseBody<{ question: IMappedQuestion, lastPage: number }>>,
 ) => {
 	try {
 		const { question, lastPage } = await getQuestion(req.params.id, req.params.page);
@@ -151,8 +150,8 @@ app.get('/tests/:id/questions/:page', async (
 });
 
 app.post('/tests', async (
-	req: Request<{}, {}, IAddTestRequestBody>,
-	res: Response<IResponseBody<ITest>>,
+	req: RequestWithBody<IAddTestRequestBody>,
+	res: Response<IResponseBody<IMappedTest>>,
 ) => {
 	try {
 		const newTest = await addTest({
@@ -169,8 +168,8 @@ app.post('/tests', async (
 });
 
 app.patch('/tests/:id', async (
-	req: Request<UriId, {}, Pick<ITest, 'title' | 'questions'>>,
-	res: Response<IResponseBody<ITest>>,
+	req: RequestWithParamsAndBody<{id: string}, Pick<ITest, 'title' | 'questions'>>,
+	res: Response<IResponseBody<IMappedTest>>,
 ) => {
 	try {
 		const updatedTest = await editTest(req.params.id, {
@@ -189,7 +188,7 @@ app.patch('/tests/:id', async (
 	}
 });
 app.delete('/tests/:id', async (
-	req: Request<UriId>,
+	req: Request<{ id: string }>,
 	res: Response<IResponseBody<null>>,
 ) => {
 	try {
@@ -205,7 +204,7 @@ app.delete('/tests/:id', async (
 });
 
 app.get('/histories/:id', async (
-	req: Request<UriId>,
+	req: Request<{ id: string }>,
 	res: Response<IResponseBody<IHistory>>,
 ) => {
 	try {
@@ -219,7 +218,7 @@ app.get('/histories/:id', async (
 });
 
 app.post('/histories', async (
-	req: Request<{}, {}, IAddHistoryRequestBody>,
+	req: RequestWithBody<IAddHistoryRequestBody>,
 	res: Response<IResponseBody<IHistory>>,
 ) => {
 	try {
@@ -237,7 +236,7 @@ app.post('/histories', async (
 });
 
 app.delete('/histories/:id', async (
-	req: Request<UriId>,
+	req: Request<{ id: string }>,
 	res: Response<IResponseBody<null>>,
 ) => {
 	try {
