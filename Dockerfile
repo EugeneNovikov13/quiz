@@ -10,6 +10,7 @@ RUN npm run build
 
 WORKDIR /usr/src/app/server
 RUN npm i
+RUN npx tsc
 
 EXPOSE 3001
 
