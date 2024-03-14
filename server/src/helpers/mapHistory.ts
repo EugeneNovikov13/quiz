@@ -1,6 +1,8 @@
-const mapResult = require('./mapResult');
+import mapResult from './mapResult';
+import { HydratedDocument } from 'mongoose';
+import { IHistory, IMappedHistory } from '../types';
 
-module.exports = function (history) {
+export default function (history: HydratedDocument<IHistory>): IMappedHistory {
 	return {
 		id: history.id,
 		user: {

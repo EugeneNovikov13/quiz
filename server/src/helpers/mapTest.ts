@@ -3,12 +3,10 @@ import { HydratedDocument } from 'mongoose';
 import { IMappedTest, ITest } from '../types';
 
 export  default function (test: HydratedDocument<ITest>): IMappedTest {
-	const dateObject = new Date(test.createdAt);
-
 	return {
 		id: test.id as string,
 		title: test.title,
-		createdAt: dateObject.toLocaleDateString(),
+		createdAt: test.createdAt.toLocaleDateString(),
 		author: {
 			name: test.author?.name || 'user',
 			surname: test.author?.surname || 'Unknown',

@@ -16,18 +16,21 @@ import mapQuestion from './helpers/mapQuestion';
 import {
 	IAddHistoryRequestBody,
 	IAddTestRequestBody,
+	IMappedHistory,
+	IMappedQuestion,
+	IMappedTest,
 	IMappedUser,
-	IHistory,
 	IResponseBody,
-	ITest,
 	ITestList,
 	ITestRequestQuery,
 	IUpdateUserRequestBody,
 	IUser,
-	IMappedTest, IMappedQuestion, RequestWithBody, RequestWithQuery, RequestWithParams, RequestWithParamsAndBody,
+	RequestWithBody,
+	RequestWithParams,
+	RequestWithParamsAndBody,
+	RequestWithQuery,
 } from './types';
 
-const port = 3001;
 const app = express();
 
 app.use(express.static('../client/build'));
@@ -81,7 +84,6 @@ app.get('/tests', async (
 	res: Response<IResponseBody<ITestList>>,
 ) => {
 	try {
-		console.log('req.query',req.query);
 		const { tests, lastPage } = await getTests(
 			req.query?.user,
 			+req.query?.limit,
@@ -128,7 +130,9 @@ app.get('/tests/:id', async (
 	try {
 		const test = await getTest(req.params.id);
 
-		res.send({ data: mapTest(test), error: null });
+		if (test) {
+			res.send({ data: mapTest(test), error: null });
+		}
 	} catch (e) {
 		res.send({ data: null, error: 'Error! Maybe... This test isn\'t exist' });
 		console.log(e);
@@ -140,7 +144,7 @@ app.get('/tests/:id/questions/:page', async (
 	res: Response<IResponseBody<{ question: IMappedQuestion, lastPage: number }>>,
 ) => {
 	try {
-		const { question, lastPage } = await getQuestion(req.params.id, req.params.page);
+		const { question, lastPage } = await getQuestion(req.params.id, +req.params.page);
 
 		res.send({ data: { question: mapQuestion(question), lastPage }, error: null });
 	} catch (e) {
@@ -168,7 +172,7 @@ app.post('/tests', async (
 });
 
 app.patch('/tests/:id', async (
-	req: RequestWithParamsAndBody<{id: string}, Pick<ITest, 'title' | 'questions'>>,
+	req: RequestWithParamsAndBody<{ id: string }, Pick<IMappedTest, 'title' | 'questions'>>,
 	res: Response<IResponseBody<IMappedTest>>,
 ) => {
 	try {
@@ -205,7 +209,7 @@ app.delete('/tests/:id', async (
 
 app.get('/histories/:id', async (
 	req: Request<{ id: string }>,
-	res: Response<IResponseBody<IHistory>>,
+	res: Response<IResponseBody<IMappedHistory[]>>,
 ) => {
 	try {
 		const histories = await getHistories(req.params.id);
@@ -219,7 +223,7 @@ app.get('/histories/:id', async (
 
 app.post('/histories', async (
 	req: RequestWithBody<IAddHistoryRequestBody>,
-	res: Response<IResponseBody<IHistory>>,
+	res: Response<IResponseBody<IMappedHistory>>,
 ) => {
 	try {
 		const newHistory = await addHistory({
@@ -258,6 +262,6 @@ mongoose.connect(
 	process.env.DB_CONNECTION_STRING,
 ).then(() => {
 	app.listen(process.env.PORT, () => {
-		console.log(`Server has been started on port ${port}`);
+		console.log(`Server has been started on port ${process.env.PORT}`);
 	});
 });
