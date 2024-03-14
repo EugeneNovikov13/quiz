@@ -6,7 +6,7 @@ import { HydratedDocument } from 'mongoose';
 
 export default async function(req: Request, res: Response, next: NextFunction) {
 	try {
-		const token = req.cookies.token;
+		const token: string | null = req.cookies.token;
 
 		if (!token) {
 			console.log('Token not found');

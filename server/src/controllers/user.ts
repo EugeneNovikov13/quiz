@@ -5,7 +5,10 @@ import { IUser } from '../types';
 import { HydratedDocument } from 'mongoose';
 
 // register
-
+/**
+ * Регистрация пользователя
+ * @param userData - данные нового пользователя
+ */
 export async function register(userData: IUser) {
 	if (!userData.password) {
 		throw new Error('Password is empty');
@@ -21,9 +24,13 @@ export async function register(userData: IUser) {
 }
 
 // login
-
+/**
+ * Авторизация пользователя
+ * @param email - введённая пользователем электронная почта
+ * @param password - введённый пользователем пароль
+ */
 export async function login(email: string, password: string) {
-	const user = await User.findOne({ email });
+	const user: HydratedDocument<IUser> | null = await User.findOne({ email });
 
 	if (!user) {
 		throw new Error('User not found');
@@ -41,7 +48,11 @@ export async function login(email: string, password: string) {
 }
 
 // update
-
+/**
+ * Обновление данных пользователя
+ * @param id - id пользователя
+ * @param user - новые данные пользователя
+ */
 export function updateUser(id: string, user: Omit<IUser, 'password'>) {
 	return User.findByIdAndUpdate(id, user, { returnDocument: 'after', runValidators: true });
 }

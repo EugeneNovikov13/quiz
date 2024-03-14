@@ -1,4 +1,6 @@
-module.exports = function (result) {
+import { IResult } from '../types';
+
+export default function (result: IResult): IResult {
 	return {
 		id: result.id,
 		question: result.question,

@@ -39,7 +39,7 @@ const EditContainer: FC<EditProps> = ({ className }) => {
 	useEffect(() => {
 		//Если в адресной строке нет id теста, очищаем стор.тест перед созданием нового теста
 		if (!params.id) {
-			dispatch(RESET_TEST_DATA);
+			dispatch(RESET_TEST_DATA());
 			setIsLoading(false);
 			return;
 		}
